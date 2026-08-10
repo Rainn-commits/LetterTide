@@ -29,7 +29,7 @@ class LoginController extends Controller
             
             $user->load('role');
 
-            $roleName = $user->role?->name_role;
+            $roleName = $user->role?->nama_role;
 
             return match ($roleName) {
                 'Super Admin' => redirect()->route('dashboard.superadmin'),
