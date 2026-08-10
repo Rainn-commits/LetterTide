@@ -90,7 +90,7 @@
 
     <div id="idleCutscene" class="idle-cutscene">
         <video id="cutsceneVideo" loop muted playsinline>
-            <source src="https://assets.mixkit.co/videos/preview/mixkit-top-view-of-a-modern-city-building-41556-large.mp4" type="video/mp4">
+            <source src="public/videos/ p4">
         </video>
         <div class="idle-overlay-text">
             <p>🎥 DEMO MODE - Tekan tombol/gerakkan mouse untuk kembali</p>
