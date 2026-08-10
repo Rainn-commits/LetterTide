@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Log In — LetterTide</title>
+    <title>Log In - etterTide</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@500;600;700;800&display=swap" rel="stylesheet">
     @vite('resources/css/pages/login.css')
@@ -46,7 +46,7 @@
                     </div>
                 @endif
 
-                <form method="POST" action="{{ route('login.attempt') }}" novalidate>
+                <form method="POST" action="{{ route('login') }}" novalidate>
                     @csrf
 
                     <div class="auth-field @error('email') has-error @enderror">

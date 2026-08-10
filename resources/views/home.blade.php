@@ -6,7 +6,14 @@
     <title>LetterTide — Kelola Surat Perusahaan Lebih Rapi dan Efisien</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../css/home.css">
+    
+    @vite([
+        'resources/css/variables.css',
+        'resources/css/home.css',
+        'resources/css/pages/login.css',
+        'resources/js/password-toggle.js',
+    ])
+
 </head>
 <body>
 
@@ -29,6 +36,7 @@
 
         <div class="navbar__actions">
             <a href="login.html" class="navbar__login">Log In</a>
+            <a href="register.html" class="btn-signin">Sign In</a>
         </div>
     </header>
 
@@ -41,6 +49,7 @@
                 Sistem manajemen administrasi persuratan untuk PT Inovindo Digital Media
             </p>
             <div class="hero__cta">
+                <a href="register.html" class="btn-primary">Mulai Sekarang</a>
                 <a href="login.html" class="btn-outline">Log In</a>
             </div>
         </div>
