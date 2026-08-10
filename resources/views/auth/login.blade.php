@@ -3,10 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Log In - etterTide</title>
+    <title>Log In - LetterTide</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@500;600;700;800&display=swap" rel="stylesheet">
-    @vite('resources/css/pages/login.css')
+    @vite([
+    'resources/css/pages/login.css',
+    'resources/css/variables.css',
+    'resources/css/auth-base.css',
+    'resources/css/login.css',
+    'resources/js/password-toggle.js' 
+])
 </head>
 <body>
 
@@ -88,7 +94,5 @@
 
         </div>
     </div>
-
-    @vite('resources/js/password-toggle.js')
 </body>
 </html>
