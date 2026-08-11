@@ -28,6 +28,9 @@ Route::middleware('auth')->group(function () {
     Route::put('/template-surat/{templateSurat}', [TemplateSuratController::class, 'update'])->name('template-surat.update');
     Route::delete('/template-surat/{templateSurat}', [TemplateSuratController::class, 'destroy'])->name('template-surat.destroy');
 
+    Route::post('/template-surat/parse-preview', [TemplateSuratController::class, 'parsePreview'])
+        ->name('template-surat.parse-preview');
+
     Route::middleware('role:Super Admin')->group(function () {
         Route::get('/dashboard/super-admin', fn() => view('dashboard.super-admin'))->name('dashboard.superadmin');
     });

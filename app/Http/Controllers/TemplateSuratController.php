@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\TemplateSurat;
 use App\Http\Controllers\Controller;
+use App\Services\PlaceholderParser;
 use Illuminate\Http\Request;
 
 class TemplateSuratController extends Controller
@@ -71,5 +72,13 @@ class TemplateSuratController extends Controller
 
         return redirect()->route('template-surat.index')
             ->with('success', 'Template dinonaktifkan.');
+    }
+
+    public function parsePreview(Request $request)
+    {
+    $text = $request->input('isi_template', '');
+    $placeholders = PlaceholderParser::extract($text);
+
+    return response()->json(['placeholders' => $placeholders]);
     }
 }
