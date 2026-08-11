@@ -44,8 +44,8 @@
                 LEBIH RAPI DAN EFISIEN
             </h1>
             <p class="hero__subtitle">
-                Sistem manajemen administrasi persuratan untuk PT<br>
-                Inovindo Digital Media
+                Sistem manajemen administrasi persuratan untuk<br>
+                PT Inovindo Digital Media
             </p>
         </div>
 
@@ -87,71 +87,4 @@
     </section>
 
 </body>
-
-    <div id="idleCutscene" class="idle-cutscene">
-        <video id="cutsceneVideo" loop muted playsinline>
-            <source src="public/videos/ p4">
-        </video>
-        <div class="idle-overlay-text">
-            <p>🎥 DEMO MODE - Tekan tombol/gerakkan mouse untuk kembali</p>
-        </div>
-    </div>
-
-    <style>
-    .idle-cutscene {
-        position: fixed;
-        top: 0; left: 0; width: 100vw; height: 100vh;
-        background: #000;
-        z-index: 9999;
-        opacity: 0;
-        pointer-events: none;
-        transition: opacity 0.8s ease-in-out;
-    }
-    .idle-cutscene.active {
-        opacity: 1;
-        pointer-events: auto;
-    }
-    .idle-cutscene video {
-        width: 100%; height: 100%; object-fit: cover;
-    }
-    .idle-overlay-text {
-        position: absolute; bottom: 30px; left: 50%;
-        transform: translateX(-50%);
-        background: rgba(0, 0, 0, 0.7);
-        color: #fff; padding: 10px 24px; border-radius: 30px;
-        font-family: sans-serif; font-size: 14px; letter-spacing: 1px;
-    }
-    </style>
-
-    <script>
-    let idleTime = 0;
-    const idleLimit = 10;
-    const cutscene = document.getElementById('idleCutscene');
-    const video = document.getElementById('cutsceneVideo');
-
-    function resetTimer() {
-        idleTime = 0;
-        if (cutscene.classList.contains('active')) {
-            cutscene.classList.remove('active');
-            video.pause();
-        }
-    }
-
-    window.onload = resetTimer;
-    window.onmousemove = resetTimer;
-    window.onmousedown = resetTimer;
-    window.onclick = resetTimer;
-    window.onkeypress = resetTimer;
-    window.addEventListener('scroll', resetTimer, true);
-
-    setInterval(() => {
-        idleTime++;
-        if (idleTime >= idleLimit) {
-            if (!cutscene.classList.contains('active')) {
-                cutscene.classList.add('active');
-                video.play();
-            }
-        }
-    }, 1000);
-    </script>
 </html>
