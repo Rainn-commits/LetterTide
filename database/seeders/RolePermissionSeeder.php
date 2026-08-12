@@ -40,7 +40,9 @@ class RolePermissionSeeder extends Seeder
 
         foreach ($data as $row) {
             $row['created_at'] = now();
-            DB::table('role_permissions')->insert($row);
+            $row['updated_at'] = now();
+            
+            DB::table('role_permissions')->insertOrIgnore($row);
         }
     }
 }

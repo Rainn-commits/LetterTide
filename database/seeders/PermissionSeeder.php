@@ -10,7 +10,7 @@ class PermissionSeeder extends Seeder
 {
     public function run(): void
     {
-        DB::table('permissions')->insert([
+        DB::table('permissions')->insertOrIgnore([
             ['nama_permission' => 'Kelola Role & Hak Akses', 'kode_permission' => 'role.manage', 'created_at' => now(), 'updated_at' => now()],
             ['nama_permission' => 'Kelola Pengguna', 'kode_permission' => 'user.manage', 'created_at' => now(), 'updated_at' => now()],
             ['nama_permission' => 'Kelola Pengaturan Kop Surat', 'kode_permission' => 'kopsurat.manage', 'created_at' => now(), 'updated_at' => now()],
