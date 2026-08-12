@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\UserLookupController;
 use App\Http\Controllers\TemplateSuratController;
+use App\Http\Controllers\SuratController;
 
 Route::get('/', function () {
     return view('home');
@@ -30,6 +31,11 @@ Route::middleware('auth')->group(function () {
 
     Route::post('/template-surat/parse-preview', [TemplateSuratController::class, 'parsePreview'])
         ->name('template-surat.parse-preview');
+    
+    Route::middleware(['auth'])->group(function () {
+        Route::get('/surat/create', [SuratController::class, 'create'])->name('surat.create');
+        Route::get('/surat/create/{template}', [SuratController::class, 'form'])->name('surat.form');
+    });
 
     Route::middleware('role:Super Admin')->group(function () {
         Route::get('/dashboard/super-admin', fn() => view('dashboard.super-admin'))->name('dashboard.superadmin');
@@ -44,3 +50,4 @@ Route::middleware('auth')->group(function () {
     });
 
 });
+
