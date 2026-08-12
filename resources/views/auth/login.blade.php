@@ -11,7 +11,7 @@
     'resources/css/variables.css',
     'resources/css/auth-base.css',
     'resources/css/login.css',
-    'resources/js/password-toggle.js' 
+    '' 
 ])
 </head>
 <body>
@@ -94,5 +94,7 @@
 
         </div>
     </div>
+    
+    resources/js/password-toggle.js
 </body>
 </html>
