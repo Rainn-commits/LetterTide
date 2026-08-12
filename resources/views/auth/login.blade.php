@@ -7,12 +7,12 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@500;600;700;800&display=swap" rel="stylesheet">
     @vite([
-    'resources/css/pages/login.css',
-    'resources/css/variables.css',
-    'resources/css/auth-base.css',
-    'resources/css/login.css',
-    '' 
-])
+        'resources/css/pages/login.css',
+        'resources/css/variables.css',
+        'resources/css/auth-base.css',
+        'resources/css/login.css',
+        'resources/js/password-toggle.js'
+    ])
 </head>
 <body>
 
@@ -45,12 +45,6 @@
                     </span>
                     <span class="auth-card__brand-name">LetterTide</span>
                 </div>
-
-                @if ($errors->any())
-                    <div class="auth-field has-error" style="border:none;">
-                        <p class="auth-field__error" style="display:block;">{{ $errors->first() }}</p>
-                    </div>
-                @endif
 
                 <form method="POST" action="{{ route('login') }}" novalidate>
                     @csrf
@@ -94,7 +88,6 @@
 
         </div>
     </div>
-    
-    resources/js/password-toggle.js
+
 </body>
 </html>
