@@ -9,7 +9,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
     @vite([
         'resources/css/variables.css',
-        'resources/css/home.css'
+        'resources/css/home.css',
+        'resources/js/hero-parallax.js'
     ])
 
     <style>
@@ -49,6 +50,81 @@
             </p>
         </div>
 
+        <div class="hero__scene" aria-hidden="true">
+ 
+            <div class="hero__glow hero__glow--1"></div>
+            <div class="hero__glow hero__glow--2"></div>
+            <div class="hero__dotgrid"></div>
+ 
+            {{-- Main app-window card --}}
+            <div class="hero__card hero__card--main">
+                <div class="hero__card-float" data-depth="0.03">
+                    <div class="hero__card-bar">
+                        <span></span><span></span><span></span>
+                    </div>
+                    <div class="hero__card-body">
+                        <div class="hero__line hero__line--title"></div>
+                        <div class="hero__line"></div>
+                        <div class="hero__line"></div>
+                        <div class="hero__line hero__line--short"></div>
+                        <div class="hero__line"></div>
+                        <div class="hero__line hero__line--short"></div>
+                        <span class="hero__cursor"></span>
+                    </div>
+                </div>
+            </div>
+ 
+            {{-- Floating stat card: surat terkirim --}}
+            <div class="hero__card hero__card--stat">
+                <div class="hero__card-float" data-depth="0.07">
+                    <span class="hero__stat-icon">
+                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M5 13l4 4L19 7" stroke="#FFFFFF" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </span>
+                    <span class="hero__stat-text">
+                        <strong>Surat Terkirim</strong>
+                        <span>128 bulan ini</span>
+                    </span>
+                </div>
+            </div>
+ 
+            {{-- Floating progress ring card --}}
+            <div class="hero__card hero__card--progress">
+                <div class="hero__card-float" data-depth="0.06">
+                    <svg viewBox="0 0 64 64" class="hero__ring">
+                        <circle cx="32" cy="32" r="26" fill="none" stroke="rgba(255,255,255,0.18)" stroke-width="6"/>
+                        <circle cx="32" cy="32" r="26" fill="none" stroke="#2FC4D0" stroke-width="6" stroke-dasharray="163.4" stroke-dashoffset="41" stroke-linecap="round" transform="rotate(-90 32 32)"/>
+                        <text x="32" y="37" text-anchor="middle" font-family="Inter, sans-serif" font-size="14" font-weight="700" fill="#FFFFFF">75%</text>
+                    </svg>
+                    <span>Draft selesai</span>
+                </div>
+            </div>
+ 
+            {{-- Floating envelope badge --}}
+            <div class="hero__card hero__card--envelope">
+                <div class="hero__card-float" data-depth="0.09">
+                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M3 6.5C3 5.67 3.67 5 4.5 5H19.5C20.33 5 21 5.67 21 6.5V17.5C21 18.33 20.33 19 19.5 19H4.5C3.67 19 3 18.33 3 17.5V6.5Z" stroke="#6FE0E8" stroke-width="1.8"/>
+                        <path d="M4 6.5L12 13L20 6.5" stroke="#6FE0E8" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </div>
+            </div>
+ 
+            {{-- Floating avatar chip --}}
+            <div class="hero__card hero__card--avatars">
+                <div class="hero__card-float" data-depth="0.05">
+                    <span class="hero__avatar-stack">
+                        <span class="hero__avatar" style="background:#0EA1AB;">YR</span>
+                        <span class="hero__avatar" style="background:#101820;">AD</span>
+                        <span class="hero__avatar hero__avatar--more">+3</span>
+                    </span>
+                    <span class="hero__card-caption">Tim aktif</span>
+                </div>
+            </div>
+ 
+        </div>
+ 
         <div class="hero__walker" aria-hidden="true">
             <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
                 <g class="walker__body">

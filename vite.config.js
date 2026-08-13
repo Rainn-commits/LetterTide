@@ -10,10 +10,12 @@ export default defineConfig({
                 'resources/css/app.css',
                 'resources/js/app.js',
                 'resources/css/variables.css',
+                'resources/views/home.blade.php',
                 'resources/css/home.css',
                 'resources/css/auth-base.css',
                 'resources/css/login.css',
                 'resources/js/password-toggle.js',
+                'resources/js/hero-parallax.js'
             ],
             refresh: true,
             fonts: [
