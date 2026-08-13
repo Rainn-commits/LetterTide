@@ -22,10 +22,10 @@
 <body>
 
     <header class="navbar">
-          <a href="{{ route('home') }}" class="navbar__brand">
+        <div class="navbar__brand">
             <img src="{{ asset('images/logo.png') }}" alt="Logo LetterTide" class="navbar__logo-img">
             <span class="navbar__brand-name">LetterTide</span>
-        </a>
+        </div>
 
         <nav class="navbar__links" id="navbarLinks">
             <a href="#">Buat Surat</a>

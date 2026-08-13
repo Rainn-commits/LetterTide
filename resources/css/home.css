@@ -485,6 +485,23 @@ body,
     padding-left: 0;
     margin-top: 0;
     max-width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .hero__title {
+    max-width: 100%;
+  }
+
+  .hero__subtitle {
+    margin-left: 0;       
+    max-width: 360px;      
+    text-align: center;
+  }
+
+  .hero__subtitle br {
+    display: none !important;
   }
 
   .hero__scene {
@@ -500,6 +517,10 @@ body,
     flex-direction: column;
     align-items: center;
     gap: 16px;
+  }
+
+  .hero__stat-text {
+    text-align: left !important;
   }
 
   .hero__glow,
