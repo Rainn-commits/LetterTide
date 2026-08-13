@@ -5,6 +5,9 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\UserLookupController;
 use App\Http\Controllers\TemplateSuratController;
 use App\Http\Controllers\SuratController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ProfileController;
+
 
 Route::get('/', function () {
     return view('home');
@@ -48,6 +51,22 @@ Route::middleware('auth')->group(function () {
     Route::middleware('role:Super Admin,Admin,User')->group(function () {
         Route::get('/dashboard/user', fn() => view('dashboard.user'))->name('dashboard.user');
     });
+
+    Route::middleware(['auth', 'role:Super Admin'])->group(function () {
+        Route::get('/dashboard/super-admin', [DashboardController::class, 'superAdmin'])->name('dashboard.superadmin');
+    });
+
+    Route::middleware(['auth', 'role:Super Admin,Admin'])->group(function () {
+        Route::get('/dashboard/admin', [DashboardController::class, 'admin'])->name('dashboard.admin');
+    });
+
+    Route::middleware(['auth', 'role:Super Admin,Admin,User'])->group(function () {
+        Route::get('/dashboard/user', [DashboardController::class, 'user'])->name('dashboard.user');
+    });
+
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::put('/profile/password', [ProfileController::class, 'updatePassword'])->name('profile.password.update');
 
 });
 
