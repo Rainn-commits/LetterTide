@@ -27,7 +27,7 @@
             <span class="navbar__brand-name">LetterTide</span>
         </a>
 
-        <nav class="navbar__links">
+        <nav class="navbar__links" id="navbarLinks">
             <a href="#">Buat Surat</a>
             <a href="#">Template Surat</a>
             <a href="#">Arsip Digital</a>
@@ -36,7 +36,40 @@
         <div class="navbar__actions">
             <a href="{{ route('login') }}" class="btn-signin">Log In</a>
         </div>
+
+        <button type="button" class="navbar__toggle" id="navbarToggle" aria-label="Buka menu" aria-expanded="false" aria-controls="navbarLinks">
+            <svg class="navbar__toggle-icon navbar__toggle-icon--open" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M4 6H20M4 12H20M4 18H20" stroke="#101820" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+            <svg class="navbar__toggle-icon navbar__toggle-icon--close" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:none;">
+                <path d="M6 6L18 18M6 18L18 6" stroke="#101820" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+        </button>
     </header>
+
+    <script>
+        (function () {
+            var toggle = document.getElementById('navbarToggle');
+            var links = document.getElementById('navbarLinks');
+            if (!toggle || !links) return;
+
+            toggle.addEventListener('click', function () {
+                var isOpen = links.classList.toggle('is-open');
+                toggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+                toggle.querySelector('.navbar__toggle-icon--open').style.display = isOpen ? 'none' : 'block';
+                toggle.querySelector('.navbar__toggle-icon--close').style.display = isOpen ? 'block' : 'none';
+            });
+
+            links.querySelectorAll('a').forEach(function (a) {
+                a.addEventListener('click', function () {
+                    links.classList.remove('is-open');
+                    toggle.setAttribute('aria-expanded', 'false');
+                    toggle.querySelector('.navbar__toggle-icon--open').style.display = 'block';
+                    toggle.querySelector('.navbar__toggle-icon--close').style.display = 'none';
+                });
+            });
+        })();
+    </script>
 
     <section class="hero">
         <div class="hero__content">
@@ -51,12 +84,11 @@
         </div>
 
         <div class="hero__scene" aria-hidden="true">
- 
+
             <div class="hero__glow hero__glow--1"></div>
             <div class="hero__glow hero__glow--2"></div>
             <div class="hero__dotgrid"></div>
- 
-            {{-- Main app-window card --}}
+
             <div class="hero__card hero__card--main">
                 <div class="hero__card-float" data-depth="0.03">
                     <div class="hero__card-bar">
@@ -73,8 +105,7 @@
                     </div>
                 </div>
             </div>
- 
-            {{-- Floating stat card: surat terkirim --}}
+
             <div class="hero__card hero__card--stat">
                 <div class="hero__card-float" data-depth="0.07">
                     <span class="hero__stat-icon">
@@ -83,25 +114,23 @@
                         </svg>
                     </span>
                     <span class="hero__stat-text">
-                        <strong>Surat Terkirim</strong>
-                        <span>128 bulan ini</span>
+                        <strong>Surat Dibuat</strong>
+                        <span>128 Surat</span>
                     </span>
                 </div>
             </div>
- 
-            {{-- Floating progress ring card --}}
+
             <div class="hero__card hero__card--progress">
                 <div class="hero__card-float" data-depth="0.06">
                     <svg viewBox="0 0 64 64" class="hero__ring">
-                        <circle cx="32" cy="32" r="26" fill="none" stroke="rgba(255,255,255,0.18)" stroke-width="6"/>
-                        <circle cx="32" cy="32" r="26" fill="none" stroke="#2FC4D0" stroke-width="6" stroke-dasharray="163.4" stroke-dashoffset="41" stroke-linecap="round" transform="rotate(-90 32 32)"/>
-                        <text x="32" y="37" text-anchor="middle" font-family="Inter, sans-serif" font-size="14" font-weight="700" fill="#FFFFFF">75%</text>
+                        <circle cx="32" cy="32" r="26" fill="none" stroke="rgba(11,18,32,0.12)" stroke-width="6"/>
+                        <circle cx="32" cy="32" r="26" fill="none" stroke="#0EA1AB" stroke-width="6" stroke-dasharray="163.4" stroke-dashoffset="41" stroke-linecap="round" transform="rotate(-90 32 32)"/>
+                        <text x="32" y="37" text-anchor="middle" font-family="Inter, sans-serif" font-size="14" font-weight="700" fill="#0B1220">75%</text>
                     </svg>
-                    <span>Draft selesai</span>
+                    <span>Progres Draft</span>
                 </div>
             </div>
- 
-            {{-- Floating envelope badge --}}
+
             <div class="hero__card hero__card--envelope">
                 <div class="hero__card-float" data-depth="0.09">
                     <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -110,21 +139,24 @@
                     </svg>
                 </div>
             </div>
- 
-            {{-- Floating avatar chip --}}
-            <div class="hero__card hero__card--avatars">
+
+            <div class="hero__card hero__card--approval">
                 <div class="hero__card-float" data-depth="0.05">
-                    <span class="hero__avatar-stack">
-                        <span class="hero__avatar" style="background:#0EA1AB;">YR</span>
-                        <span class="hero__avatar" style="background:#101820;">AD</span>
-                        <span class="hero__avatar hero__avatar--more">+3</span>
+                    <span class="hero__approval-icon">
+                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="12" cy="12" r="9" stroke="#FFFFFF" stroke-width="1.8"/>
+                            <path d="M12 7.5V12L15 14" stroke="#FFFFFF" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
                     </span>
-                    <span class="hero__card-caption">Tim aktif</span>
+                    <span class="hero__stat-text">
+                        <strong>Menunggu Approval</strong>
+                        <span>17 Surat</span>
+                    </span>
                 </div>
             </div>
- 
+
         </div>
- 
+
         <div class="hero__walker" aria-hidden="true">
             <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
                 <g class="walker__body">
