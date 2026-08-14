@@ -17,6 +17,6 @@
             <span class="topbar__bell-dot" aria-hidden="true"></span>
         </button>
 
-        <span class="topbar__avatar">{{ Str::of(auth()->user()->name ?? 'U')->explode(' ')->map(fn ($w) => strtoupper($w[0] ?? ''))->take(2)->implode('') }}</span>
+        <a href="{{ route('profile.edit') }}" class="topbar__avatar" title="Kelola Profil">{{ Str::of(auth()->user()->name ?? 'U')->explode(' ')->map(fn ($w) => strtoupper($w[0] ?? ''))->take(2)->implode('') }}</a>
     </div>
 </header>

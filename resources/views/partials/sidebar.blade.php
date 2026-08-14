@@ -1,13 +1,18 @@
 @php
-    /**
-     * Setiap item boleh dibatasi per role lewat key 'roles'.
-     * Sesuaikan nama role di sini dengan kolom nama_role di tabel roles kamu.
-     */
+    $currentRole = auth()->user()->role->nama_role ?? null;
+
+    $dashboardRoute = match ($currentRole) {
+        'Super Admin' => 'dashboard.superadmin',
+        'Admin'       => 'dashboard.admin',
+        'User'        => 'dashboard.user',
+        default       => 'dashboard.user',
+    };
+
     $menuItems = [
         [
-            'label' => 'Dashboard - ' . (auth()->user()->role->nama_role ?? ''),
-            'route' => 'dashboard',
-            'active' => request()->routeIs('dashboard'),
+            'label' => 'Dashboard - ' . ($currentRole ?? ''),
+            'route' => $dashboardRoute,
+            'active' => request()->routeIs('dashboard.*'),
             'roles' => ['Super Admin', 'Admin', 'User'],
             'icon' => 'grid',
         ],
@@ -22,7 +27,7 @@
             'label' => 'Template Surat',
             'route' => 'template-surat.index',
             'active' => request()->routeIs('template-surat.*'),
-            'roles' => ['Super Admin', 'Admin'],
+            'roles' => ['Super Admin', 'Admin', 'User'],
             'icon' => 'mail',
         ],
         [
@@ -36,14 +41,14 @@
             'label' => 'Pengaturan Kop Surat',
             'route' => 'kop-surat.index',
             'active' => request()->routeIs('kop-surat.*'),
-            'roles' => ['Super Admin'],
+            'roles' => ['Super Admin', 'Admin'],
             'icon' => 'settings',
         ],
         [
             'label' => 'Kelola Pengguna',
             'route' => 'pengguna.index',
             'active' => request()->routeIs('pengguna.*'),
-            'roles' => ['Super Admin'],
+            'roles' => ['Super Admin', 'Admin'],
             'icon' => 'users',
         ],
         [
@@ -54,12 +59,10 @@
             'icon' => 'user',
         ],
     ];
-
-    $currentRole = auth()->user()->role->nama_role ?? null;
 @endphp
 
 <aside class="sidebar" id="sidebar">
-    <a href="{{ route('dashboard') }}" class="sidebar__brand">
+    <a href="{{ route($dashboardRoute) }}" class="sidebar__brand">
         <span class="sidebar__logo-mark">
             @include('partials.logo-icon')
         </span>
@@ -96,10 +99,12 @@
     </nav>
 
     <div class="sidebar__footer">
-        <span class="sidebar__avatar">{{ Str::of(auth()->user()->name ?? 'U')->explode(' ')->map(fn ($w) => strtoupper($w[0] ?? ''))->take(2)->implode('') }}</span>
-        <div class="sidebar__user">
-            <div class="sidebar__user-name">{{ auth()->user()->name ?? 'Pengguna' }}</div>
-        </div>
+        <a href="{{ route('profile.edit') }}" class="sidebar__profile-link" title="Kelola Profil">
+            <span class="sidebar__avatar">{{ Str::of(auth()->user()->name ?? 'U')->explode(' ')->map(fn ($w) => strtoupper($w[0] ?? ''))->take(2)->implode('') }}</span>
+            <div class="sidebar__user">
+                <div class="sidebar__user-name">{{ auth()->user()->name ?? 'Pengguna' }}</div>
+            </div>
+        </a>
         <form method="POST" action="{{ route('logout') }}">
             @csrf
             <button type="submit" class="sidebar__logout" title="Log Out">
