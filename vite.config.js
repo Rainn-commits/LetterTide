@@ -10,12 +10,20 @@ export default defineConfig({
                 'resources/css/app.css',
                 'resources/js/app.js',
                 'resources/css/variables.css',
-                'resources/views/home.blade.php',
                 'resources/css/home.css',
-                'resources/css/auth-base.css',
+                'resources/views/home.blade.php',
                 'resources/css/login.css',
+                'resources/css/forgot-password.css',
+                'resources/css/surat.css',
+                'resources/css/app-shell.css',
+                'resources/css/template-surat.css',
+                'resources/css/dashboard.css',
+                'resources/css/profile.css',                
+                'resources/css/auth-base.css',
                 'resources/js/password-toggle.js',
-                'resources/js/hero-parallax.js'
+                'resources/js/hero-parallax.js',
+                'resources/js/template-editor.js',
+                'resources/js/surat-wizard.js'
             ],
             refresh: true,
             fonts: [
