@@ -14,28 +14,28 @@
     </div>
 
     <div class="card">
-        <form method="POST" action="{{ route('surat.store', $template->id) }}" class="surat-form" novalidate>
+        <form method="POST" action="{{ route('surat.store', $template) }}">
             @csrf
-            <input type="hidden" name="template_id" value="{{ $template->id }}">
 
             @foreach ($fields as $field)
                 @php
-                    $key = is_array($field) ? $field['key'] : $field->key;
-                    $label = is_array($field) ? $field['label'] : $field->label;
-                    $isDate = str_contains($key, 'tanggal');
-                    $isEmployeeName = $key === 'nama_karyawan';
-                    $oldValue = old('jawaban.' . $key);
+                    $key = $field['name'];
+                    $label = $field['label'];
+                    $type = $field['type'];
+                    $isDate = $type === 'date';
+                    $isAutocompleteUser = $type === 'autocomplete_user';
+                    $oldValue = old('fields.' . $key);
                 @endphp
 
                 <div class="form-field">
                     <label for="field_{{ $key }}">{{ $label }}:</label>
 
-                    @if ($isEmployeeName)
+                    @if ($isAutocompleteUser)
                         <div class="autocomplete">
                             <input
                                 type="text"
                                 id="field_{{ $key }}"
-                                name="jawaban[{{ $key }}]"
+                                name="fields[{{ $key }}]"
                                 value="{{ $oldValue }}"
                                 data-autocomplete="user"
                                 data-search-url="{{ route('users.search') }}"
@@ -45,12 +45,12 @@
                             <div class="autocomplete__results" id="results_{{ $key }}"></div>
                         </div>
                     @elseif ($isDate)
-                        <input type="date" id="field_{{ $key }}" name="jawaban[{{ $key }}]" value="{{ $oldValue }}" required>
+                        <input type="date" id="field_{{ $key }}" name="fields[{{ $key }}]" value="{{ $oldValue }}" required>
                     @else
-                        <input type="text" id="field_{{ $key }}" name="jawaban[{{ $key }}]" value="{{ $oldValue }}" required>
+                        <input type="text" id="field_{{ $key }}" name="fields[{{ $key }}]" value="{{ $oldValue }}" required>
                     @endif
 
-                    @error('jawaban.' . $key)
+                    @error('fields.' . $key)
                         <p class="form-field__hint" style="color: var(--color-danger);">{{ $message }}</p>
                     @enderror
                 </div>

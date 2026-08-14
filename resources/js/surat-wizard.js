@@ -1,13 +1,5 @@
-// resources/js/surat-wizard.js
-//
-// Step 1 (pilih-template): filter template cards by search input.
-// Step 2 (form): autocomplete for any input with [data-autocomplete="user"],
-// backed by UserLookupController::search via the URL in [data-search-url]
-// (set from the blade view, e.g. data-search-url="{{ route('users.search') }}").
-
 document.addEventListener('DOMContentLoaded', function () {
 
-    /* ---------- Step 1: filter template grid by search ---------- */
     const searchInput = document.getElementById('templateSearch');
     const cards = document.querySelectorAll('.template-card');
 
@@ -29,7 +21,6 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    /* ---------- Step 2: "Nama Karyawan" autocomplete ---------- */
     document.querySelectorAll('[data-autocomplete="user"]').forEach((input) => {
         const resultsBox = document.getElementById('results_' + input.id.replace('field_', ''));
         const searchUrl = input.dataset.searchUrl || '/users/search';
