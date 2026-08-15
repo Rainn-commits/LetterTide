@@ -6,5 +6,39 @@ use Illuminate\Database\Eloquent\Model;
 
 class Surat extends Model
 {
-    //
+    protected $table = 'surat';
+
+    protected $fillable = [
+        'template_id',
+        'user_id',
+        'kop_surat_id',
+        'nomor_surat',
+        'jenis',
+        'tanggal_surat',
+        'file_arsip',
+    ];
+
+    protected $casts = [
+        'tanggal_surat' => 'date',
+    ];
+
+    public function template()
+    {
+        return $this->belongsTo(TemplateSurat::class, 'template_id');
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function kopSurat()
+    {
+        return $this->belongsTo(PengaturanKopSurat::class, 'kop_surat_id');
+    }
+
+    public function isiSurat()
+    {
+        return $this->hasMany(IsiSurat::class);
+    }
 }
