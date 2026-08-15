@@ -9,7 +9,7 @@
 @section('content')
 
     <div class="dash-welcome">
-        <h2 class="dash-welcome__title">Halo, {{ auth()->user()->name }} 👋</h2>
+        <h2 class="dash-welcome__title">Halo, {{ auth()->user()->name }}!</h2>
         <p class="dash-welcome__subtitle">Ringkasan aktivitas persuratan yang perlu kamu pantau.</p>
     </div>
 
