@@ -1,6 +1,5 @@
-@import url('../variables.css');
+@import url('variables.css');
 
-/* ---------- Card wrapper (step 2) ---------- */
 .card {
   background: var(--color-white);
   border-radius: var(--radius-lg);
@@ -8,7 +7,6 @@
   padding: 32px;
 }
 
-/* ---------- Search bar (step 1) ---------- */
 .surat-search {
   background: var(--color-white);
   border-radius: var(--radius-md);
@@ -46,7 +44,6 @@
   color: #A6B2B6;
 }
 
-/* ---------- Wizard step header ---------- */
 .wizard-step {
   display: flex;
   align-items: center;
@@ -75,7 +72,6 @@
   color: var(--color-ink);
 }
 
-/* ---------- Template grid (step 1) ---------- */
 .template-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
@@ -127,7 +123,6 @@
   font-size: 14.5px;
 }
 
-/* ---------- Form (step 2) ---------- */
 .surat-form {
   max-width: 640px;
 }
@@ -167,7 +162,6 @@
   font-size: 13px;
 }
 
-/* ---------- Autocomplete (Nama Karyawan) ---------- */
 .autocomplete {
   position: relative;
 }
@@ -209,7 +203,6 @@
   color: var(--color-ink-soft);
 }
 
-/* ---------- Submit button ---------- */
 .btn-block-wide {
   display: block;
   width: 100%;
@@ -234,4 +227,186 @@
 @media (max-width: 720px) {
   .template-grid { grid-template-columns: repeat(2, 1fr); }
   .btn-block-wide { max-width: none; }
+}
+
+.surat-alert {
+  border-radius: var(--radius-sm);
+  padding: 14px 18px;
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 20px;
+  max-width: 720px;
+}
+
+.surat-alert--error {
+  background: #FDEDEA;
+  color: var(--color-danger);
+}
+
+.surat-alert--success {
+  background: var(--color-bg-tint-2);
+  color: var(--color-primary-dark);
+}
+
+.surat-preview-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 720px;
+  margin-bottom: 20px;
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--color-ink);
+  border: 1.5px solid var(--color-ink);
+  font-weight: 700;
+  font-size: 14.5px;
+  padding: 11px 22px;
+  border-radius: var(--radius-pill);
+  transition: background 0.15s ease;
+}
+
+.btn-ghost:hover {
+  background: var(--color-bg-tint);
+}
+
+.btn-dark {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--color-ink);
+  color: var(--color-white);
+  border: none;
+  font-weight: 700;
+  font-size: 14.5px;
+  padding: 12px 24px;
+  border-radius: var(--radius-pill);
+  transition: background 0.15s ease, transform 0.15s ease;
+}
+
+.btn-dark:hover {
+  background: #000;
+  transform: translateY(-1px);
+}
+
+.btn-dark svg {
+  width: 17px;
+  height: 17px;
+}
+
+.surat-paper {
+  background: var(--color-white);
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 56px 64px;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-card);
+  font-family: 'Times New Roman', Times, serif;
+  color: #111;
+}
+
+.surat-paper__kop {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.surat-paper__logo {
+  width: 56px;
+  height: 56px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.surat-paper__company {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.4;
+}
+
+.surat-paper__company strong {
+  font-size: 18px;
+}
+
+.surat-paper__company span {
+  font-size: 13.5px;
+  color: #444;
+}
+
+.surat-paper__contact {
+  font-size: 12px !important;
+  color: #666 !important;
+  margin-top: 2px;
+}
+
+.surat-paper__divider {
+  border: none;
+  border-top: 2px solid var(--color-ink);
+  margin: 16px 0 20px;
+}
+
+.surat-paper__meta {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13.5px;
+  margin-bottom: 24px;
+}
+
+.surat-paper__title {
+  text-align: center;
+  font-weight: 700;
+  font-size: 16px;
+  text-decoration: underline;
+  margin-bottom: 24px;
+}
+
+.surat-paper__body {
+  font-size: 14.5px;
+  line-height: 1.9;
+  white-space: normal;
+}
+
+.surat-paper__signature {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  text-align: right;
+  margin-top: 40px;
+  font-size: 14.5px;
+}
+
+.surat-paper__signature-space {
+  height: 64px;
+}
+
+@media (max-width: 780px) {
+  .surat-paper { padding: 32px 24px; }
+  .surat-preview-toolbar { flex-direction: column-reverse; align-items: stretch; gap: 12px; }
+}
+
+@media print {
+  .sidebar,
+  .topbar,
+  .surat-preview-toolbar,
+  .wizard-step {
+    display: none !important;
+  }
+
+  .dash {
+    display: block;
+  }
+
+  .dash__content {
+    padding: 0;
+    background: none;
+  }
+
+  .surat-paper {
+    box-shadow: none;
+    border-radius: 0;
+    max-width: none;
+    margin: 0;
+    padding: 0;
+  }
 }
