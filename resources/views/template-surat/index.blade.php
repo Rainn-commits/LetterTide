@@ -8,6 +8,12 @@
 
 @section('content')
 
+    @if(session('success'))
+        <div class="alert alert-success" style="padding: 12px 16px; background-color: #d1e7dd; color: #0f5132; border: 1px solid #badbcc; border-radius: 8px; margin-bottom: 20px;">
+            {{ session('success') }}
+        </div>
+    @endif
+
     <div class="page-toolbar">
         <div class="page-toolbar__spacer"></div>
         <a href="{{ route('template-surat.create') }}" class="btn-teal">
@@ -40,7 +46,7 @@
                         <td class="template-name">{{ $template->nama_template }}</td>
                         <td>v{{ $template->versi }}</td>
                         <td>
-                            @if ($template->status === 'Aktif')
+                            @if (($template->status ?? 'Aktif') === 'Aktif')
                                 <span class="status-pill status-pill--active">Aktif</span>
                             @else
                                 <span class="status-pill status-pill--inactive">Nonaktif</span>
@@ -48,18 +54,32 @@
                         </td>
                         <td>
                             <div class="row-actions">
+                                {{-- Tombol Edit --}}
                                 <a href="{{ route('template-surat.edit', $template->id) }}" class="icon-btn" title="Edit template" aria-label="Edit template">
                                     <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                         <path d="M4 20L4.6 16.2C4.7 15.5 5 14.9 5.5 14.4L15.4 4.5C16.2 3.7 17.5 3.7 18.3 4.5L19.5 5.7C20.3 6.5 20.3 7.8 19.5 8.6L9.6 18.5C9.1 19 8.5 19.3 7.8 19.4L4 20Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
                                     </svg>
                                 </a>
-                                <a href="{{ route('template-surat.history', $template->id) }}" class="icon-btn icon-btn--ghost" title="Riwayat versi" aria-label="Riwayat versi">
-                                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M3 12a9 9 0 109-9 9 9 0 00-6.7 3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
-                                        <path d="M3 4v4h4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-                                        <path d="M12 8v4l3 2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-                                    </svg>
-                                </a>
+
+                                @if (Route::has('template-surat.history'))
+                                    <a href="{{ route('template-surat.history', $template->id) }}" class="icon-btn icon-btn--ghost" title="Riwayat versi" aria-label="Riwayat versi">
+                                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M3 12a9 9 0 109-9 9 9 0 00-6.7 3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+                                            <path d="M3 4v4h4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+                                            <path d="M12 8v4l3 2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+                                        </svg>
+                                    </a>
+                                @endif
+
+                                <form method="POST" action="{{ route('template-surat.destroy', $template->id) }}" style="display:inline">
+                                    @csrf 
+                                    @method('DELETE')
+                                    <button type="submit" class="icon-btn icon-btn--ghost" title="Nonaktifkan template" aria-label="Nonaktifkan template" onclick="return confirm('Nonaktifkan template ini?')" style="border:none; background:transparent; cursor:pointer;">
+                                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+                                        </svg>
+                                    </button>
+                                </form>
                             </div>
                         </td>
                     </tr>

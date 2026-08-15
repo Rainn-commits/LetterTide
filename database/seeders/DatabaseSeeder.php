@@ -24,18 +24,28 @@ class DatabaseSeeder extends Seeder
         ]);
 
         $superAdminRole = DB::table('roles')->where('nama_role', 'Super Admin')->first();
+        $adminRole      = DB::table('roles')->where('nama_role', 'Admin')->first();
+        $userRole       = DB::table('roles')->where('nama_role', 'User')->first();
 
         User::factory()->create([
-            'name' => 'Super Admin',
-            'email' => 'superadmin@gmail.com',
-            'password' => bcrypt('1234509'),
-            'role_id' => $superAdminRole->id,
+            'name'     => 'Super Admin',
+            'email'    => 'superadmin@gmail.com',
+            'password' => Hash::make('12345607'),
+            'role_id'  => $superAdminRole ? $superAdminRole->id : null,
         ]);
 
-        $this->call([
-            RoleSeeder::class,
-            PermissionSeeder::class,
-            RolePermissionSeeder::class,
+        User::factory()->create([
+            'name'     => 'Admin',
+            'email'    => 'admin@gmail.com',
+            'password' => Hash::make('12345608'),
+            'role_id'  => $adminRole ? $adminRole->id : null,
+        ]);
+
+        User::factory()->create([
+            'name'     => 'User',
+            'email'    => 'user@gmail.com',
+            'password' => Hash::make('12345609'),
+            'role_id'  => $userRole ? $userRole->id : null,
         ]);
     }
 }
