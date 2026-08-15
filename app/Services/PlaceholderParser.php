@@ -24,6 +24,15 @@ class PlaceholderParser
         }, $names);
     }
 
+    public static function render(string $text, array $values): string
+    {
+        return preg_replace_callback(
+            '/\{\{\s*([a-zA-Z_][a-zA-Z0-9_]*)\s*\}\}/',
+            fn($matches) => $values[$matches[1]] ?? '',
+            $text
+        );
+    }
+
     private static function inferType(string $name): string
     {
         $lower = strtolower($name);

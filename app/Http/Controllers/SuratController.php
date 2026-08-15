@@ -63,8 +63,18 @@ class SuratController extends Controller
             ]);
         }
 
-        return redirect()->route('surat.create')
+        return redirect()->route('surat.show', $surat)
             ->with('success', "Surat berhasil dibuat dengan nomor {$nomorSurat}.");
+    }
+
+    public function show(Surat $surat)
+    {
+        $surat->load(['template', 'kopSurat', 'isiSurat', 'user']);
+
+        $values = $surat->isiSurat->pluck('nilai_field', 'nama_field')->toArray();
+        $isiSuratRendered = PlaceholderParser::render($surat->template->isi_template, $values);
+
+        return view('surat.preview', compact('surat', 'isiSuratRendered'));
     }
 
     private function generateNomorSurat(TemplateSurat $template): string
