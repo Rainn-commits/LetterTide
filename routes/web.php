@@ -69,6 +69,6 @@ Route::middleware('auth')->group(function () {
     Route::put('/profile/password', [ProfileController::class, 'updatePassword'])->name('profile.password.update');
 
     Route::post('/surat/create/{template}', [SuratController::class, 'store'])->name('surat.store');
-
+    Route::get('/surat/{surat}', [SuratController::class, 'show'])->name('surat.show');
 });
 
