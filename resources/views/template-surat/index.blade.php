@@ -54,7 +54,6 @@
                         </td>
                         <td>
                             <div class="row-actions">
-                                {{-- Tombol Edit --}}
                                 <a href="{{ route('template-surat.edit', $template->id) }}" class="icon-btn" title="Edit template" aria-label="Edit template">
                                     <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                         <path d="M4 20L4.6 16.2C4.7 15.5 5 14.9 5.5 14.4L15.4 4.5C16.2 3.7 17.5 3.7 18.3 4.5L19.5 5.7C20.3 6.5 20.3 7.8 19.5 8.6L9.6 18.5C9.1 19 8.5 19.3 7.8 19.4L4 20Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>

@@ -13,24 +13,27 @@
         <h2 class="wizard-step__title">Lengkapi Data Surat</h2>
     </div>
 
+    @error('kop_surat')
+        <div class="surat-alert surat-alert--error">{{ $message }}</div>
+    @enderror
+
     <div class="card">
-        <form method="POST" action="{{ route('surat.store', $template) }}">
+        <form method="POST" action="{{ route('surat.store', $template->id) }}" class="surat-form" novalidate>
             @csrf
 
-            @foreach ($fields as $field)
+            @forelse ($fields as $field)
                 @php
-                    $key = $field['name'];
-                    $label = $field['label'];
-                    $type = $field['type'];
-                    $isDate = $type === 'date';
-                    $isAutocompleteUser = $type === 'autocomplete_user';
+                    $key = is_array($field) ? $field['key'] : $field->key;
+                    $label = is_array($field) ? $field['label'] : $field->label;
+                    $isDate = str_contains($key, 'tanggal');
+                    $isEmployeeName = $key === 'nama_karyawan';
                     $oldValue = old('fields.' . $key);
                 @endphp
 
                 <div class="form-field">
                     <label for="field_{{ $key }}">{{ $label }}:</label>
 
-                    @if ($isAutocompleteUser)
+                    @if ($isEmployeeName)
                         <div class="autocomplete">
                             <input
                                 type="text"
@@ -54,7 +57,11 @@
                         <p class="form-field__hint" style="color: var(--color-danger);">{{ $message }}</p>
                     @enderror
                 </div>
-            @endforeach
+            @empty
+                <p class="form-field__hint" style="margin-bottom: 20px;">
+                    Template ini tidak punya data yang perlu diisi. Klik tombol di bawah untuk langsung membuat suratnya.
+                </p>
+            @endforelse
 
             <button type="submit" class="btn-block-wide">Buat Nomor Surat &amp; Simpan</button>
         </form>

@@ -65,7 +65,6 @@
             <div class="form-field">
                 <label>Placeholder Terdeteksi</label>
                 <div class="placeholder-list" id="placeholderList">
-                    {{-- Diisi otomatis oleh template-editor.js saat halaman dimuat --}}
                 </div>
             </div>
 
