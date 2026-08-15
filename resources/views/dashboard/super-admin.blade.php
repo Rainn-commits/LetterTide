@@ -62,21 +62,20 @@
                 <span class="card__hint">6 bulan terakhir</span>
             </div>
 
-            @if (!empty($trafficData))
+            @if (!empty($trafficData) && array_sum($trafficData) > 0)
                 <div class="traffic-chart">
                     @php $max = max($trafficData) ?: 1; @endphp
                     @foreach ($trafficData as $label => $count)
                         @php $heightPercentage = max(6, round(($count / $max) * 100)); @endphp
                         <div class="traffic-chart__col {{ $loop->last ? 'traffic-chart__col--current' : '' }}">
-                            <div class="traffic-chart__bar" style="--bar-height: {{ $heightPercentage }}%;"></div>
+                            <div class="traffic-chart__bar" style="--bar-height: {{ $heightPercentage }}%;" title="{{ $count }} surat"></div>
                             <span class="traffic-chart__label">{{ $label }}</span>
                         </div>
                     @endforeach
                 </div>
             @else
                 <p class="traffic-chart__empty">
-                    Data traffic bulanan belum tersedia. Tambahkan <code>$trafficData</code>
-                    di <code>DashboardController::superAdmin()</code> untuk menampilkan grafik ini.
+                    Belum ada traffic surat dalam 6 bulan terakhir.
                 </p>
             @endif
         </div>

@@ -8,6 +8,8 @@
     @vite('resources/css/app.css')
 
     @yield('page-css')
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
     @yield('content')

@@ -27,7 +27,7 @@
                 <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 6.5C3 5.67 3.67 5 4.5 5H19.5C20.33 5 21 5.67 21 6.5V17.5C21 18.33 20.33 19 19.5 19H4.5C3.67 19 3 18.33 3 17.5V6.5Z" stroke="currentColor" stroke-width="1.6"/><path d="M4 6.5L12 13L20 6.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
             </span>
             <div>
-                <div class="stat-card__value">{{ number_format($stats['surat_saya']) }}</div>
+                <div class="stat-card__value">{{ number_format($stats['surat_saya'] ?? 0) }}</div>
                 <div class="stat-card__label">Surat Saya</div>
             </div>
         </div>
@@ -40,7 +40,7 @@
                 <span class="card__hint">6 bulan terakhir</span>
             </div>
 
-            @if (!empty($trafficData))
+            @if (isset($trafficData) && is_array($trafficData) && count($trafficData) > 0 && array_sum($trafficData) > 0)
                 <div class="traffic-chart">
                     @php $max = max($trafficData) ?: 1; @endphp
                     @foreach ($trafficData as $label => $count)
@@ -53,8 +53,7 @@
                 </div>
             @else
                 <p class="traffic-chart__empty">
-                    Data traffic bulanan belum tersedia. Tambahkan <code>$trafficData</code>
-                    di <code>DashboardController::user()</code> untuk menampilkan grafik ini.
+                    Kamu belum pernah membuat surat. Grafik traffic akan muncul setelah ada surat yang dibuat.
                 </p>
             @endif
         </div>
@@ -64,7 +63,7 @@
                 <h3 class="card__title">Riwayat Terakhir</h3>
             </div>
 
-            @if ($riwayatTerakhir->isNotEmpty())
+            @if (isset($riwayatTerakhir) && $riwayatTerakhir->isNotEmpty())
                 <ul class="activity-list">
                     @foreach ($riwayatTerakhir as $surat)
                         <li class="activity-item">
@@ -73,7 +72,7 @@
                             </span>
                             <div class="activity-item__body">
                                 <div class="activity-item__title">{{ $surat->template->nama_template ?? 'Template dihapus' }}</div>
-                                <div class="activity-item__meta">{{ $surat->created_at->diffForHumans() }}</div>
+                                <div class="activity-item__meta">{{ optional($surat->created_at)->diffForHumans() ?? '-' }}</div>
                             </div>
                         </li>
                     @endforeach
