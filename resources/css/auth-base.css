@@ -14,12 +14,31 @@
   position: absolute;
   top: 32px;
   left: 40px;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: var(--color-white);
+  box-shadow: var(--shadow-soft);
   display: flex;
   align-items: center;
-  gap: 8px;
-  font-weight: 700;
+  justify-content: center;
   color: var(--color-ink);
-  font-size: 15px;
+  z-index: 5;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease, color 0.15s ease;
+}
+
+.auth-page__back svg {
+  width: 20px;
+  height: 20px;
+}
+
+.auth-page__back:hover,
+.auth-page__back:active,
+.auth-page__back:focus-visible {
+  background: var(--color-primary);
+  color: var(--color-white);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-card);
 }
 
 .auth-card {
@@ -58,6 +77,11 @@
 .auth-card__logo-mark svg {
   width: 22px;
   height: 22px;
+}
+
+.auth-card__logo-img {
+  height: 44px;
+  width: auto;
 }
 
 .auth-card__brand-name {

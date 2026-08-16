@@ -7,7 +7,6 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@500;600;700;800&display=swap" rel="stylesheet">
     @vite([
-        'resources/css/pages/login.css',
         'resources/css/variables.css',
         'resources/css/auth-base.css',
         'resources/css/login.css',
@@ -18,11 +17,28 @@
 
     <div class="auth-page auth-page--login">
 
-        <a href="{{ url('/') }}" class="auth-page__back">&larr; Kembali ke beranda</a>
+        <a href="{{ url('/') }}" class="auth-page__back" aria-label="Kembali ke beranda">
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M19 12H5M5 12L12 19M5 12L12 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+        </a>
 
         <div class="auth-split">
 
             <div class="auth-split__panel">
+                <div class="auth-split__scene" aria-hidden="true">
+                    <div class="auth-split__cloud auth-split__cloud--1"></div>
+                    <div class="auth-split__cloud auth-split__cloud--2"></div>
+                    <div class="auth-split__cloud auth-split__cloud--3"></div>
+
+                    <div class="auth-split__mote" style="left:20%; top:70%; animation-duration:6s; animation-delay:0s;"></div>
+                    <div class="auth-split__mote" style="left:65%; top:75%; animation-duration:7.5s; animation-delay:1.2s;"></div>
+                    <div class="auth-split__mote" style="left:40%; top:80%; animation-duration:6.8s; animation-delay:2.4s;"></div>
+                    <div class="auth-split__mote" style="left:80%; top:65%; animation-duration:8s; animation-delay:0.6s;"></div>
+                    <div class="auth-split__mote" style="left:15%; top:55%; animation-duration:7s; animation-delay:3s;"></div>
+                    <div class="auth-split__mote" style="left:55%; top:60%; animation-duration:6.4s; animation-delay:1.8s;"></div>
+                </div>
+
                 <div>
                     <svg class="auth-split__panel-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M3 6.5C3 5.67157 3.67157 5 4.5 5H19.5C20.3284 5 21 5.67157 21 6.5V17.5C21 18.3284 20.3284 19 19.5 19H4.5C3.67157 19 3 18.3284 3 17.5V6.5Z" stroke="white" stroke-width="1.3" stroke-linejoin="round"/>
@@ -32,7 +48,7 @@
                 <div>
                     <h2 class="auth-split__panel-title">Satu pintu masuk untuk semua peran</h2>
                     <p class="auth-split__panel-copy">
-                        Super Admin, Admin, dan User masuk lewat form yang sama —
+                        Super Admin, Admin dan User masuk lewat form yang sama |
                         LetterTide akan mengarahkan Anda ke dashboard sesuai hak akses setelah login.
                     </p>
                 </div>
@@ -40,9 +56,7 @@
 
             <div class="auth-split__form">
                 <div class="auth-card__brand">
-                    <span class="auth-card__logo-mark">
-                        @include('partials.logo-icon')
-                    </span>
+                    <img src="{{ asset('images/logo.png') }}" alt="Logo LetterTide" class="auth-card__logo-img">
                     <span class="auth-card__brand-name">LetterTide</span>
                 </div>
 
