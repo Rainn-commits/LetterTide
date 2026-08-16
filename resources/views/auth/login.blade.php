@@ -39,7 +39,7 @@
                     <div class="auth-split__mote" style="left:55%; top:60%; animation-duration:6.4s; animation-delay:1.8s;"></div>
                 </div>
 
-                <div>
+                <div class="auth-split__panel-icon-wrap">
                     <svg class="auth-split__panel-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M3 6.5C3 5.67157 3.67157 5 4.5 5H19.5C20.3284 5 21 5.67157 21 6.5V17.5C21 18.3284 20.3284 19 19.5 19H4.5C3.67157 19 3 18.3284 3 17.5V6.5Z" stroke="white" stroke-width="1.3" stroke-linejoin="round"/>
                         <path d="M4 6.5L12 13L20 6.5" stroke="white" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
@@ -48,8 +48,7 @@
                 <div>
                     <h2 class="auth-split__panel-title">Satu pintu masuk untuk semua peran</h2>
                     <p class="auth-split__panel-copy">
-                        Super Admin, Admin dan User masuk lewat form yang sama |
-                        LetterTide akan mengarahkan Anda ke dashboard sesuai hak akses setelah login.
+                        Super Admin, Admin dan User masuk lewat form yang sama. LetterTide akan mengarahkan Anda ke dashboard sesuai hak akses setelah login.
                     </p>
                 </div>
             </div>
@@ -78,9 +77,14 @@
                         <div class="auth-field__control">
                             <input type="password" id="password" name="password" required>
                             <button type="button" class="auth-field__toggle" data-toggle-password="password" aria-label="Tampilkan password">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <svg class="auth-field__toggle-icon--show" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M2 12C2 12 5.5 5 12 5C18.5 5 22 12 22 12C22 12 18.5 19 12 19C5.5 19 2 12 2 12Z" stroke="currentColor" stroke-width="1.6"/>
                                     <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.6"/>
+                                </svg>
+                                <svg class="auth-field__toggle-icon--hide" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:none;">
+                                    <path d="M3 3L21 21" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+                                    <path d="M10.58 10.58a2 2 0 002.83 2.83" stroke="currentColor" stroke-width="1.6"/>
+                                    <path d="M9.88 5.09A9.77 9.77 0 0112 5c6.5 0 10 7 10 7a17.9 17.9 0 01-2.16 3.19M6.61 6.61A17.9 17.9 0 002 12s3.5 7 10 7a9.76 9.76 0 004.11-.88" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
                                 </svg>
                             </button>
                         </div>

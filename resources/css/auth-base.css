@@ -41,6 +41,17 @@
   box-shadow: var(--shadow-card);
 }
 
+@media (max-width: 860px) {
+  .auth-page {
+    padding-top: 96px;
+  }
+
+  .auth-page__back {
+    top: 24px;
+    left: 24px;
+  }
+}
+
 .auth-card {
   background: var(--color-white);
   width: 100%;

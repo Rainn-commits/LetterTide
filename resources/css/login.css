@@ -97,10 +97,54 @@
   max-width: 280px;
 }
 
+.auth-split__panel-icon-wrap {
+  position: relative;
+  width: 64px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.auth-split__panel-icon-wrap::before,
+.auth-split__panel-icon-wrap::after {
+  content: "";
+  position: absolute;
+  inset: -8px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.55);
+  animation: icon-pulse 2.6s ease-out infinite;
+}
+
+.auth-split__panel-icon-wrap::after {
+  animation-delay: 1.3s;
+}
+
+@keyframes icon-pulse {
+  0%   { transform: scale(0.7); opacity: 0.8; }
+  80%  { transform: scale(1.5); opacity: 0; }
+  100% { transform: scale(1.5); opacity: 0; }
+}
+
 .auth-split__panel-icon {
   position: relative;
   width: 64px;
   height: 64px;
+  animation: icon-bob 3.2s ease-in-out infinite;
+  transform-origin: center;
+}
+
+@keyframes icon-bob {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50%      { transform: translateY(-6px) rotate(-4deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .auth-split__panel-icon-wrap::before,
+  .auth-split__panel-icon-wrap::after,
+  .auth-split__panel-icon {
+    animation: none;
+  }
 }
 
 .auth-split__form {
