@@ -28,9 +28,22 @@
         </div>
     </div>
 
-    <script>
-        document.getElementById('sidebarToggle')?.addEventListener('click', function () {
-            document.getElementById('sidebar')?.classList.toggle('is-open');
+<script>
+        const sidebar = document.getElementById('sidebar');
+        const sidebarToggle = document.getElementById('sidebarToggle');
+
+        sidebarToggle?.addEventListener('click', function (e) {
+            e.stopPropagation(); 
+            sidebar?.classList.toggle('is-open');
+        });
+
+        document.addEventListener('click', function (e) {
+            if (sidebar?.classList.contains('is-open') && 
+                !sidebar.contains(e.target) && 
+                !sidebarToggle.contains(e.target)) {
+                
+                sidebar.classList.remove('is-open');
+            }
         });
     </script>
 
