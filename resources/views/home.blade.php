@@ -92,7 +92,8 @@
             <div class="hero__card hero__card--main">
                 <div class="hero__card-float" data-depth="0.03">
                     <div class="hero__card-bar">
-                        <span></span><span></span><span></span>
+                        <span class="hero__card-control hero__card-control--min" aria-hidden="true">&minus;</span>
+                        <span class="hero__card-control hero__card-control--close" aria-hidden="true">&times;</span>
                     </div>
                     <div class="hero__card-body">
                         <div class="hero__line hero__line--title"></div>
