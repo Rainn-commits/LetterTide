@@ -9,6 +9,7 @@ use App\Models\TemplateSurat;
 use App\Services\PlaceholderParser;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class SuratController extends Controller
 {
@@ -75,6 +76,37 @@ class SuratController extends Controller
         $isiSuratRendered = PlaceholderParser::render($surat->template->isi_template, $values);
 
         return view('surat.preview', compact('surat', 'isiSuratRendered'));
+    }
+
+    public function cetak(Surat $surat)
+    {
+        $surat->load(['template', 'kopSurat', 'isiSurat', 'user']);
+
+        $values = $surat->isiSurat->pluck('nilai_field', 'nama_field')->toArray();
+        $isiSuratRendered = PlaceholderParser::render($surat->template->isi_template, $values);
+
+        return view('surat.cetak', compact('surat', 'isiSuratRendered'));
+    }
+
+    public function uploadArsip(Request $request, Surat $surat)
+    {
+        $request->validate([
+            'file_arsip' => ['required', 'file', 'mimes:pdf,zip,rar', 'max:5120'],
+        ]);
+
+        if ($request->hasFile('file_arsip')) {
+            if ($surat->file_arsip && Storage::disk('public')->exists($surat->file_arsip)) {
+                Storage::disk('public')->delete($surat->file_arsip);
+            }
+
+            $path = $request->file('file_arsip')->store('arsip_surat', 'public');
+
+            $surat->update([
+                'file_arsip' => $path,
+            ]);
+        }
+
+        return back()->with('success', 'File arsip surat berhasil diunggah.');
     }
 
     private function generateNomorSurat(TemplateSurat $template): string

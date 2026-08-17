@@ -70,5 +70,11 @@ Route::middleware('auth')->group(function () {
 
     Route::post('/surat/create/{template}', [SuratController::class, 'store'])->name('surat.store');
     Route::get('/surat/{surat}', [SuratController::class, 'show'])->name('surat.show');
+
+    Route::get('/arsip', [ArsipController::class, 'index'])->name('arsip.index');
+
+    Route::get('/surat/{surat}/cetak', [SuratController::class, 'cetak'])->name('surat.cetak');
+
+    Route::post('/surat/{surat}/upload-arsip', [SuratController::class, 'uploadArsip'])->name('surat.upload-arsip');
 });
 

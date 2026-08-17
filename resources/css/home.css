@@ -196,6 +196,7 @@ body,
   height: 460px;
   z-index: 2;
   pointer-events: none;
+  text-align: left; 
 }
 
 .hero__glow {
