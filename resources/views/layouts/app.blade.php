@@ -3,15 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>@yield('page-title', 'LetterFlow')</title>
+    <title>@yield('page-title', 'LetterTide')</title>
 
-    @vite('resources/css/app.css')
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@500;600;700;800&display=swap" rel="stylesheet">
+
+    @vite(['resources/css/app.css', 'resources/css/app-shell.css'])
 
     @yield('page-css')
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-    @yield('content')
+
+    <div class="dash">
+        @include('partials.sidebar')
+
+        <div class="dash__main">
+            @include('partials.topbar')
+
+            <main class="dash__content">
+                @yield('content')
+            </main>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('sidebarToggle')?.addEventListener('click', function () {
+            document.getElementById('sidebar')?.classList.toggle('is-open');
+        });
+    </script>
+
+    @yield('page-js')
 </body>
 </html>
