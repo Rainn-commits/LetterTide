@@ -61,13 +61,24 @@
     ];
 @endphp
 
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+
 <aside class="sidebar" id="sidebar">
-    <a href="{{ route($dashboardRoute) }}" class="sidebar__brand">
-        <span class="sidebar__logo-mark">
-            @include('partials.logo-icon')
-        </span>
-        <span class="sidebar__brand-name">LetterTide</span>
-    </a>
+    <div class="sidebar__header">
+        <a href="{{ route($dashboardRoute) }}" class="sidebar__brand">
+            <span class="sidebar__logo-mark">
+                @include('partials.logo-icon')
+            </span>
+            <span class="sidebar__brand-name">LetterTide</span>
+        </a>
+        
+        <button type="button" class="sidebar__close-btn" id="sidebarCloseBtn" aria-label="Tutup Sidebar">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+        </button>
+    </div>
 
     <nav class="sidebar__nav">
         @foreach ($menuItems as $item)

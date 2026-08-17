@@ -21,8 +21,39 @@
 .sidebar__brand {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 12px;
   padding: 24px 24px 20px;
+}
+
+.sidebar__close-btn {
+  display: none;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  color: var(--color-ink);
+}
+
+.sidebar__close-btn svg {
+  width: 22px;
+  height: 22px;
+}
+
+.sidebar-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 15;
+  transition: opacity 0.2s ease;
+}
+
+.sidebar-overlay.is-active {
+  display: block;
 }
 
 .sidebar__logo-mark {
@@ -266,8 +297,23 @@
 }
 
 @media (max-width: 960px) {
-  .sidebar { position: fixed; left: -264px; z-index: 20; transition: left 0.2s ease; box-shadow: var(--shadow-card); }
-  .sidebar.is-open { left: 0; }
-  .topbar__toggle { display: inline-flex; }
-  .dash__content { padding: 20px; }
+  .sidebar { 
+    position: fixed; 
+    left: -264px; 
+    z-index: 20; 
+    transition: left 0.2s ease; 
+    box-shadow: var(--shadow-card); 
+  }
+  .sidebar.is-open { 
+    left: 0; 
+  }
+  .sidebar__close-btn { 
+    display: inline-flex; 
+  }
+  .topbar__toggle { 
+    display: inline-flex; 
+  }
+  .dash__content { 
+    padding: 20px; 
+  }
 }
