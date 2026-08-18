@@ -46,7 +46,7 @@
                     </svg>
                 </div>
                 <div>
-                    <h2 class="auth-split__panel-title">Satu Pintu Masuk Untuk Semua Role</h2>
+                    <h2 class="auth-split__panel-title">Satu Pintu Masuk Untuk Semua peran</h2>
                     <p class="auth-split__panel-copy">
                         Super Admin, Admin dan User masuk lewat form yang sama. LetterTide akan mengarahkan Anda ke dashboard sesuai hak akses setelah login.
                     </p>

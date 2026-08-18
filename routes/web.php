@@ -25,7 +25,7 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     
-    Route::get('/dashboard/superadmin', [DashboardController::class, 'super-admin'])->name('dashboard.super-admin');
+    Route::get('/dashboard/superadmin', [DashboardController::class, 'superAdmin'])->name('dashboard.super-admin');
     Route::get('/dashboard/admin', [DashboardController::class, 'admin'])->name('dashboard.admin');
     Route::get('/dashboard/user', [DashboardController::class, 'user'])->name('dashboard.user');
 

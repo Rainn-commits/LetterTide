@@ -46,7 +46,7 @@ class DashboardController extends Controller
         $trafficData = $this->getTrafficData();
         $aktivitasTerbaru = Surat::with(['template', 'user'])->latest()->limit(5)->get();
 
-        return view('dashboard.superadmin', compact('stats', 'aktivitasTerbaru', 'trafficData'));
+        return view('dashboard.super-admin', compact('stats', 'aktivitasTerbaru', 'trafficData'));
     }
 
     public function admin()

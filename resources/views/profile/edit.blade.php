@@ -54,7 +54,7 @@
         <div class="card">
             <h3 class="card__title">Ubah Password</h3>
 
-            <form method="POST" action="{{ route('profile.update-password') }}" novalidate>
+            <form method="POST" action="{{ route('profile.password.update') }}" novalidate>
                 @csrf
                 @method('PUT')
 
