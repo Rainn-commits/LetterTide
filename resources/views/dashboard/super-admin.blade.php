@@ -18,9 +18,14 @@
             </div>
         </a>
 
-        <a href="{{ Route::has('pengguna.index') ? route('pengguna.index') : '#' }}" class="stat-card">
+        <a href="{{ Route::has('pengguna.index') ? route('pengguna.index') : url('/pengguna') }}" class="stat-card">
             <span class="stat-card__icon stat-card__icon--dark">
-                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M17 20v-1.5a3.5 3.5 0 00-3.5-3.5h-5A3.5 3.5 0 005 18.5V20" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><circle cx="9.5" cy="8" r="3" stroke="currentColor" stroke-width="1.6"/><path d="M16 8.5a2.5 2.5 0 010 5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M19 20v-1.5a3.3 3.3 0 00-2-3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="9" cy="7" r="4"></circle>
+                    <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
+                    <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                </svg>
             </span>
             <div>
                 <div class="stat-card__value">{{ number_format($stats['total_pengguna']) }}</div>

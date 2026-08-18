@@ -340,3 +340,51 @@
   .topbar__toggle { display: inline-flex; }
   .dash__content { padding: 20px; }
 }
+
+.sidebar::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 80px;
+    height: 150px;
+    pointer-events: none;
+    opacity: 0.35;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 200'%3E%3Cpath d='M100 0 C70 40, 65 90, 95 150' fill='none' stroke='%230d9488' stroke-width='2' stroke-dasharray='3 2'/%3E%3Cpath d='M75 45 Q60 38 65 28 Q80 32 75 45 Z' fill='%230d9488'/%3E%3Cpath d='M65 95 Q50 88 55 78 Q70 82 65 95 Z' fill='%2314b8a6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: top right;
+    z-index: 1;
+}
+
+.sidebar::after {
+    content: '';
+    position: absolute;
+    bottom: 140px; 
+    left: 0;
+    right: 0;
+    height: 100px;
+    pointer-events: none;
+    opacity: 0.28; 
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 100'%3E%3C!-- Arus Gelombang Laut --%3E%3Cpath d='M-10 50 C 50 80, 110 20, 180 60 C 240 90, 280 40, 320 70' fill='none' stroke='%230d9488' stroke-width='2'/%3E%3Cpath d='M-10 70 C 60 95, 130 45, 200 75 C 250 95, 290 55, 320 80' fill='none' stroke='%2314b8a6' stroke-width='1.5' stroke-dasharray='4 3'/%3E%3C!-- Icon Amplop Melayang di Atas Arus --%3E%3Cg transform='translate(195, 15) rotate(-10) scale(0.6)' fill='none' stroke='%230d9488' stroke-width='1.8'%3E%3Crect x='0' y='0' width='22' height='15' rx='2' fill='%23ffffff'/%3E%3Cpath d='M0 0 L11 9 L22 0'/%3E%3C/g%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+    z-index: 1;
+}
+
+.sidebar::before {
+    opacity: 0.6 !important;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 200'%3E%3Cpath d='M100 0 C70 40, 65 90, 95 150' fill='none' stroke='%230d9488' stroke-width='2' stroke-dasharray='3 2'/%3E%3Cpath d='M75 45 Q60 38 65 28 Q80 32 75 45 Z' fill='%230d9488'/%3E%3Cpath d='M65 95 Q50 88 55 78 Q70 82 65 95 Z' fill='%2314b8a6'/%3E%3C!-- Bintang Magis --%3E%3Cpath d='M50 35 L52 40 L57 42 L52 44 L50 49 L48 44 L43 42 L48 40 Z' fill='%23f59e0b' opacity='0.8'/%3E%3Ccircle cx='70' cy='120' r='2' fill='%2338bdf8'/%3E%3Ccircle cx='40' cy='80' r='1.5' fill='%23f59e0b'/%3E%3C/svg%3E") !important;
+}
+
+.sidebar::after {
+    opacity: 0.5 !important;
+    bottom: 150px !important; 
+    animation: magicFloat 5s ease-in-out infinite alternate;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 100'%3E%3Cpath d='M-10 50 C 50 80, 110 20, 180 60 C 240 90, 280 40, 320 70' fill='none' stroke='%230d9488' stroke-width='2'/%3E%3Cpath d='M-10 70 C 60 95, 130 45, 200 75 C 250 95, 290 55, 320 80' fill='none' stroke='%2314b8a6' stroke-width='1.5' stroke-dasharray='4 3'/%3E%3C!-- Amplop Magis Menyala --%3E%3Cg transform='translate(190, 15) rotate(-10) scale(0.65)' fill='none' stroke='%230d9488' stroke-width='1.8'%3E%3Crect x='0' y='0' width='22' height='15' rx='2' fill='%23ffffff' filter='drop-shadow(0px 0px 4px %2338bdf8)'/%3E%3Cpath d='M0 0 L11 9 L22 0'/%3E%3C/g%3E%3C!-- Partikel Percikan Sihir --%3E%3Cpath d='M170 25 L171 28 L174 29 L171 30 L170 33 L169 30 L166 29 L169 28 Z' fill='%23f59e0b'/%3E%3Ccircle cx='225' cy='35' r='2' fill='%2338bdf8'/%3E%3Ccircle cx='130' cy='55' r='1.5' fill='%23f59e0b'/%3E%3C/svg%3E") !important;
+}
+
+@keyframes magicFloat {
+    0% { transform: translateY(0px); }
+    100% { transform: translateY(-6px); }
+}

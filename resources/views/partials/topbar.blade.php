@@ -8,19 +8,10 @@
 
     @php    
         $roleName = auth()->user()->role->nama_role ?? 'User';
-    
-        $subtitles = [
-            'Super Admin' => 'Ringkasan seluruh aktivitas persuratan di LetterTide.',
-            'Admin'       => 'Ringkasan aktivitas persuratan yang perlu kamu pantau.',
-            'User'        => 'Ini ringkasan surat kamu di LetterTide.',
-        ];
-
-        $subtitle = $subtitles[$roleName] ?? 'Ringkasan aktivitas persuratan Anda di LetterTide.';
     @endphp
 
         <div class="topbar__greeting">
             <h1 class="topbar__title">Halo, {{ $roleName }}!</h1>
-            <p class="topbar__subtitle">{{ $subtitle }}</p>
         </div>
     </div>
 
