@@ -3,7 +3,7 @@
 @section('page-title', 'Kelola Template Surat')
 
 @section('page-css')
-    @vite('resources/css/index.css')
+    @vite('resources/css/template-surat.css')
 @endsection
 
 @section('content')

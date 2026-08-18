@@ -3,7 +3,7 @@
 @section('page-title', 'Tambah Template Baru')
 
 @section('page-css')
-    @vite('resources/css/create.css')
+    @vite('resources/css/template-surat.css')
 @endsection
 
 @section('content')

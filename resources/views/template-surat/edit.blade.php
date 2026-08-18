@@ -3,7 +3,7 @@
 @section('page-title', 'Edit Template Surat')
 
 @section('page-css')
-    @vite('resources/css/edit.css')
+    @vite('resources/css/template-surat.css')
 @endsection
 
 @section('content')

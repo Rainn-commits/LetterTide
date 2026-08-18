@@ -90,11 +90,11 @@
                         <td>{{ $surat->tanggal_surat->format('d/m/Y') }}</td>
                         <td>
                             @if ($surat->file_arsip)
-                                <a href="{{ asset('storage/' . $surat->file_arsip) }}" target="_blank" style="color: #0f5132; font-weight: 600;">
-                                    Lihat File
+                                <a href="{{ asset('storage/' . $surat->file_arsip) }}" target="_blank" class="file-badge-link">
+                                    📄 Lihat File
                                 </a>
                             @else
-                                <span style="color: #6c757d;">Belum ada</span>
+                                <span class="badge-empty">Belum ada</span>
                             @endif
                         </td>
                         <td style="text-align: right;">
