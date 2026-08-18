@@ -2,12 +2,14 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\UserLookupController;
 use App\Http\Controllers\TemplateSuratController;
 use App\Http\Controllers\SuratController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ArsipController;
+
 
 Route::get('/', function () {
     return view('home');
@@ -20,6 +22,11 @@ Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 Route::get('/forgot-password', function () {
     return view('auth.forgot-password');
 })->name('password.request');
+
+Route::post('/forgot-password', function () {
+    session()->flash('reset_requested', true);
+    return redirect()->back();
+})->name('password.request.submit');
 
 Route::middleware('auth')->group(function () { 
 
