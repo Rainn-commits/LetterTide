@@ -7,7 +7,7 @@ use App\Http\Controllers\TemplateSuratController;
 use App\Http\Controllers\SuratController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfileController;
-
+use App\Http\Controllers\ArsipController;
 
 Route::get('/', function () {
     return view('home');
@@ -31,50 +31,31 @@ Route::middleware('auth')->group(function () {
     Route::get('/template-surat/{templateSurat}/edit', [TemplateSuratController::class, 'edit'])->name('template-surat.edit');
     Route::put('/template-surat/{templateSurat}', [TemplateSuratController::class, 'update'])->name('template-surat.update');
     Route::delete('/template-surat/{templateSurat}', [TemplateSuratController::class, 'destroy'])->name('template-surat.destroy');
+    Route::post('/template-surat/parse-preview', [TemplateSuratController::class, 'parsePreview'])->name('template-surat.parse-preview');
 
-    Route::post('/template-surat/parse-preview', [TemplateSuratController::class, 'parsePreview'])
-        ->name('template-surat.parse-preview');
-    
-    Route::middleware(['auth'])->group(function () {
-        Route::get('/surat/create', [SuratController::class, 'create'])->name('surat.create');
-        Route::get('/surat/create/{template}', [SuratController::class, 'form'])->name('surat.form');
-    });
+    Route::get('/surat/create', [SuratController::class, 'create'])->name('surat.create');
+    Route::get('/surat/create/{template}', [SuratController::class, 'form'])->name('surat.form');
+    Route::post('/surat/create/{template}', [SuratController::class, 'store'])->name('surat.store');
+    Route::get('/surat/{surat}', [SuratController::class, 'show'])->name('surat.show');
+    Route::get('/surat/{surat}/cetak', [SuratController::class, 'cetak'])->name('surat.cetak');
+    Route::post('/surat/{surat}/upload-arsip', [SuratController::class, 'uploadArsip'])->name('surat.upload-arsip');
 
-    Route::middleware('role:Super Admin')->group(function () {
-        Route::get('/dashboard/super-admin', fn() => view('dashboard.super-admin'))->name('dashboard.superadmin');
-    });
-
-    Route::middleware('role:Super Admin,Admin')->group(function () {
-        Route::get('/dashboard/admin', fn() => view('dashboard.admin'))->name('dashboard.admin');
-    });
-
-    Route::middleware('role:Super Admin,Admin,User')->group(function () {
-        Route::get('/dashboard/user', fn() => view('dashboard.user'))->name('dashboard.user');
-    });
-
-    Route::middleware(['auth', 'role:Super Admin'])->group(function () {
-        Route::get('/dashboard/super-admin', [DashboardController::class, 'superAdmin'])->name('dashboard.superadmin');
-    });
-
-    Route::middleware(['auth', 'role:Super Admin,Admin'])->group(function () {
-        Route::get('/dashboard/admin', [DashboardController::class, 'admin'])->name('dashboard.admin');
-    });
-
-    Route::middleware(['auth', 'role:Super Admin,Admin,User'])->group(function () {
-        Route::get('/dashboard/user', [DashboardController::class, 'user'])->name('dashboard.user');
-    });
+    Route::get('/arsip', [ArsipController::class, 'index'])->name('arsip.index');
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::put('/profile/password', [ProfileController::class, 'updatePassword'])->name('profile.password.update');
 
-    Route::post('/surat/create/{template}', [SuratController::class, 'store'])->name('surat.store');
-    Route::get('/surat/{surat}', [SuratController::class, 'show'])->name('surat.show');
+    Route::middleware('role:Super Admin')->group(function () {
+        Route::get('/dashboard/super-admin', [DashboardController::class, 'superAdmin'])->name('dashboard.super-admin');
+    });
 
-    Route::get('/arsip', [ArsipController::class, 'index'])->name('arsip.index');
+    Route::middleware('role:Super Admin,Admin')->group(function () {
+        Route::get('/dashboard/admin', [DashboardController::class, 'admin'])->name('dashboard.admin');
+    });
 
-    Route::get('/surat/{surat}/cetak', [SuratController::class, 'cetak'])->name('surat.cetak');
+    Route::middleware('role:Super Admin,Admin,User')->group(function () {
+        Route::get('/dashboard/user', [DashboardController::class, 'user'])->name('dashboard.user');
+    });
 
-    Route::post('/surat/{surat}/upload-arsip', [SuratController::class, 'uploadArsip'])->name('surat.upload-arsip');
 });
-

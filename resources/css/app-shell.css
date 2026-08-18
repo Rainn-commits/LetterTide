@@ -217,7 +217,28 @@
 .topbar__left {
   display: flex;
   align-items: center;
-  gap: 18px;
+  gap: 12px;
+}
+
+.topbar__greeting {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.topbar__title {
+    font-size: 1.125rem; 
+    font-weight: 700;
+    color: #0f172a;
+    margin: 0;
+    line-height: 1.2;
+}
+
+.topbar__subtitle {
+    font-size: 0.813rem; 
+    color: #64748b;
+    margin: 0;
+    line-height: 1.2;
 }
 
 .topbar__toggle {
