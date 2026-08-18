@@ -1,18 +1,21 @@
 @php
-    $currentRole = auth()->user()->role->nama_role ?? null;
+    $roleName = auth()->user()->role->nama_role ?? '';
 
-    $dashboardRoute = match ($currentRole) {
-        'Super Admin' => 'dashboard.superadmin',
-        'Admin'       => 'dashboard.admin',
-        'User'        => 'dashboard.user',
-        default       => 'dashboard.user',
+    $dashboardRoute = match (true) {
+        str_contains($roleName, 'Super Admin') => 'dashboard.superadmin',
+        str_contains($roleName, 'Admin')       => 'dashboard.admin',
+        default                                => 'dashboard.user',
     };
+
+    if (!Route::has($dashboardRoute)) {
+        $dashboardRoute = 'dashboard';
+    }
 
     $menuItems = [
         [
             'label' => 'Dashboard',
             'route' => $dashboardRoute,
-            'active' => request()->routeIs('dashboard.*'),
+            'active' => request()->routeIs('dashboard*'),
             'roles' => ['Super Admin', 'Admin', 'User'],
             'icon' => 'grid',
         ],
@@ -71,9 +74,11 @@
 
     <nav class="sidebar__nav">
         @foreach ($menuItems as $item)
-            @continue($currentRole && !in_array($currentRole, $item['roles']))
-            <a href="{{ Route::has($item['route']) ? route($item['route']) : '#' }}"
+            @continue($roleName && !in_array($roleName, $item['roles']))
+
+            <a href="{{ Route::has($item['route']) ? route($item['route']) : url('/dashboard') }}"
                class="sidebar__link {{ $item['active'] ? 'is-active' : '' }}">
+                
                 @switch($item['icon'])
                     @case('grid')
                         <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="3" width="8" height="8" rx="1.5" stroke="currentColor" stroke-width="1.6"/><rect x="13" y="3" width="8" height="8" rx="1.5" stroke="currentColor" stroke-width="1.6"/><rect x="3" y="13" width="8" height="8" rx="1.5" stroke="currentColor" stroke-width="1.6"/><rect x="13" y="13" width="8" height="8" rx="1.5" stroke="currentColor" stroke-width="1.6"/></svg>
@@ -110,7 +115,7 @@
     </nav>
 
     <div class="sidebar__footer">
-        <a href="{{ route('profile.edit') }}" class="sidebar__profile-link" title="Kelola Profil">
+        <a href="{{ Route::has('profile.edit') ? route('profile.edit') : '#' }}" class="sidebar__profile-link" title="Kelola Profil">
             <span class="sidebar__avatar">{{ Str::of(auth()->user()->name ?? 'U')->explode(' ')->map(fn ($w) => strtoupper($w[0] ?? ''))->take(2)->implode('') }}</span>
             <div class="sidebar__user">
                 <div class="sidebar__user-name">{{ auth()->user()->name ?? 'Pengguna' }}</div>

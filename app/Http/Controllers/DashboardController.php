@@ -79,4 +79,21 @@ class DashboardController extends Controller
 
         return view('dashboard.user', compact('stats', 'riwayatTerakhir', 'trafficData'));
     }
+
+    public function index()
+    {
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+        $roleName = $user?->role?->nama_role ?? '';
+
+        if (str_contains($roleName, 'Super Admin')) {
+            return $this->superAdmin();
+        } 
+        
+        if (str_contains($roleName, 'Admin')) {
+            return $this->admin();
+        }
+
+        return $this->user();
+    }
 }

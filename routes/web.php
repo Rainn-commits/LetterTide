@@ -23,6 +23,12 @@ Route::get('/forgot-password', function () {
 
 Route::middleware('auth')->group(function () { 
 
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    
+    Route::get('/dashboard/superadmin', [DashboardController::class, 'superadmin'])->name('dashboard.superadmin');
+    Route::get('/dashboard/admin', [DashboardController::class, 'admin'])->name('dashboard.admin');
+    Route::get('/dashboard/user', [DashboardController::class, 'user'])->name('dashboard.user');
+
     Route::get('/users/search', [UserLookupController::class, 'search'])->name('users.search');
 
     Route::get('/template-surat', [TemplateSuratController::class, 'index'])->name('template-surat.index');
@@ -46,16 +52,5 @@ Route::middleware('auth')->group(function () {
     Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::put('/profile/password', [ProfileController::class, 'updatePassword'])->name('profile.password.update');
 
-    Route::middleware('role:Super Admin')->group(function () {
-        Route::get('/dashboard/super-admin', [DashboardController::class, 'superAdmin'])->name('dashboard.super-admin');
-    });
-
-    Route::middleware('role:Super Admin,Admin')->group(function () {
-        Route::get('/dashboard/admin', [DashboardController::class, 'admin'])->name('dashboard.admin');
-    });
-
-    Route::middleware('role:Super Admin,Admin,User')->group(function () {
-        Route::get('/dashboard/user', [DashboardController::class, 'user'])->name('dashboard.user');
-    });
-
+    Route::get('/dashboard', [App\Http\Controllers\DashboardController::class, 'index'])->name('dashboard');
 });

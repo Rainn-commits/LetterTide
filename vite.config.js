@@ -7,11 +7,10 @@ export default defineConfig({
     plugins: [
         laravel({
             input: [
+                'resources/views/home.blade.php',
                 'resources/css/app.css',
-                'resources/js/app.js',
                 'resources/css/variables.css',
                 'resources/css/home.css',
-                'resources/views/home.blade.php',
                 'resources/css/login.css',
                 'resources/css/forgot-password.css',
                 'resources/css/surat.css',
@@ -23,6 +22,7 @@ export default defineConfig({
                 'resources/js/password-toggle.js',
                 'resources/js/hero-parallax.js',
                 'resources/js/template-editor.js',
+                'resources/js/app.js',
                 'resources/js/surat-wizard.js'
             ],
             refresh: true,

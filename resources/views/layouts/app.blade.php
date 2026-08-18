@@ -8,7 +8,12 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@500;600;700;800&display=swap" rel="stylesheet">
 
-    @vite(['resources/css/app.css', 'resources/css/app-shell.css'])
+    @vite([
+        'resources/css/app.css', 
+        'resources/css/app-shell.css',
+        'resources/css/surat.css',
+        'resources/css/template-surat.css'
+    ])
 
     @yield('page-css')
 
