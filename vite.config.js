@@ -23,7 +23,8 @@ export default defineConfig({
                 'resources/js/hero-parallax.js',
                 'resources/js/template-editor.js',
                 'resources/js/app.js',
-                'resources/js/surat-wizard.js'
+                'resources/js/surat-wizard.js',
+                'resources/js/dashboard-interactions.js'
             ],
             refresh: true,
             fonts: [
