@@ -10,7 +10,6 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ArsipController;
 
-
 Route::get('/', function () {
     return view('home');
 })->name('home');
@@ -23,10 +22,7 @@ Route::get('/forgot-password', function () {
     return view('auth.forgot-password');
 })->name('password.request');
 
-Route::post('/forgot-password', function () {
-    session()->flash('reset_requested', true);
-    return redirect()->back();
-})->name('password.request.submit');
+Route::post('/forgot-password', [ForgotPasswordController::class, 'submitRequest'])->name('password.request.submit');
 
 Route::middleware('auth')->group(function () { 
 
@@ -58,6 +54,4 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::put('/profile/password', [ProfileController::class, 'updatePassword'])->name('profile.password.update');
-
-    Route::get('/dashboard', [App\Http\Controllers\DashboardController::class, 'index'])->name('dashboard');
 });
