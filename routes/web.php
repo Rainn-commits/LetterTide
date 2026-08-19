@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\NotificationController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
@@ -26,6 +27,8 @@ Route::post('/forgot-password', [ForgotPasswordController::class, 'submitRequest
 
 Route::middleware('auth')->group(function () { 
 
+    Route::post('/notifications/{notification}/mark-as-read', [NotificationController::class, 'markAsRead'])->name('notifications.markAsRead');
+    
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     
     Route::get('/dashboard/superadmin', [DashboardController::class, 'superAdmin'])->name('dashboard.super-admin');
