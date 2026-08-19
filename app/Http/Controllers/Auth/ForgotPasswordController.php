@@ -13,24 +13,12 @@ class ForgotPasswordController extends Controller
     public function submitRequest(Request $request)
     {
         $admins = User::whereHas('role', function($q) {
-            $q->whereIn('nama_role', ['Admin', 'Super Admin', 'superadmin']);
+            $q->whereIn('nama_role', ['Admin', 'Super Admin']);
         })->get();
 
         foreach ($admins as $admin) {
-            DB::table('notifications')->insert([
-                'id'              => (string) Str::uuid(),
-                'type'            => 'App\Notifications\ResetPasswordRequested',
-                'notifiable_type' => 'App\Models\User',
-                'notifiable_id'   => $admin->id,
-                'data'            => json_encode([
-                    'title'   => 'Permintaan Reset Password',
-                    'message' => 'Ada pengguna yang meminta reset password.',
-                ]),
-                'read_at'         => null,
-                'created_at'      => now(),
-                'updated_at'      => now(),
-            ]);
-        }
+            $admin->notify(new ResetPasswordRequested());
+        }    
 
         session()->flash('reset_requested', true);
 
