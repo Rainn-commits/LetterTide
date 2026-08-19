@@ -10,13 +10,14 @@ use App\Http\Controllers\SuratController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ArsipController;
+use App\Http\Controllers\KopSuratController;
 
 Route::get('/', function () {
     return view('home');
 })->name('home');
 
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
-Route::post('/login', [LoginController::class, 'login'])->name('login.attempt'); 
+Route::post('/login', [LoginController::class, 'login'])->name('login.attempt');
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
 Route::get('/forgot-password', function () {
@@ -25,12 +26,12 @@ Route::get('/forgot-password', function () {
 
 Route::post('/forgot-password', [ForgotPasswordController::class, 'submitRequest'])->name('password.request.submit');
 
-Route::middleware('auth')->group(function () { 
+Route::middleware('auth')->group(function () {
 
     Route::post('/notifications/{notification}/mark-as-read', [NotificationController::class, 'markAsRead'])->name('notifications.markAsRead');
-    
+
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-    
+
     Route::get('/dashboard/superadmin', [DashboardController::class, 'superAdmin'])->name('dashboard.super-admin');
     Route::get('/dashboard/admin', [DashboardController::class, 'admin'])->name('dashboard.admin');
     Route::get('/dashboard/user', [DashboardController::class, 'user'])->name('dashboard.user');
@@ -53,6 +54,12 @@ Route::middleware('auth')->group(function () {
     Route::post('/surat/{surat}/upload-arsip', [SuratController::class, 'uploadArsip'])->name('surat.upload-arsip');
 
     Route::get('/arsip', [ArsipController::class, 'index'])->name('arsip.index');
+
+    Route::middleware('role:Super Admin,Admin')->group(function () {
+        Route::get('/kop-surat', [KopSuratController::class, 'index'])->name('kop-surat.index');
+        Route::get('/kop-surat/create', [KopSuratController::class, 'create'])->name('kop-surat.create');
+        Route::post('/kop-surat', [KopSuratController::class, 'store'])->name('kop-surat.store');
+    });
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
