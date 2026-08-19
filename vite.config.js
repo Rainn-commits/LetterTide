@@ -24,7 +24,8 @@ export default defineConfig({
                 'resources/js/template-editor.js',
                 'resources/js/app.js',
                 'resources/js/surat-wizard.js',
-                'resources/js/dashboard-interactions.js'
+                'resources/js/dashboard-interactions.js',
+                'resources/css/kop-surat.css'
             ],
             refresh: true,
             fonts: [

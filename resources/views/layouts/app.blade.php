@@ -12,7 +12,10 @@
         'resources/css/app.css', 
         'resources/css/app-shell.css',
         'resources/css/surat.css',
-        'resources/css/template-surat.css'
+        'resources/css/template-surat.css',
+        'resources/css/app.css', 
+        'resources/css/kop-surat.css', 
+        'resources/js/app.js'
     ])
 
     @yield('page-css')

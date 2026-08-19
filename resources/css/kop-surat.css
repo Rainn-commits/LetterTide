@@ -1,0 +1,185 @@
+h2 {
+    color: #008793;
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-top: 0;
+    margin-bottom: 24px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid rgba(0, 195, 208, 0.3);
+    letter-spacing: -0.01em;
+}
+
+h3 {
+    color: #00737d;
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-top: 32px;
+    margin-bottom: 16px;
+}
+
+form[action*="kop-surat"] {
+    background: #ffffff;
+    border: 1px solid rgba(0, 195, 208, 0.25);
+    border-radius: 12px;
+    padding: 28px;
+    box-shadow: 0 4px 20px -2px rgba(0, 195, 208, 0.08);
+    max-width: 680px;
+}
+
+form[action*="kop-surat"] label {
+    display: inline-block;
+    font-weight: 600;
+    font-size: 0.875rem;
+    color: #334155;
+    margin-top: 14px;
+    margin-bottom: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.025em;
+}
+
+form[action*="kop-surat"] input[type="text"],
+form[action*="kop-surat"] input[type="email"],
+form[action*="kop-surat"] input[type="file"] {
+    width: 100%;
+    max-width: 100%;
+    padding: 10px 14px;
+    margin-bottom: 4px;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 8px;
+    box-sizing: border-box;
+    font-size: 0.95rem;
+    color: #0f172a;
+    background-color: #fafafa;
+    transition: all 0.2s ease-in-out;
+}
+
+form[action*="kop-surat"] input[type="text"]:focus,
+form[action*="kop-surat"] input[type="email"]:focus {
+    outline: none;
+    border-color: #00C3D0;
+    background-color: #ffffff;
+    box-shadow: 0 0 0 4px rgba(0, 195, 208, 0.18);
+}
+
+form[action*="kop-surat"] input[type="file"] {
+    padding: 8px;
+    background-color: rgba(0, 195, 208, 0.04);
+    border: 1.5px dashed rgba(0, 195, 208, 0.4);
+    cursor: pointer;
+}
+
+form[action*="kop-surat"] input[type="file"]:hover {
+    background-color: rgba(0, 195, 208, 0.08);
+}
+
+form[action*="kop-surat"] img {
+    border-radius: 8px;
+    border: 1px solid rgba(0, 195, 208, 0.3);
+    padding: 6px;
+    background: #ffffff;
+    box-shadow: 0 2px 8px rgba(0, 195, 208, 0.1);
+    vertical-align: middle;
+}
+
+form[action*="kop-surat"] small {
+    color: #64748b;
+    font-size: 0.825rem;
+    margin-left: 6px;
+}
+
+form[action*="kop-surat"] button[type="submit"] {
+    background: linear-gradient(135deg, #00C3D0 0%, #009ea8 100%);
+    color: #ffffff;
+    font-weight: 600;
+    font-size: 0.95rem;
+    padding: 11px 24px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-top: 20px;
+    box-shadow: 0 4px 12px rgba(0, 195, 208, 0.3);
+    transition: all 0.2s ease-in-out;
+}
+
+form[action*="kop-surat"] button[type="submit"]:hover {
+    background: linear-gradient(135deg, #00d5e3 0%, #008b94 100%);
+    box-shadow: 0 6px 16px rgba(0, 195, 208, 0.4);
+    transform: translateY(-1px);
+}
+
+a[href*="kop-surat/create"] {
+    display: inline-flex;
+    align-items: center;
+    background: linear-gradient(135deg, #00C3D0 0%, #009ea8 100%);
+    color: #ffffff !important;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.9rem;
+    padding: 10px 20px;
+    border-radius: 8px;
+    margin-top: 14px;
+    margin-bottom: 24px;
+    box-shadow: 0 4px 12px rgba(0, 195, 208, 0.25);
+    transition: all 0.2s ease;
+}
+
+a[href*="kop-surat/create"]:hover {
+    background: linear-gradient(135deg, #00d5e3 0%, #008b94 100%);
+    box-shadow: 0 6px 16px rgba(0, 195, 208, 0.35);
+    transform: translateY(-1px);
+}
+
+p:has(+ img), 
+p:has(+ table), 
+p:has(+ a) {
+    background-color: rgba(0, 195, 208, 0.12);
+    border-left: 4px solid #00C3D0;
+    color: #005b63;
+    padding: 12px 16px;
+    border-radius: 6px;
+    font-weight: 500;
+    margin-bottom: 20px;
+}
+
+table[border="1"] {
+    width: 100%;
+    max-width: 680px;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin-top: 12px;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid rgba(0, 195, 208, 0.25) !important;
+    box-shadow: 0 2px 12px rgba(0, 195, 208, 0.06);
+}
+
+table[border="1"] td {
+    padding: 12px 18px;
+    border: none;
+    border-bottom: 1px solid rgba(0, 195, 208, 0.12);
+    font-size: 0.925rem;
+    color: #334155;
+}
+
+table[border="1"] tr:last-child td {
+    border-bottom: none;
+}
+
+table[border="1"] tr:nth-child(even) {
+    background-color: rgba(0, 195, 208, 0.03);
+}
+
+table[border="1"] tr:nth-child(odd) {
+    background-color: #ffffff;
+}
+
+table[border="1"] tr:hover {
+    background-color: rgba(0, 195, 208, 0.09);
+}
+
+table[border="1"] td:first-child {
+    font-weight: 700;
+    color: #008793;
+    width: 130px;
+    background-color: rgba(0, 195, 208, 0.06);
+}
