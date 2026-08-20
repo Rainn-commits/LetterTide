@@ -27,7 +27,7 @@ class DatabaseSeeder extends Seeder
         $adminRole      = DB::table('roles')->where('nama_role', 'Admin')->first();
         $userRole       = DB::table('roles')->where('nama_role', 'User')->first();
 
-        User::firstOrCreate(
+        User::updateOrCreate(
             ['email' => 'superadmin@gmail.com'],
             [
                 'name'     => 'Super Admin',
@@ -36,7 +36,7 @@ class DatabaseSeeder extends Seeder
             ]
         );
 
-        User::firstOrCreate(
+        User::updateOrCreate(
             ['email' => 'admin@gmail.com'],
             [
                 'name'     => 'Admin',
@@ -45,7 +45,7 @@ class DatabaseSeeder extends Seeder
             ]
         );
 
-        User::firstOrCreate(
+        User::updateOrCreate(
             ['email' => 'user1@gmail.com'],
             [
                 'name'     => 'User1',
@@ -54,7 +54,7 @@ class DatabaseSeeder extends Seeder
             ]
         );
 
-        User::firstOrCreate(
+        User::updateOrCreate(
             ['email' => 'user2@gmail.com'],
             [
                 'name'     => 'User2',
@@ -63,7 +63,7 @@ class DatabaseSeeder extends Seeder
             ]
         );
 
-        User::firstOrCreate(
+        User::updateOrCreate(
             ['email' => 'user3@gmail.com'],
             [
                 'name'     => 'User3',
