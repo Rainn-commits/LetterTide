@@ -19,13 +19,14 @@ export default defineConfig({
                 'resources/css/dashboard.css',
                 'resources/css/profile.css',                
                 'resources/css/auth-base.css',
+                'resources/css/pengguna.css',
+                'resources/css/kop-surat.css',
                 'resources/js/password-toggle.js',
                 'resources/js/hero-parallax.js',
                 'resources/js/template-editor.js',
                 'resources/js/app.js',
                 'resources/js/surat-wizard.js',
-                'resources/js/dashboard-interactions.js',
-                'resources/css/kop-surat.css'
+                'resources/js/dashboard-interactions.js'
             ],
             refresh: true,
             fonts: [
