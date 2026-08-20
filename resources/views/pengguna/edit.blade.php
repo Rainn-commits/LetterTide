@@ -1,28 +1,45 @@
 @extends('layouts.app')
+
+@push('styles')
+    @vite('resources/css/pengguna.css')
+@endpush
+
 @section('content')
-<h2>Edit Pengguna</h2>
+<div class="pengguna-container">
+    <h2>Edit Pengguna</h2><br>
 
-@if($errors->any())<p style="color:red">{{ $errors->first() }}</p>@endif
+    @if($errors->any())
+        <div class="alert-message alert-danger">{{ $errors->first() }}</div>
+    @endif
 
-<form method="POST" action="{{ route('pengguna.update', $pengguna) }}">
-    @csrf
-    @method('PUT')
+    <div class="form-card"> 
+        <form method="POST" action="{{ route('pengguna.update', $pengguna) }}">
+            @csrf
+            @method('PUT')
 
-    <label>Nama</label><br>
-    <input type="text" name="name" value="{{ old('name', $pengguna->name) }}" required><br>
+            <div class="form-group">
+                <label>Nama</label>
+                <input type="text" name="name" class="form-control-pengguna" value="{{ old('name', $pengguna->name) }}" required>
+            </div>
 
-    <label>Email</label><br>
-    <input type="email" name="email" value="{{ old('email', $pengguna->email) }}" required><br>
+            <div class="form-group">
+                <label>Email</label>
+                <input type="email" name="email" class="form-control-pengguna" value="{{ old('email', $pengguna->email) }}" required>
+            </div>
 
-    <label>Role</label><br>
-    <select name="role_id" required>
-        @foreach($roles as $role)
-            <option value="{{ $role->id }}" {{ old('role_id', $pengguna->role_id) == $role->id ? 'selected' : '' }}>
-                {{ $role->nama_role }}
-            </option>
-        @endforeach
-    </select><br>
+            <div class="form-group">
+                <label>Role</label>
+                <select name="role_id" class="form-control-pengguna" required>
+                    @foreach($roles as $role)
+                        <option value="{{ $role->id }}" {{ old('role_id', $pengguna->role_id) == $role->id ? 'selected' : '' }}>
+                            {{ $role->nama_role }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
 
-    <button type="submit">Simpan Perubahan</button>
-</form>
+            <button type="submit" class="btn-pengguna btn-primary-pengguna">Simpan Perubahan</button>
+        </form>
+    </div>
+</div>
 @endsection
