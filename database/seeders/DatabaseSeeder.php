@@ -27,25 +27,49 @@ class DatabaseSeeder extends Seeder
         $adminRole      = DB::table('roles')->where('nama_role', 'Admin')->first();
         $userRole       = DB::table('roles')->where('nama_role', 'User')->first();
 
-        User::factory()->create([
-            'name'     => 'Super Admin',
-            'email'    => 'superadmin@gmail.com',
-            'password' => Hash::make('12345607'),
-            'role_id'  => $superAdminRole ? $superAdminRole->id : null,
-        ]);
+        User::firstOrCreate(
+            ['email' => 'superadmin@gmail.com'],
+            [
+                'name'     => 'Super Admin',
+                'password' => Hash::make('o123456789n'),
+                'role_id'  => $superAdminRole?->id,
+            ]
+        );
 
-        User::factory()->create([
-            'name'     => 'Admin',
-            'email'    => 'admin@gmail.com',
-            'password' => Hash::make('12345608'),
-            'role_id'  => $adminRole ? $adminRole->id : null,
-        ]);
+        User::firstOrCreate(
+            ['email' => 'admin@gmail.com'],
+            [
+                'name'     => 'Admin',
+                'password' => Hash::make('t123456789o'),
+                'role_id'  => $adminRole?->id,
+            ]
+        );
 
-        User::factory()->create([
-            'name'     => 'User',
-            'email'    => 'user@gmail.com',
-            'password' => Hash::make('12345609'),
-            'role_id'  => $userRole ? $userRole->id : null,
-        ]);
+        User::firstOrCreate(
+            ['email' => 'user1@gmail.com'],
+            [
+                'name'     => 'User1',
+                'password' => Hash::make('on12345678901'),
+                'role_id'  => $userRole?->id,
+            ]
+        );
+
+        User::firstOrCreate(
+            ['email' => 'user2@gmail.com'],
+            [
+                'name'     => 'User2',
+                'password' => Hash::make('tw12345678902'),
+                'role_id'  => $userRole?->id,
+            ]
+        );
+
+        User::firstOrCreate(
+            ['email' => 'user3@gmail.com'],
+            [
+                'name'     => 'User3',
+                'password' => Hash::make('tr12345678903'),
+                'role_id'  => $userRole?->id,
+            ]
+        );
     }
 }
