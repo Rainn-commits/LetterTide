@@ -69,28 +69,67 @@
             </div>
         @endauth
 
-        <a href="{{ route('profile.edit') }}" class="topbar__avatar" title="Kelola Profil">
-            {{ Str::of(auth()->user()->name ?? 'U')->explode(' ')->map(fn ($w) => strtoupper($w[0] ?? ''))->take(2)->implode('') }}
-        </a>
-    </div>
+        <div style="position: relative; display: inline-block;">
+            <button type="button" class="topbar__avatar" id="profileDropdownBtn" aria-label="Menu Profil" style="cursor: pointer; border: none; outline: none;">
+                {{ Str::of(auth()->user()->name ?? 'U')->explode(' ')->map(fn ($w) => strtoupper($w[0] ?? ''))->take(2)->implode('') }}
+            </button>
+
+            <div id="profileDropdownMenu" style="display: none; position: absolute; right: 0; top: calc(100% + 8px); width: 170px; background: #ffffff; border-radius: 8px; box-shadow: 0 4px 16px rgba(0,0,0,0.12); border: 1px solid #eaeaea; z-index: 1000; overflow: hidden;">
+                <a href="{{ route('profile.edit') }}" style="display: flex; align-items: center; gap: 10px; padding: 10px 14px; text-decoration: none; color: #333; font-size: 13px; font-weight: 500;" onmouseover="this.style.background='#f5f5f5'" onmouseout="this.style.background='transparent'">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
+                    Profil Saya
+                </a>
+
+                <div style="height: 1px; background: #eee; margin: 2px 0;"></div>
+
+                <form action="{{ route('logout') }}" method="POST" style="margin: 0;">
+                    @csrf
+                    <button type="submit" style="display: flex; align-items: center; gap: 10px; padding: 10px 14px; width: 100%; border: none; background: transparent; color: #dc3545; font-size: 13px; font-weight: 500; cursor: pointer; text-align: left;" onmouseover="this.style.background='#fff0f0'" onmouseout="this.style.background='transparent'">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                            <polyline points="16 17 21 12 16 7"></polyline>
+                            <line x1="21" y1="12" x2="9" y2="12"></line>
+                        </svg>
+                        Log Out
+                    </button>
+                </form>
+            </div>
+        </div>
 </header>
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        const btn = document.getElementById('notifDropdownBtn');
-        const menu = document.getElementById('notifDropdownMenu');
+        const notifBtn = document.getElementById('notifDropdownBtn');
+        const notifMenu = document.getElementById('notifDropdownMenu');
+        const profileBtn = document.getElementById('profileDropdownBtn');
+        const profileMenu = document.getElementById('profileDropdownMenu');
 
-        if (btn && menu) {
-            btn.addEventListener('click', function (e) {
+        if (notifBtn && notifMenu) {
+            notifBtn.addEventListener('click', function (e) {
                 e.stopPropagation();
-                menu.classList.toggle('is-active');
-            });
-
-            document.addEventListener('click', function (e) {
-                if (!menu.contains(e.target) && !btn.contains(e.target)) {
-                    menu.classList.remove('is-active');
-                }
+                if (profileMenu) profileMenu.style.display = 'none';
+                notifMenu.classList.toggle('is-active');
             });
         }
+
+        if (profileBtn && profileMenu) {
+            profileBtn.addEventListener('click', function (e) {
+                e.stopPropagation();
+                if (notifMenu) notifMenu.classList.remove('is-active');
+                profileMenu.style.display = (profileMenu.style.display === 'block') ? 'none' : 'block';
+            });
+        }
+
+        document.addEventListener('click', function (e) {
+            if (notifMenu && !notifMenu.contains(e.target) && notifBtn && !notifBtn.contains(e.target)) {
+                notifMenu.classList.remove('is-active');
+            }
+            if (profileMenu && !profileMenu.contains(e.target) && profileBtn && !profileBtn.contains(e.target)) {
+                profileMenu.style.display = 'none';
+            }
+        });
     });
 </script>

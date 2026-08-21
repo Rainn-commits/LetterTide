@@ -20,6 +20,13 @@
             'icon' => 'grid',
         ],
         [
+            'label'  => 'Kelola Profil',
+            'route'  => 'profile.edit',
+            'active' => request()->routeIs('profile.*'),
+            'roles'  => ['Super Admin', 'Admin', 'User'], 
+            'icon'   => 'user',
+        ],
+        [
             'label' => 'Buat Surat',
             'route' => 'surat.create',
             'active' => request()->routeIs('surat.*'),
@@ -56,10 +63,17 @@
         ],
         [
             'label' => 'Kelola Role dan Hak Akses',
-            'route' => 'role-akses.index',
+            'route' => 'role.index',
             'active' => request()->routeIs('role-akses.*'),
             'roles' => ['Super Admin'],
             'icon' => 'shield',
+        ],
+        [
+            'label' => 'Log Aktivitas Sistem',
+            'route' => 'log-aktivitas.index',
+            'active' => request()->routeIs('log-aktivitas.*'),
+            'roles' => ['Super Admin'],
+            'icon' => 'log',        
         ],
     ];
 @endphp
@@ -83,6 +97,12 @@
                     @case('grid')
                         <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="3" width="8" height="8" rx="1.5" stroke="currentColor" stroke-width="1.6"/><rect x="13" y="3" width="8" height="8" rx="1.5" stroke="currentColor" stroke-width="1.6"/><rect x="3" y="13" width="8" height="8" rx="1.5" stroke="currentColor" stroke-width="1.6"/><rect x="13" y="13" width="8" height="8" rx="1.5" stroke="currentColor" stroke-width="1.6"/></svg>
                         @break
+                    @case('user')
+                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+                            <circle cx="12" cy="7" r="4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    @break
                     @case('mail')
                         <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 6.5C3 5.67 3.67 5 4.5 5H19.5C20.33 5 21 5.67 21 6.5V17.5C21 18.33 20.33 19 19.5 19H4.5C3.67 19 3 18.33 3 17.5V6.5Z" stroke="currentColor" stroke-width="1.6"/><path d="M4 6.5L12 13L20 6.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
                         @break
@@ -105,6 +125,14 @@
                         @break
                     @case('shield')
                         <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 8v4M12 16h.01" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+                        @break
+                    @case('log')
+                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M4 21V14M4 10V3M12 21V12M12 8V3M20 21V16M20 12V3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+                            <circle cx="4" cy="12" r="2" stroke="currentColor" stroke-width="1.6"/>
+                            <circle cx="12" cy="10" r="2" stroke="currentColor" stroke-width="1.6"/>
+                            <circle cx="20" cy="14" r="2" stroke="currentColor" stroke-width="1.6"/>
+                        </svg>
                         @break
                     @default
                         <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="8" r="3.5" stroke="currentColor" stroke-width="1.6"/><path d="M5 20c0-3.3 3.1-6 7-6s7 2.7 7 6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>

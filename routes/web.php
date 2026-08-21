@@ -81,7 +81,7 @@ Route::middleware('auth')->group(function () {
         Route::post('/surat/{surat}/upload-arsip', [SuratController::class, 'uploadArsip'])->name('surat.upload-arsip');
     });
 
-        Route::middleware(['auth', 'permission:role.manage'])->group(function () {
+    Route::middleware(['auth', 'permission:role.manage'])->group(function () {
         Route::get('/role', [RoleController::class, 'index'])->name('role.index');
         Route::get('/role/create', [RoleController::class, 'create'])->name('role.create');
         Route::post('/role', [RoleController::class, 'store'])->name('role.store');
