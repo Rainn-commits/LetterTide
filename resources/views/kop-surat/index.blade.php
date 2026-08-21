@@ -1,4 +1,11 @@
 @extends('layouts.app')
+
+@section('page-title', 'Pengaturan Kop Surat')
+
+@section('page-css')
+    @vite('resources/css/kop-surat.css')
+@endsection
+
 @section('content')
 <h2>Pengaturan Kop Surat</h2>
 

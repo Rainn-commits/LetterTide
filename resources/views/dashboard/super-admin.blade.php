@@ -112,6 +112,8 @@
         </div>
     </div>
 
+@endsection
+
 @section('page-js')
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     @vite('resources/js/dashboard-interactions.js')
