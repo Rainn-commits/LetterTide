@@ -1,24 +1,44 @@
 @extends('layouts.app')
+
+@section('page-title', 'Tambah Role Baru')
+
+@section('page-css')
+    @vite('resources/css/role.css')
+@endsection
+
 @section('content')
-<h2>Tambah Role Baru</h2>
 
-@if($errors->any())<p style="color:red">{{ $errors->first() }}</p>@endif
+    <div class="card">
+        @if($errors->any())
+            <div class="role-alert role-alert--error">{{ $errors->first() }}</div>
+        @endif
 
-<form method="POST" action="{{ route('role.store') }}">
-    @csrf
+        <form method="POST" action="{{ route('role.store') }}" class="role-form">
+            @csrf
 
-    <label>Nama Role</label><br>
-    <input type="text" name="nama_role" value="{{ old('nama_role') }}" required><br><br>
+            <div class="form-field">
+                <label for="nama_role">Nama Role:</label>
+                <input type="text" id="nama_role" name="nama_role" value="{{ old('nama_role') }}" required>
+            </div>
 
-    <label>Hak Akses:</label><br>
-    @foreach($permissions as $permission)
-        <label>
-            <input type="checkbox" name="permissions[]" value="{{ $permission->id }}"
-                {{ in_array($permission->id, old('permissions', [])) ? 'checked' : '' }}>
-            {{ $permission->nama_permission }}
-        </label><br>
-    @endforeach
+            <div class="form-field">
+                <label>Hak Akses:</label>
+                <div class="permission-grid">
+                    @foreach($permissions as $permission)
+                        <label class="permission-item">
+                            <input type="checkbox" name="permissions[]" value="{{ $permission->id }}"
+                                {{ in_array($permission->id, old('permissions', [])) ? 'checked' : '' }}>
+                            <span>{{ $permission->nama_permission }}</span>
+                        </label>
+                    @endforeach
+                </div>
+            </div>
 
-    <br><button type="submit">Simpan</button>
-</form>
+            <div class="form-actions">
+                <button type="submit" class="btn-dark">Simpan</button>
+                <a href="{{ route('role.index') }}" class="btn-ghost">Batal</a>
+            </div>
+        </form>
+    </div>
+
 @endsection

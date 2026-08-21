@@ -20,6 +20,7 @@ export default defineConfig({
                 'resources/css/auth-base.css',
                 'resources/css/pengguna.css',
                 'resources/css/kop-surat.css',
+                'resources/css/role.css',
                 'resources/js/password-toggle.js',
                 'resources/js/hero-parallax.js',
                 'resources/js/template-editor.js',
