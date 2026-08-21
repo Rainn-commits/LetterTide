@@ -9,7 +9,6 @@ export default defineConfig({
             input: [
                 'resources/views/home.blade.php',
                 'resources/css/app.css',
-                'resources/css/variables.css',
                 'resources/css/home.css',
                 'resources/css/login.css',
                 'resources/css/forgot-password.css',
