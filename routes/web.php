@@ -1,17 +1,18 @@
 <?php
 
-use App\Http\Controllers\NotificationController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\UserLookupController;
-use App\Http\Controllers\TemplateSuratController;
-use App\Http\Controllers\SuratController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ArsipController;
 use App\Http\Controllers\KopSuratController;
 use App\Http\Controllers\PenggunaController;
+use App\Http\Controllers\TemplateSuratController;
+use App\Http\Controllers\SuratController;
+use App\Http\Controllers\RoleController;
 
 Route::get('/', function () {
     return view('home');
@@ -30,43 +31,25 @@ Route::post('/forgot-password', [ForgotPasswordController::class, 'submitRequest
 Route::middleware('auth')->group(function () {
 
     Route::post('/notifications/{notification}/mark-as-read', [NotificationController::class, 'markAsRead'])->name('notifications.markAsRead');
-
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-
     Route::get('/dashboard/superadmin', [DashboardController::class, 'superAdmin'])->name('dashboard.super-admin');
     Route::get('/dashboard/admin', [DashboardController::class, 'admin'])->name('dashboard.admin');
     Route::get('/dashboard/user', [DashboardController::class, 'user'])->name('dashboard.user');
-
     Route::get('/users/search', [UserLookupController::class, 'search'])->name('users.search');
-
-    Route::get('/template-surat', [TemplateSuratController::class, 'index'])->name('template-surat.index');
-    Route::get('/template-surat/create', [TemplateSuratController::class, 'create'])->name('template-surat.create');
-    Route::post('/template-surat', [TemplateSuratController::class, 'store'])->name('template-surat.store');
-    Route::get('/template-surat/{templateSurat}/edit', [TemplateSuratController::class, 'edit'])->name('template-surat.edit');
-    Route::put('/template-surat/{templateSurat}', [TemplateSuratController::class, 'update'])->name('template-surat.update');
-    Route::delete('/template-surat/{templateSurat}', [TemplateSuratController::class, 'destroy'])->name('template-surat.destroy');
-    Route::post('/template-surat/parse-preview', [TemplateSuratController::class, 'parsePreview'])->name('template-surat.parse-preview');
-
-    Route::get('/surat/create', [SuratController::class, 'create'])->name('surat.create');
-    Route::get('/surat/create/{template}', [SuratController::class, 'form'])->name('surat.form');
-    Route::post('/surat/create/{template}', [SuratController::class, 'store'])->name('surat.store');
-    Route::get('/surat/{surat}', [SuratController::class, 'show'])->name('surat.show');
-    Route::get('/surat/{surat}/cetak', [SuratController::class, 'cetak'])->name('surat.cetak');
-    Route::post('/surat/{surat}/upload-arsip', [SuratController::class, 'uploadArsip'])->name('surat.upload-arsip');
-
-    Route::get('/arsip', [ArsipController::class, 'index'])->name('arsip.index');
-
-    Route::middleware('role:Super Admin,Admin')->group(function () {
-        Route::get('/kop-surat', [KopSuratController::class, 'index'])->name('kop-surat.index');
-        Route::get('/kop-surat/create', [KopSuratController::class, 'create'])->name('kop-surat.create');
-        Route::post('/kop-surat', [KopSuratController::class, 'store'])->name('kop-surat.store');
-    });
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::put('/profile/password', [ProfileController::class, 'updatePassword'])->name('profile.password.update');
 
-    Route::middleware(['auth', 'role:Super Admin,Admin'])->group(function () {
+    Route::get('/arsip', [ArsipController::class, 'index'])->name('arsip.index');
+
+    Route::middleware('permission:kopsurat.manage')->group(function () {
+        Route::get('/kop-surat', [KopSuratController::class, 'index'])->name('kop-surat.index');
+        Route::get('/kop-surat/create', [KopSuratController::class, 'create'])->name('kop-surat.create');
+        Route::post('/kop-surat', [KopSuratController::class, 'store'])->name('kop-surat.store');
+    });
+
+    Route::middleware('permission:user.manage')->group(function () {
         Route::get('/pengguna', [PenggunaController::class, 'index'])->name('pengguna.index');
         Route::get('/pengguna/create', [PenggunaController::class, 'create'])->name('pengguna.create');
         Route::post('/pengguna', [PenggunaController::class, 'store'])->name('pengguna.store');
@@ -74,5 +57,36 @@ Route::middleware('auth')->group(function () {
         Route::put('/pengguna/{pengguna}', [PenggunaController::class, 'update'])->name('pengguna.update');
         Route::put('/pengguna/{pengguna}/reset-password', [PenggunaController::class, 'resetPassword'])->name('pengguna.reset-password');
         Route::delete('/pengguna/{pengguna}', [PenggunaController::class, 'destroy'])->name('pengguna.destroy');
+    });
+
+    Route::middleware('permission:template.manage')->group(function () {
+        Route::get('/template-surat', [TemplateSuratController::class, 'index'])->name('template-surat.index');
+        Route::get('/template-surat/create', [TemplateSuratController::class, 'create'])->name('template-surat.create');
+        Route::post('/template-surat', [TemplateSuratController::class, 'store'])->name('template-surat.store');
+        Route::get('/template-surat/{templateSurat}/edit', [TemplateSuratController::class, 'edit'])->name('template-surat.edit');
+        Route::put('/template-surat/{templateSurat}', [TemplateSuratController::class, 'update'])->name('template-surat.update');
+        Route::delete('/template-surat/{templateSurat}', [TemplateSuratController::class, 'destroy'])->name('template-surat.destroy');
+        Route::post('/template-surat/parse-preview', [TemplateSuratController::class, 'parsePreview'])->name('template-surat.parse-preview');
+    });
+
+    Route::middleware('permission:surat.create')->group(function () {
+        Route::get('/surat/create', [SuratController::class, 'create'])->name('surat.create');
+        Route::get('/surat/create/{template}', [SuratController::class, 'form'])->name('surat.form');
+        Route::post('/surat/create/{template}', [SuratController::class, 'store'])->name('surat.store');
+    });
+
+    Route::middleware('permission:surat.print')->group(function () {
+        Route::get('/surat/{surat}', [SuratController::class, 'show'])->name('surat.show');
+        Route::get('/surat/{surat}/cetak', [SuratController::class, 'cetak'])->name('surat.cetak');
+        Route::post('/surat/{surat}/upload-arsip', [SuratController::class, 'uploadArsip'])->name('surat.upload-arsip');
+    });
+
+        Route::middleware(['auth', 'permission:role.manage'])->group(function () {
+        Route::get('/role', [RoleController::class, 'index'])->name('role.index');
+        Route::get('/role/create', [RoleController::class, 'create'])->name('role.create');
+        Route::post('/role', [RoleController::class, 'store'])->name('role.store');
+        Route::get('/role/{role}/edit', [RoleController::class, 'edit'])->name('role.edit');
+        Route::put('/role/{role}', [RoleController::class, 'update'])->name('role.update');
+        Route::delete('/role/{role}', [RoleController::class, 'destroy'])->name('role.destroy');
     });
 });
