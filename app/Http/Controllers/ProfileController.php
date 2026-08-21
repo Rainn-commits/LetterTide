@@ -6,8 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\Rules\Password;
+use Illuminate\Validation\Rule;
 
 class ProfileController extends Controller
 {
@@ -24,29 +23,33 @@ class ProfileController extends Controller
         /** @var User $user */
         $user = Auth::user();
 
-        $validated = $request->validate([
+        $userRole = $user->role->nama_role ?? '';
+        $isAdminOrSuperAdmin = in_array($userRole, ['Super Admin', 'Admin']);
+
+        $rules = [
             'name' => ['required', 'string', 'max:100'],
-        ]);
+        ];
+
+        if ($isAdminOrSuperAdmin) {
+            $rules['email'] = [
+                'required', 
+                'string', 
+                'email', 
+                'max:255', 
+                Rule::unique('users')->ignore($user->id) // Email harus unik, tapi abaikan email milik sendiri
+            ];
+        }
+
+        $validated = $request->validate($rules);
 
         $user->name = $validated['name'];
+
+        if ($isAdminOrSuperAdmin) {
+            $user->email = $validated['email'];
+        }
+
         $user->save();
 
         return back()->with('success', 'Profil berhasil diperbarui.');
-    }
-
-    public function updatePassword(Request $request)
-    {
-        $validated = $request->validate([
-            'current_password' => ['required', 'current_password'],
-            'password'         => ['required', 'confirmed', Password::min(8)],
-        ]);
-
-        /** @var User $user */
-        $user = Auth::user();
-
-        $user->password = Hash::make($validated['password']);
-        $user->save();
-
-        return back()->with('success', 'Password berhasil diubah.');
     }
 }
