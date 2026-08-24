@@ -16,8 +16,14 @@ class Surat extends Model
         'jenis',
         'tanggal_surat',
         'file_arsip',
+        'jumlah_akses',
     ];
 
+        public function evaluasiRetensi()
+    {
+        return $this->hasOne(EvaluasiRetensi::class);
+    }
+    
     protected $casts = [
         'tanggal_surat' => 'date',
     ];
