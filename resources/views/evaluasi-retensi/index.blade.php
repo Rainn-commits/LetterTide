@@ -3,7 +3,7 @@
 @section('page-title', 'Evaluasi Retensi Arsip')
 
 @section('page-css')
-    @vite('resources/css/pages/evaluasi-retensi.css')
+    @vite('resources/css/evaluasi-retensi.css')
 @endsection
 
 @section('content')
