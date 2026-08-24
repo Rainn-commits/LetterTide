@@ -1,0 +1,103 @@
+.rk-page {
+    padding: 24px;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.rk-page__title {
+    font-size: 22px;
+    font-weight: 600;
+    margin-bottom: 6px;
+    color: #101820;
+}
+
+.rk-page__subtitle {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 20px;
+}
+
+.rk-alert {
+    padding: 12px 16px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    font-size: 14px;
+}
+
+.rk-alert--success { background: #E6F9F0; color: #0B8A4A; }
+.rk-alert--warning { background: #FFF6E0; color: #A87400; }
+.rk-alert--error   { background: #FDEAEA; color: #C43D3D; }
+
+.rk-total-bobot {
+    display: inline-block;
+    padding: 8px 16px;
+    border-radius: 8px;
+    background: #F0F0F0;
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 20px;
+}
+
+.rk-total-bobot--ok    { background: #E6F9F0; color: #0B8A4A; }
+.rk-total-bobot--warn  { background: #FFF6E0; color: #A87400; }
+
+.rk-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+}
+
+.rk-table th {
+    background: #101820;
+    color: #fff;
+    text-align: left;
+    padding: 12px 16px;
+    font-size: 13px;
+}
+
+.rk-table td {
+    padding: 12px 16px;
+    font-size: 14px;
+    border-bottom: 1px solid #eee;
+}
+
+.rk-tipe-badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.rk-tipe-badge--benefit { background: #E6F4FB; color: #0B6FA8; }
+.rk-tipe-badge--cost    { background: #FDF0E6; color: #B85C00; }
+
+.rk-bobot-form {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.rk-bobot-form input[type="number"] {
+    width: 80px;
+    padding: 6px 8px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+}
+
+.rk-bobot-form button {
+    padding: 6px 14px;
+    background: #101820;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 13px;
+}
+
+.rk-bobot-form button:hover {
+    background: #2FC4D0;
+}

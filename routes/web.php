@@ -46,6 +46,8 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/arsip', [ArsipController::class, 'index'])->name('arsip.index');
 
+    Route::get('/evaluasi-retensi', [EvaluasiRetensiController::class, 'index'])->name('evaluasi-retensi.index');
+
     Route::middleware('permission:kopsurat.manage')->group(function () {
         Route::get('/kop-surat', [KopSuratController::class, 'index'])->name('kop-surat.index');
         Route::get('/kop-surat/create', [KopSuratController::class, 'create'])->name('kop-surat.create');
@@ -96,8 +98,6 @@ Route::middleware('auth')->group(function () {
     Route::middleware(['auth', 'permission:log.view'])->group(function () {
         Route::get('/log-aktivitas', [LogAktivitasController::class, 'index'])->name('log-aktivitas.index');
     });
-
-
 
     Route::middleware(['auth', 'permission:retensi.manage'])->group(function () {
         Route::get('/retensi-kriteria', [RetensiKriteriaController::class, 'index'])->name('retensi-kriteria.index');
