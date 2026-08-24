@@ -73,6 +73,8 @@ class SuratController extends Controller
 
     public function show(Surat $surat)
     {
+        $surat->increment('jumlah_akses');
+
         $surat->load(['template', 'kopSurat', 'isiSurat', 'user']);
 
         $values = $surat->isiSurat->pluck('nilai_field', 'nama_field')->toArray();
