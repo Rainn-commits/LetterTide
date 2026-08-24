@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Role;
 use App\Models\User;
+use App\Models\LogAktivitas;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -43,6 +44,8 @@ class PenggunaController extends Controller
             'is_aktif' => true,
         ]);
 
+        LogAktivitas::catat('Membuat', 'Pengguna', "Menambahkan pengguna \"{$validated['name']}\"");
+
         return redirect()->route('pengguna.index')
             ->with('success', 'Pengguna baru berhasil ditambahkan.');
     }
@@ -74,6 +77,8 @@ class PenggunaController extends Controller
             'role_id' => $validated['role_id'],
         ]);
 
+        LogAktivitas::catat('Mengubah', 'Pengguna', "Mengubah data pengguna \"{$pengguna->name}\"");
+
         return redirect()->route('pengguna.index')
             ->with('success', 'Data pengguna berhasil diperbarui.');
     }
@@ -88,6 +93,8 @@ class PenggunaController extends Controller
 
         $pengguna->update(['password' => Hash::make($validated['password'])]);
 
+        LogAktivitas::catat('Reset Password', 'Pengguna', "Reset password untuk \"{$pengguna->name}\"");
+
         return back()->with('success', "Password untuk {$pengguna->name} berhasil direset.");
     }
 
@@ -100,6 +107,8 @@ class PenggunaController extends Controller
         }
 
         $pengguna->update(['is_aktif' => false]);
+
+        LogAktivitas::catat('Menonaktifkan', 'Pengguna', "Menonaktifkan pengguna \"{$pengguna->name}\"");
 
         return back()->with('success', "Pengguna {$pengguna->name} berhasil dinonaktifkan.");
     }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\IsiSurat;
+use App\Models\LogAktivitas;
 use App\Models\PengaturanKopSurat;
 use App\Models\Surat;
 use App\Models\TemplateSurat;
@@ -63,6 +64,8 @@ class SuratController extends Controller
                 'created_at'  => now(),
             ]);
         }
+
+        LogAktivitas::catat('Membuat', 'Surat', "Membuat surat \"{$nomorSurat}\" dari template \"{$template->nama_template}\"");
 
         return redirect()->route('surat.show', $surat)
             ->with('success', "Surat berhasil dibuat dengan nomor {$nomorSurat}.");

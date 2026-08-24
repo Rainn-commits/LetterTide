@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use App\Models\Permission;
 use App\Models\Role;
+use App\Models\LogAktivitas;
 use Illuminate\Http\Request;
 
 class RoleController extends Controller
@@ -33,6 +34,8 @@ class RoleController extends Controller
 
         $role = Role::create(['nama_role' => $validated['nama_role']]);
         $role->permissions()->sync($validated['permissions'] ?? []);
+
+        LogAktivitas::catat('Membuat', 'Role', "Membuat role \"{$role->nama_role}\"");
 
         return redirect()->route('role.index')
             ->with('success', "Role \"{$role->nama_role}\" berhasil dibuat.");
@@ -70,6 +73,8 @@ class RoleController extends Controller
         $role->update(['nama_role' => $validated['nama_role']]);
         $role->permissions()->sync($permissionBaru);
 
+        LogAktivitas::catat('Mengubah', 'Role', "Mengubah hak akses role \"{$role->nama_role}\"");
+
         return redirect()->route('role.index')
             ->with('success', "Role \"{$role->nama_role}\" berhasil diperbarui.");
     }
@@ -83,6 +88,8 @@ class RoleController extends Controller
         if ($role->users()->exists()) {
             return back()->withErrors(['role' => 'Role ini masih digunakan oleh pengguna aktif, tidak dapat dihapus.']);
         }
+
+        LogAktivitas::catat('Menghapus', 'Role', "Menghapus role \"{$role->nama_role}\"");
 
         $role->delete();
 

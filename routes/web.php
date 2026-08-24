@@ -13,6 +13,7 @@ use App\Http\Controllers\PenggunaController;
 use App\Http\Controllers\TemplateSuratController;
 use App\Http\Controllers\SuratController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\LogAktivitasController;
 
 Route::get('/', function () {
     return view('home');
@@ -88,5 +89,9 @@ Route::middleware('auth')->group(function () {
         Route::get('/role/{role}/edit', [RoleController::class, 'edit'])->name('role.edit');
         Route::put('/role/{role}', [RoleController::class, 'update'])->name('role.update');
         Route::delete('/role/{role}', [RoleController::class, 'destroy'])->name('role.destroy');
+    });
+
+    Route::middleware(['auth', 'permission:log.view'])->group(function () {
+        Route::get('/log-aktivitas', [LogAktivitasController::class, 'index'])->name('log-aktivitas.index');
     });
 });
