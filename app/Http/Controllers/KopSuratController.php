@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\PengaturanKopSurat;
-use App\Http\Controllers\Controller;
 use App\Models\LogAktivitas;
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -65,7 +65,7 @@ class KopSuratController extends Controller
         ]);
 
         LogAktivitas::catat('Mengubah', 'Kop Surat', "Menyimpan kop surat sebagai versi {$versiBaru}");
-
+        
         return redirect()->route('kop-surat.index')
             ->with('success', "Kop surat berhasil disimpan sebagai versi {$versiBaru}.");
     }

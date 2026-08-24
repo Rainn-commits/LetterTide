@@ -23,8 +23,9 @@
 
             @forelse ($fields as $field)
                 @php
-                    $key = is_array($field) ? $field['key'] : $field->key;
-                    $label = is_array($field) ? $field['label'] : $field->label;
+                    $key   = is_string($field) ? $field : (is_array($field) ? ($field['key'] ?? '') : ($field->key ?? ''));
+                    $label = is_string($field) ? ucwords(str_replace('_', ' ', $field)) : (is_array($field) ? ($field['label'] ?? $key) : ($field->label ?? $key));
+                    
                     $isDate = str_contains($key, 'tanggal');
                     $isEmployeeName = $key === 'nama_karyawan';
                     $oldValue = old('fields.' . $key);

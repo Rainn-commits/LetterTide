@@ -11,12 +11,22 @@
 
 @if(session('success'))<p>{{ session('success') }}</p>@endif
 
-@if($kopSuratAktif)
-    <img src="{{ Storage::url($kopSuratAktif->logo) }}" width="100">
-    <p>{{ $kopSuratAktif->nama_pt }} — versi {{ $kopSuratAktif->versi }}</p>
-    <p>{{ $kopSuratAktif->alamat_pt }}</p>
+@if (!$kopSurat)
+    <div class="alert-box">
+        <p>Kop surat belum diatur.</p>
+    </div>
+
+    <a href="{{ route('kop-surat.create') }}" class="btn-primary">
+        + Buat Kop Surat Baru
+    </a>
 @else
-    <p>Kop surat belum diatur.</p>
+    <div class="kop-preview-card">
+
+    </div>
+
+    <a href="{{ route('kop-surat.edit', $kopSurat->id) }}" class="btn-primary">
+        Ubah / Simpan Versi Baru
+    </a>
 @endif
 
 <a href="{{ route('kop-surat.create') }}">Ubah / Simpan Versi Baru</a>
