@@ -14,6 +14,8 @@ use App\Http\Controllers\TemplateSuratController;
 use App\Http\Controllers\SuratController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\LogAktivitasController;
+use App\Http\Controllers\RetensiKriteriaController;
+use App\Http\Controllers\EvaluasiRetensiController;
 
 Route::get('/', function () {
     return view('home');
@@ -93,5 +95,16 @@ Route::middleware('auth')->group(function () {
 
     Route::middleware(['auth', 'permission:log.view'])->group(function () {
         Route::get('/log-aktivitas', [LogAktivitasController::class, 'index'])->name('log-aktivitas.index');
+    });
+
+
+
+    Route::middleware(['auth', 'permission:retensi.manage'])->group(function () {
+        Route::get('/retensi-kriteria', [RetensiKriteriaController::class, 'index'])->name('retensi-kriteria.index');
+        Route::put('/retensi-kriteria/{retensiKriterion}', [RetensiKriteriaController::class, 'update'])->name('retensi-kriteria.update');
+
+        Route::get('/evaluasi-retensi', [EvaluasiRetensiController::class, 'index'])->name('evaluasi-retensi.index');
+        Route::post('/evaluasi-retensi/{surat}/nilai', [EvaluasiRetensiController::class, 'simpanPenilaian'])->name('evaluasi-retensi.nilai');
+        Route::post('/evaluasi-retensi/jalankan', [EvaluasiRetensiController::class, 'jalankanEvaluasi'])->name('evaluasi-retensi.jalankan');
     });
 });
