@@ -3,7 +3,7 @@
 @section('page-title', 'Log Aktivitas Sistem')
 
 @section('page-css')
-    @vite('resources/css/pages/log-aktivitas.css')
+    @vite('resources/css/log-aktivitas.css')
 @endsection
 
 @section('content')
