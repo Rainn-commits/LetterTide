@@ -48,8 +48,8 @@
                 >{{ old('isi_template') }}</textarea>
                 
                 <p class="form-field__hint">
-                    Gunakan format <code>@{{nama_variabel}}</code> untuk menandai bagian yang akan diisi otomatis,
-                    contoh: <code>@{{nama_karyawan}}</code>.
+                    Gunakan format <code>&#123;&#123;nama_variabel&#125;&#125;</code> untuk menandai bagian yang akan diisi otomatis,
+                    contoh: <code>&#123;&#123;nama_karyawan&#125;&#125;</code>.
                 </p>
                 
                 @error('isi_template')
@@ -60,7 +60,7 @@
             <div class="form-field">
                 <label>Placeholder Terdeteksi</label>
                 <div class="placeholder-list" id="placeholderList">
-                    <p class="placeholder-list__empty">Belum ada placeholder terdeteksi. Ketik @{{nama_variabel}} di isi template.</p>
+                    <p class="placeholder-list__empty">Belum ada placeholder terdeteksi. Ketik &#123;&#123;nama_variabel&#125;&#125; di isi template.</p>
                 </div>
             </div>
 

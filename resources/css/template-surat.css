@@ -177,7 +177,6 @@
   font-size: 14.5px;
 }
 
-/* ---------- Form (create / edit) ---------- */
 .template-form {
   max-width: 720px;
 }
@@ -233,7 +232,6 @@
   color: var(--color-ink-soft);
 }
 
-/* ---------- Placeholder pills ---------- */
 .placeholder-list {
   display: flex;
   flex-wrap: wrap;
@@ -258,7 +256,6 @@
   padding: 8px 0;
 }
 
-/* ---------- Form actions ---------- */
 .form-actions {
   display: flex;
   align-items: center;
