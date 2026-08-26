@@ -13,38 +13,43 @@
 }
 
 .surat-paper__header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 4px;
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    width: 100% !important;
+    margin-bottom: 6px;
 }
 
-.surat-paper__company-left h2 {
-    font-size: 15pt;
-    font-weight: bold;
-    margin: 0;
-    color: #000;
-    letter-spacing: 0.5px;
-}
-
-.surat-paper__company-right {
-    text-align: right;
-    font-size: 9.5pt;
-    line-height: 1.3;
-    color: #000;
-}
-
-.surat-paper__logo-box {
+.surat-paper__logo-left {
     display: flex;
     align-items: center;
-    gap: 8px;
-    margin-top: 4px;
+    width: 25%;
 }
 
 .surat-paper__logo {
-    height: 35px;
+    max-height: 85px;
     width: auto;
+    max-width: 160px;
     object-fit: contain;
+}
+
+.surat-paper__company-right {
+    width: 75%;
+    text-align: right !important;
+    color: #000000;
+}
+
+.surat-paper__company-right h2 {
+    font-size: 15pt;
+    font-weight: bold;
+    margin: 0 0 2px 0;
+    text-transform: uppercase;
+}
+
+.surat-paper__company-right p {
+    font-size: 9.5pt;
+    margin: 1px 0;
+    line-height: 1.35;
 }
 
 .surat-paper__divider {
@@ -84,28 +89,33 @@
     white-space: pre-line;
 }
 
-.signature-container {
+.signature-wrapper {
     display: flex;
-    justify-content: flex-start; 
-    margin-top: 30px;
+    justify-content: flex-end; 
     width: 100%;
+    margin-top: 40px;
 }
 
 .signature-box {
-    text-align: left;
-    min-width: 250px;
+    width: 260px;
+    text-align: center; 
     font-size: 12pt;
     line-height: 1.4;
 }
 
 .signature-space {
-    height: 65px;
+    height: 70px;
 }
 
 .signature-name {
-    display: block;
     font-weight: bold;
-    color: #000;
+    text-decoration: underline;
+    display: block;
+}
+
+.signature-sub {
+    font-size: 10pt;
+    color: #333;
 }
 
 .page-toolbar-preview {

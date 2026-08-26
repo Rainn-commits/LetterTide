@@ -18,20 +18,31 @@
     </div>
 
     <div class="surat-paper">
-
+        
         @if ($surat->kopSurat)
             <div class="surat-paper__header">
-                <div class="surat-paper__company-left">
-                    <h2>{{ $surat->kopSurat->nama_pt }}</h2>
+                <div class="surat-paper__logo-left">
                     @if ($surat->kopSurat->logo_path)
-                        <div class="surat-paper__logo-box">
-                            <img src="{{ Storage::url($surat->kopSurat->logo_path) }}" alt="Logo" class="surat-paper__logo">
-                        </div>
+                        <img src="{{ asset('storage/' . str_replace('storage/', '', $surat->kopSurat->logo_path)) }}" alt="Logo" class="surat-paper__logo">
                     @endif
                 </div>
+
                 <div class="surat-paper__company-right">
-                    <div>{{ $surat->kopSurat->alamat }}</div>
-                    <div>WhatsApp. {{ $surat->kopSurat->telepon }} &nbsp; Website. {{ $surat->kopSurat->website }}</div>
+                    <h2>{{ $surat->kopSurat->nama_pt }}</h2>
+                    @if($surat->kopSurat->alamat)
+                        <p>{{ $surat->kopSurat->alamat }}</p>
+                    @endif
+                    <p>
+                        @if($surat->kopSurat->telepon)
+                            WhatsApp. +62 {{ ltrim($surat->kopSurat->telepon, '+62') }}
+                        @endif
+                        @if($surat->kopSurat->website)
+                            &nbsp;&middot;&nbsp; Website. {{ $surat->kopSurat->website }}
+                        @endif
+                    </p>
+                    @if($surat->kopSurat->email)
+                        <p>Email: {{ $surat->kopSurat->email }}</p>
+                    @endif
                 </div>
             </div>
             <div class="surat-paper__divider"></div>
@@ -41,11 +52,29 @@
             Bandung, {{ \Carbon\Carbon::parse($surat->tanggal_surat)->translatedFormat('d F Y') }}
         </div>
 
+        @php
+            $romawiBulan = ['', 'I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII'];
+            $bulanNum = (int) \Carbon\Carbon::parse($surat->tanggal_surat)->format('n');
+            $bulanRomawi = $romawiBulan[$bulanNum] ?? 'I';
+            $tahunDuaDigit = \Carbon\Carbon::parse($surat->tanggal_surat)->format('y');
+            
+            $nomorUrut = sprintf('%03d', $surat->id ?? 1);
+            $kodeTemplate = $surat->template?->kode_template ?? 'SPSP';
+            $namaPtSingkat = 'INOVINDO';
+
+            $nomorSuratFormatted = "{$nomorUrut}/{$kodeTemplate}/{$namaPtSingkat}/{$bulanRomawi}/{$tahunDuaDigit}";
+        @endphp
+
         <table class="surat-paper__meta-table">
             <tr>
-                <td style="width: 80px;">Nomor</td>
+                <td style="width: 90px;">Nomor</td>
                 <td style="width: 15px;">:</td>
-                <td>{{ $surat->nomor_surat }}</td>
+                <td>{{ $surat->nomor_surat ?? $nomorSuratFormatted }}</td>
+            </tr>
+            <tr>
+                <td>Lampiran</td>
+                <td>:</td>
+                <td>{{ $surat->lampiran ?? '-' }}</td>
             </tr>
         </table>
 
@@ -75,19 +104,15 @@
             }
         @endphp
 
-        <div class="signature-container">
+        <div class="signature-wrapper">
             <div class="signature-box">
                 <div>Hormat Kami,</div>
                 <div>{{ $jabatanPenandatangan }}</div>
 
                 <div class="signature-space"></div>
 
-                <span class="signature-name">
-                    {{ $namaPenandatangan }}
-                </span>
-                <div style="font-size: 10pt; color: #333;">
-                    {{ $surat->kopSurat?->website ?? 'www.inovindo.co.id' }}
-                </div>
+                <div class="signature-name">{{ $namaPenandatangan }}</div>
+                <div class="signature-sub">{{ $surat->kopSurat?->website ?? 'www.inovindo.co.id' }}</div>
             </div>
         </div>
 
