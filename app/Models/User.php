@@ -33,4 +33,15 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+    
+    protected $fillable = [
+        'name',
+        'email',
+        'password',
+        'can_sign', 
+    ];
+
+    protected $casts = [
+        'can_sign' => 'boolean',
+    ];
 }

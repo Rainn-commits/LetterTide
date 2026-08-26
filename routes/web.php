@@ -113,5 +113,7 @@ Route::middleware('auth')->group(function () {
 
     Route::middleware(['auth', 'role:Super Admin,Admin'])->group(function () {
         Route::resource('template-surat', TemplateSuratController::class)->except(['show']);
+        Route::resource('template-surat', TemplateSuratController::class);
+        Route::post('template-surat/parse-preview', [TemplateSuratController::class, 'parsePreview'])->name('template-surat.parse-preview');
     });
 });

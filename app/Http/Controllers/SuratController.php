@@ -7,6 +7,7 @@ use App\Models\LogAktivitas;
 use App\Models\PengaturanKopSurat;
 use App\Models\Surat;
 use App\Models\TemplateSurat;
+use App\Models\User;
 use App\Services\PlaceholderParser;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -26,8 +27,10 @@ class SuratController extends Controller
     public function form(TemplateSurat $template)
     {
         $fields = PlaceholderParser::toFormFields($template->isi_template);
+        
+        $users = User::orderBy('name')->get();
 
-        return view('surat.form', compact('template', 'fields'));
+        return view('surat.form', compact('template', 'fields', 'users'));
     }
 
     public function store(Request $request, TemplateSurat $template)
@@ -79,7 +82,22 @@ class SuratController extends Controller
         $values = $surat->isiSurat->pluck('nilai_field', 'nama_field')->toArray();
         $isiSuratRendered = PlaceholderParser::render($surat->template->isi_template, $values);
 
-        return view('surat.preview', compact('surat', 'isiSuratRendered'));
+        $namaPenandatangan = $values['nama_penandatangan'] 
+                        ?? $values['Nama Penandatangan'] 
+                        ?? $values['penandatangan'] 
+                        ?? $surat->user?->name;
+
+        $jabatanPenandatangan = $values['jabatan_penandatangan'] 
+                            ?? $values['Jabatan Penandatangan'] 
+                            ?? $values['jabatan'] 
+                            ?? '';
+
+        return view('surat.preview', compact(
+            'surat', 
+            'isiSuratRendered', 
+            'namaPenandatangan', 
+            'jabatanPenandatangan'
+        ));
     }
 
     public function cetak(Surat $surat)
@@ -119,8 +137,9 @@ class SuratController extends Controller
         $values = $surat->isiSurat->pluck('nilai_field', 'nama_field')->toArray();
         $template = $surat->template;
         $fields = PlaceholderParser::toFormFields($template->isi_template);
+        $users = User::orderBy('name')->get();
 
-        return view('surat.edit', compact('surat', 'template', 'fields', 'values'));
+        return view('surat.edit', compact('surat', 'template', 'fields', 'values', 'users'));
     }
 
     public function update(Request $request, Surat $surat)

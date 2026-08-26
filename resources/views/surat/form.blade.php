@@ -34,12 +34,29 @@
                     }
 
                     $oldValue = old('fields.' . $key);
+                    $lowerKey = strtolower($key);
+                    $isPenandatangan = str_contains($lowerKey, 'penandatangan') || str_contains($lowerKey, 'hrd');
                 @endphp
 
                 <div class="form-field">
                     <label for="field_{{ Str::slug($key) }}">{{ $label }}:</label>
 
-                    @if ($type === 'autocomplete_user' || $key === 'nama_karyawan')
+                    @if ($isPenandatangan)
+                        <select 
+                            id="field_{{ Str::slug($key) }}" 
+                            name="fields[{{ $key }}]" 
+                            class="form-control" 
+                            required
+                        >
+                            <option value="">-- Pilih User Penandatangan --</option>
+                            @foreach ($users as $u)
+                                <option value="{{ $u->name }}" {{ $oldValue == $u->name ? 'selected' : '' }}>
+                                    {{ $u->name }}
+                                </option>
+                            @endforeach
+                        </select>
+
+                    @elseif ($type === 'autocomplete_user' || $key === 'nama_karyawan')
                         <div class="autocomplete">
                             <input
                                 type="text"
@@ -53,7 +70,8 @@
                             >
                             <div class="autocomplete__results" id="results_{{ Str::slug($key) }}"></div>
                         </div>
-                    @elseif ($type === 'date' || str_contains(strtolower($key), 'tanggal'))
+
+                    @elseif ($type === 'date' || str_contains($lowerKey, 'tanggal'))
                         <input 
                             type="date" 
                             id="field_{{ Str::slug($key) }}" 
@@ -61,6 +79,7 @@
                             value="{{ $oldValue }}" 
                             required
                         >
+
                     @else
                         <input 
                             type="text" 

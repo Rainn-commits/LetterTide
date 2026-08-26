@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\TemplateSurat;
+use App\Models\LogAktivitas;
 use App\Http\Controllers\Controller;
 use App\Services\PlaceholderParser;
 use Illuminate\Http\Request;
@@ -30,12 +31,14 @@ class TemplateSuratController extends Controller
             'isi_template'  => ['required', 'string'],
         ]);
 
-        TemplateSurat::create([
+        $template = TemplateSurat::create([
             'nama_template' => $validated['nama_template'],
             'isi_template'  => $validated['isi_template'],
             'versi'         => 1,
             'is_aktif'      => true,
         ]);
+
+        LogAktivitas::catat('Membuat', 'Template Surat', "Membuat template \"{$template->nama_template}\" versi 1");
 
         return redirect()->route('template-surat.index')
             ->with('success', 'Template berhasil disimpan.');
@@ -55,12 +58,14 @@ class TemplateSuratController extends Controller
 
         $templateSurat->update(['is_aktif' => false]);
 
-        TemplateSurat::create([
+        $baru = TemplateSurat::create([
             'nama_template' => $validated['nama_template'],
             'isi_template'  => $validated['isi_template'],
             'versi'         => $templateSurat->versi + 1,
             'is_aktif'      => true,
         ]);
+
+        LogAktivitas::catat('Mengubah', 'Template Surat', "Memperbarui template \"{$baru->nama_template}\" ke versi {$baru->versi}");
 
         return redirect()->route('template-surat.index')
             ->with('success', 'Template berhasil disimpan sebagai versi baru.');
@@ -68,7 +73,10 @@ class TemplateSuratController extends Controller
 
     public function destroy(TemplateSurat $templateSurat)
     {
+        $nama = $templateSurat->nama_template;
         $templateSurat->update(['is_aktif' => false]);
+
+        LogAktivitas::catat('Menghapus', 'Template Surat', "Menonaktifkan template \"{$nama}\" versi {$templateSurat->versi}");
 
         return redirect()->route('template-surat.index')
             ->with('success', 'Template dinonaktifkan.');
@@ -76,9 +84,9 @@ class TemplateSuratController extends Controller
 
     public function parsePreview(Request $request)
     {
-    $text = $request->input('isi_template', '');
-    $placeholders = PlaceholderParser::extract($text);
+        $text = $request->input('isi_template', '');
+        $placeholders = PlaceholderParser::extract($text);
 
-    return response()->json(['placeholders' => $placeholders]);
+        return response()->json(['placeholders' => $placeholders]);
     }
 }

@@ -1,0 +1,122 @@
+.surat-paper {
+    width: 215mm;
+    min-height: 330mm;
+    padding: 20mm 20mm 20mm 25mm;
+    margin: 0 auto 30px auto;
+    background: #ffffff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    box-sizing: border-box;
+    font-family: "Times New Roman", Times, serif;
+    font-size: 12pt;
+    line-height: 1.5; 
+    color: #000000;
+}
+
+.surat-paper__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 4px;
+}
+
+.surat-paper__company-left h2 {
+    font-size: 15pt;
+    font-weight: bold;
+    margin: 0;
+    color: #000;
+    letter-spacing: 0.5px;
+}
+
+.surat-paper__company-right {
+    text-align: right;
+    font-size: 9.5pt;
+    line-height: 1.3;
+    color: #000;
+}
+
+.surat-paper__logo-box {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 4px;
+}
+
+.surat-paper__logo {
+    height: 35px;
+    width: auto;
+    object-fit: contain;
+}
+
+.surat-paper__divider {
+    border: 0;
+    border-top: 2px solid #000;
+    margin: 6px 0 20px 0;
+}
+
+.surat-paper__meta-top {
+    text-align: right;
+    margin-bottom: 15px;
+}
+
+.surat-paper__meta-table {
+    margin-bottom: 20px;
+    border-collapse: collapse;
+}
+
+.surat-paper__meta-table td {
+    padding: 2px 0;
+    vertical-align: top;
+}
+
+.surat-paper__title {
+    text-align: center;
+    font-weight: bold;
+    font-size: 12pt;
+    margin: 20px 0;
+    text-decoration: underline;
+}
+
+.surat-paper__body {
+    font-size: 12pt;
+    line-height: 1.5; 
+    text-align: justify;
+    margin-bottom: 30px;
+    white-space: pre-line;
+}
+
+.signature-container {
+    display: flex;
+    justify-content: flex-start; 
+    margin-top: 30px;
+    width: 100%;
+}
+
+.signature-box {
+    text-align: left;
+    min-width: 250px;
+    font-size: 12pt;
+    line-height: 1.4;
+}
+
+.signature-space {
+    height: 65px;
+}
+
+.signature-name {
+    display: block;
+    font-weight: bold;
+    color: #000;
+}
+
+.page-toolbar-preview {
+    width: 215mm;
+    margin: 0 auto 16px auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.page-toolbar-preview__actions {
+    display: flex;
+    gap: 8px;
+}
