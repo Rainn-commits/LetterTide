@@ -18,7 +18,10 @@ class KopSuratController extends Controller
             ->orderByDesc('versi')
             ->get();
 
-        return view('kop-surat.index', compact('kopSuratAktif', 'riwayat'));
+        return view('kop-surat.index', [
+            'kopSurat' => $kopSuratAktif,
+            'riwayat'  => $riwayat,
+        ]);
     }
 
     public function create()
