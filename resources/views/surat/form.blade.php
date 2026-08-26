@@ -13,13 +13,29 @@
         <h2 class="wizard-step__title">Lengkapi Data Surat</h2>
     </div>
 
-    @error('kop_surat')
-        <div class="surat-alert surat-alert--error">{{ $message }}</div>
-    @enderror
-
     <div class="card">
         <form method="POST" action="{{ route('surat.store', $template->id) }}" class="surat-form" novalidate>
             @csrf
+
+            <div class="form-field">
+                <label for="kop_surat_id">Pilih Kop Surat Perusahaan:</label>
+                <select name="kop_surat_id" id="kop_surat_id" class="form-control" required>
+                    <option value="">-- Pilih Kop Surat --</option>
+                    @foreach ($kopSurats as $k)
+                        <option value="{{ $k->id }}" {{ (isset($k) && $k->is_aktif) ? 'selected' : '' }}>
+                            {{ $k->nama_pt }} ({{ $k->email }})
+                        </option>
+                    @endforeach
+                </select>
+                @error('kop_surat_id')
+                    <p class="form-field__hint" style="color: var(--color-danger);">{{ $message }}</p>
+                @enderror
+            </div>
+
+            <div class="form-field">
+                <label for="lampiran">Lampiran Surat:</label>
+                <input type="text" id="lampiran" name="lampiran" value="{{ old('lampiran', '-') }}" placeholder="Contoh: 1 Lembar / -">
+            </div>
 
             @forelse ($fields as $field)
                 @php

@@ -28,7 +28,6 @@ Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 Route::get('/forgot-password', function () {
     return view('auth.forgot-password');
 })->name('password.request');
-
 Route::post('/forgot-password', [ForgotPasswordController::class, 'submitRequest'])->name('password.request.submit');
 
 Route::middleware('auth')->group(function () {
@@ -45,8 +44,6 @@ Route::middleware('auth')->group(function () {
     Route::put('/profile/password', [ProfileController::class, 'updatePassword'])->name('profile.password.update');
 
     Route::get('/arsip', [ArsipController::class, 'index'])->name('arsip.index');
-
-    Route::get('/evaluasi-retensi', [EvaluasiRetensiController::class, 'index'])->name('evaluasi-retensi.index');
 
     Route::middleware('permission:kopsurat.manage')->group(function () {
         Route::get('/kop-surat', [KopSuratController::class, 'index'])->name('kop-surat.index');
@@ -89,7 +86,7 @@ Route::middleware('auth')->group(function () {
         Route::post('/surat/{surat}/upload-arsip', [SuratController::class, 'uploadArsip'])->name('surat.upload-arsip');
     });
 
-    Route::middleware(['auth', 'permission:role.manage'])->group(function () {
+    Route::middleware('permission:role.manage')->group(function () {
         Route::get('/role', [RoleController::class, 'index'])->name('role.index');
         Route::get('/role/create', [RoleController::class, 'create'])->name('role.create');
         Route::post('/role', [RoleController::class, 'store'])->name('role.store');
@@ -98,11 +95,11 @@ Route::middleware('auth')->group(function () {
         Route::delete('/role/{role}', [RoleController::class, 'destroy'])->name('role.destroy');
     });
 
-    Route::middleware(['auth', 'permission:log.view'])->group(function () {
+    Route::middleware('auth')->group(function () {
         Route::get('/log-aktivitas', [LogAktivitasController::class, 'index'])->name('log-aktivitas.index');
     });
 
-    Route::middleware(['auth', 'permission:retensi.manage'])->group(function () {
+    Route::middleware('permission:retensi.manage')->group(function () {
         Route::get('/retensi-kriteria', [RetensiKriteriaController::class, 'index'])->name('retensi-kriteria.index');
         Route::put('/retensi-kriteria/{retensiKriterion}', [RetensiKriteriaController::class, 'update'])->name('retensi-kriteria.update');
 
@@ -111,9 +108,4 @@ Route::middleware('auth')->group(function () {
         Route::post('/evaluasi-retensi/jalankan', [EvaluasiRetensiController::class, 'jalankanEvaluasi'])->name('evaluasi-retensi.jalankan');
     });
 
-    Route::middleware(['auth', 'role:Super Admin,Admin'])->group(function () {
-        Route::resource('template-surat', TemplateSuratController::class)->except(['show']);
-        Route::resource('template-surat', TemplateSuratController::class);
-        Route::post('template-surat/parse-preview', [TemplateSuratController::class, 'parsePreview'])->name('template-surat.parse-preview');
-    });
 });

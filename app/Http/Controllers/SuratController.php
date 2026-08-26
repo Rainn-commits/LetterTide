@@ -27,34 +27,29 @@ class SuratController extends Controller
     public function form(TemplateSurat $template)
     {
         $fields = PlaceholderParser::toFormFields($template->isi_template);
-        
         $users = User::orderBy('name')->get();
+        $kopSurats = PengaturanKopSurat::orderBy('created_at', 'desc')->get();
 
-        return view('surat.form', compact('template', 'fields', 'users'));
+        return view('surat.form', compact('template', 'fields', 'users', 'kopSurats'));
     }
 
     public function store(Request $request, TemplateSurat $template)
     {
         $validated = $request->validate([
-            'fields'   => ['required', 'array'],
-            'fields.*' => ['required', 'string'],
+            'kop_surat_id' => ['required', 'exists:pengaturan_kop_surats,id'],
+            'lampiran'     => ['nullable', 'string'],
+            'fields'       => ['required', 'array'],
+            'fields.*'     => ['required', 'string'],
         ]);
-
-        $kopSuratAktif = PengaturanKopSurat::where('is_aktif', true)->first();
-
-        if (!$kopSuratAktif) {
-            return back()->withErrors([
-                'kop_surat' => 'Kop surat belum diatur. Hubungi Admin sebelum membuat surat.',
-            ]);
-        }
 
         $nomorSurat = $this->generateNomorSurat($template);
 
         $surat = Surat::create([
             'template_id'   => $template->id,
             'user_id'       => Auth::id(),
-            'kop_surat_id'  => $kopSuratAktif->id,
+            'kop_surat_id'  => $validated['kop_surat_id'],
             'nomor_surat'   => $nomorSurat,
+            'lampiran'      => $request->input('lampiran', '-'),
             'jenis'         => 'Keluar',
             'tanggal_surat' => now()->toDateString(),
         ]);
@@ -90,7 +85,7 @@ class SuratController extends Controller
         $jabatanPenandatangan = $values['jabatan_penandatangan'] 
                             ?? $values['Jabatan Penandatangan'] 
                             ?? $values['jabatan'] 
-                            ?? '';
+                            ?? 'Direktur PT. Inovindo Digital Media';
 
         return view('surat.preview', compact(
             'surat', 
@@ -107,7 +102,17 @@ class SuratController extends Controller
         $values = $surat->isiSurat->pluck('nilai_field', 'nama_field')->toArray();
         $isiSuratRendered = PlaceholderParser::render($surat->template->isi_template, $values);
 
-        return view('surat.cetak', compact('surat', 'isiSuratRendered'));
+        $namaPenandatangan = $values['nama_penandatangan'] 
+                        ?? $values['Nama Penandatangan'] 
+                        ?? $values['penandatangan'] 
+                        ?? $surat->user?->name;
+
+        $jabatanPenandatangan = $values['jabatan_penandatangan'] 
+                            ?? $values['Jabatan Penandatangan'] 
+                            ?? $values['jabatan'] 
+                            ?? 'Direktur PT. Inovindo Digital Media';
+
+        return view('surat.cetak', compact('surat', 'isiSuratRendered', 'namaPenandatangan', 'jabatanPenandatangan'));
     }
 
     public function uploadArsip(Request $request, Surat $surat)
@@ -171,7 +176,7 @@ class SuratController extends Controller
         $kodeTemplate  = $this->deriveKodeTemplate($template->nama_template);
         $bulanRomawi   = $this->bulanRomawi(now()->month);
 
-        return "{$nomorUrut}/{$kodeTemplate}/{$bulanRomawi}/{$tahunSingkat}";
+        return "{$nomorUrut}/{$kodeTemplate}/INOVINDO/{$bulanRomawi}/{$tahunSingkat}";
     }
 
     private function deriveKodeTemplate(string $namaTemplate): string

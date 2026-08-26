@@ -72,7 +72,7 @@
             'label' => 'Log Aktivitas Sistem',
             'route' => 'log-aktivitas.index',
             'active' => request()->routeIs('log-aktivitas.*'),
-            'roles' => ['Super Admin'],
+            'roles' => ['Super Admin', 'Admin'],
             'icon' => 'log',        
         ],
         [

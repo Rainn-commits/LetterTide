@@ -5,11 +5,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cetak Surat - {{ $surat->nomor_surat }}</title>
     @vite('resources/css/surat.css')
+    @vite('resources/css/surat-preview.css')
     <style>
         @media print {
             body { background: none; margin: 0; padding: 0; }
             .no-print { display: none !important; }
-            .surat-paper { box-shadow: none !important; border: none !important; margin: 0 !important; width: 100% !important; }
+            .surat-paper { box-shadow: none !important; border: none !important; margin: 0 !important; width: 100% !important; padding: 0 !important; }
+        }
+        .signature-wrapper {
+            display: flex;
+            justify-content: flex-end;
+            width: 100%;
+            margin-top: 40px;
+        }
+        .signature-box {
+            width: 250px;
+            text-align: center;
         }
     </style>
 </head>
@@ -21,42 +32,71 @@
     </div>
 
     <div class="surat-paper">
-        <div class="surat-paper__kop">
-            @if ($surat->kopSurat?->logo)
-                <img src="{{ asset('storage/' . $surat->kopSurat->logo) }}" alt="Logo" class="surat-paper__logo">
-            @endif
-            <div class="surat-paper__company">
-                <strong>{{ $surat->kopSurat->nama_pt ?? 'PT Inovindo Digital Media' }}</strong>
-                <span>{{ $surat->kopSurat->alamat_pt ?? '' }}</span>
-                @if ($surat->kopSurat && ($surat->kopSurat->telepon || $surat->kopSurat->email || $surat->kopSurat->website))
-                    <span class="surat-paper__contact">
-                        {{ collect([
-                            $surat->kopSurat->telepon ? 'Telp: ' . $surat->kopSurat->telepon : null,
-                            $surat->kopSurat->email,
-                            $surat->kopSurat->website,
-                        ])->filter()->implode(' &middot; ') }}
-                    </span>
-                @endif
+
+        @if ($surat->kopSurat)
+            <div class="surat-paper__header" style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+                <div class="surat-paper__logo-left" style="width: 25%;">
+                    @if ($surat->kopSurat->logo)
+                        <img src="{{ asset('storage/' . $surat->kopSurat->logo) }}" alt="Logo" style="max-height: 80px; width: auto;">
+                    @endif
+                </div>
+
+                <div class="surat-paper__company-right" style="width: 75%; text-align: right;">
+                    <h2 style="font-size: 15pt; font-weight: bold; margin: 0; text-transform: uppercase;">{{ $surat->kopSurat->nama_pt }}</h2>
+                    <p style="font-size: 9.5pt; margin: 2px 0;">{{ $surat->kopSurat->alamat_pt }}</p>
+                    <p style="font-size: 9.5pt; margin: 1px 0;">
+                        @if($surat->kopSurat->telepon) WhatsApp. {{ $surat->kopSurat->telepon }} @endif
+                        @if($surat->kopSurat->website) &middot; Website. {{ $surat->kopSurat->website }} @endif
+                    </p>
+                    @if($surat->kopSurat->email)
+                        <p style="font-size: 9.5pt; margin: 1px 0;">Email: {{ $surat->kopSurat->email }}</p>
+                    @endif
+                </div>
+            </div>
+            <div style="border-top: 2px solid #000; margin-top: 6px; margin-bottom: 20px;"></div>
+        @endif
+
+        <div style="text-align: right; margin-bottom: 15px;">
+            Bandung, {{ \Carbon\Carbon::parse($surat->tanggal_surat)->translatedFormat('d F Y') }}
+        </div>
+
+        <table style="margin-bottom: 20px; border-collapse: collapse;">
+            <tr>
+                <td style="width: 80px;">Nomor</td>
+                <td style="width: 15px;">:</td>
+                <td>{{ $surat->nomor_surat }}</td>
+            </tr>
+            <tr>
+                <td>Lampiran</td>
+                <td>:</td>
+                <td>{{ $surat->lampiran ?? '-' }}</td>
+            </tr>
+        </table>
+
+        <div style="text-align: center; font-weight: bold; font-size: 12pt; margin: 20px 0; text-decoration: underline;">
+            {{ $surat->template->nama_template }}
+        </div>
+
+        <div style="font-size: 12pt; line-height: 1.5; text-align: justify; margin-bottom: 30px;">
+            {!! nl2br(e($isiSuratRendered)) !!}
+        </div>
+
+        <div class="signature-wrapper">
+            <div class="signature-box">
+                <div>Hormat Kami,</div>
+                <div>{{ $jabatanPenandatangan ?? 'Direktur PT. Inovindo Digital Media' }}</div>
+
+                <div style="height: 70px;"></div>
+
+                <div style="font-weight: bold; text-decoration: underline;">
+                    {{ $namaPenandatangan ?? $surat->user->name }}
+                </div>
+                <div style="font-size: 10pt; color: #333;">
+                    {{ $surat->kopSurat?->website ?? 'www.inovindo.co.id' }}
+                </div>
             </div>
         </div>
 
-        <hr class="surat-paper__divider">
-
-        <div class="surat-paper__meta">
-            <span>Nomor: {{ $surat->nomor_surat }}</span>
-            <span>{{ $surat->tanggal_surat->translatedFormat('d F Y') }}</span>
-        </div>
-
-        <div class="surat-paper__title">{{ $surat->template->nama_template }}</div>
-
-        <div class="surat-paper__body">{!! nl2br(e($isiSuratRendered)) !!}</div>
-
-        <div class="surat-paper__signature">
-            <span>{{ $surat->kopSurat->nama_pt ?? 'PT Inovindo Digital Media' }},</span>
-            <span>{{ $surat->tanggal_surat->translatedFormat('d F Y') }}</span>
-            <div class="surat-paper__signature-space"></div>
-            <span>{{ $surat->user->name }}</span>
-        </div>
     </div>
 
 </body>
