@@ -9,7 +9,7 @@
 @section('content')
 
     @if(session('success'))
-        <div class="alert alert-success" style="padding: 12px 16px; background-color: #d1e7dd; color: #0f5132; border-radius: 8px; margin-bottom: 20px;">
+        <div style="padding: 12px 16px; background-color: #d1e7dd; color: #0f5132; border-radius: 8px; margin-bottom: 20px;">
             {{ session('success') }}
         </div>
     @endif
@@ -19,11 +19,11 @@
 
         @if (!($kopSuratAktif ?? null))
             <p style="color: #64748b; margin-bottom: 16px;">Kop surat belum diatur.</p>
-            <a href="{{ route('kop-surat.create') }}" class="btn-dark" style="display: inline-block; text-decoration: none;">
+            <a href="{{ route('kop-surat.create') }}" style="display: inline-block; padding: 10px 18px; background-color: #0d9488; color: white; border-radius: 8px; text-decoration: none; font-weight: 600;">
                 + Buat Kop Surat Baru
             </a>
         @else
-            <div class="kop-preview-card" style="border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px; background-color: #f8fafc; margin-bottom: 16px;">
+            <div style="border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px; background-color: #f8fafc; margin-bottom: 16px;">
                 <div style="font-size: 0.85rem; font-weight: 700; color: #0d9488; text-transform: uppercase; margin-bottom: 6px;">
                     Versi {{ $kopSuratAktif->versi }} (Aktif)
                 </div>
@@ -32,7 +32,7 @@
                 <p style="margin: 4px 0; color: #475569; font-size: 0.9rem;">Telp: {{ $kopSuratAktif->telepon }} | Email: {{ $kopSuratAktif->email }}</p>
             </div>
 
-            <a href="{{ route('kop-surat.create') }}" class="btn-dark" style="display: inline-block; text-decoration: none;">
+            <a href="{{ route('kop-surat.create') }}" style="display: inline-block; padding: 10px 18px; background-color: #0d9488; color: white; border-radius: 8px; text-decoration: none; font-weight: 600;">
                 Ubah / Simpan Versi Baru
             </a>
         @endif

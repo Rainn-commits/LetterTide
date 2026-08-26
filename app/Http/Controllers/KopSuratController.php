@@ -34,7 +34,7 @@ class KopSuratController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'logo'      => ['nullable', 'image', 'max:2048'],
+            'logo'      => ['nullable', 'image', 'max:10240'],
             'nama_pt'   => ['required', 'string', 'max:100'],
             'alamat_pt' => ['required', 'string', 'max:255'],
             'telepon'   => ['required', 'string', 'max:20'],

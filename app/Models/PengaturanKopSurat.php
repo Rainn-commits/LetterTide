@@ -6,10 +6,13 @@ use Illuminate\Database\Eloquent\Model;
 
 class PengaturanKopSurat extends Model
 {
-     protected $table = 'pengaturan_kop_surat';
+    protected $table = 'pengaturan_kop_surat';
+
+    // TAMBAHKAN BARIS INI: Matikan timestamp otomatis Eloquent
+    public $timestamps = false;
 
     protected $fillable = [
-        'logo', 'nama_pt', 'alamat_pt', 'telepon', 'email', 'website', 'versi', 'is_aktif',
+        'logo', 'nama_pt', 'alamat_pt', 'telepon', 'email', 'website', 'versi', 'is_aktif', 'created_at'
     ];
 
     protected $casts = [

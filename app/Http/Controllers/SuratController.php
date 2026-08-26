@@ -74,7 +74,6 @@ class SuratController extends Controller
     public function show(Surat $surat)
     {
         $surat->increment('jumlah_akses');
-
         $surat->load(['template', 'kopSurat', 'isiSurat', 'user']);
 
         $values = $surat->isiSurat->pluck('nilai_field', 'nama_field')->toArray();
@@ -114,6 +113,36 @@ class SuratController extends Controller
         return back()->with('success', 'File arsip surat berhasil diunggah.');
     }
 
+    public function edit(Surat $surat)
+    {
+        $surat->load(['template', 'isiSurat']);
+        $values = $surat->isiSurat->pluck('nilai_field', 'nama_field')->toArray();
+        $template = $surat->template;
+        $fields = PlaceholderParser::toFormFields($template->isi_template);
+
+        return view('surat.edit', compact('surat', 'template', 'fields', 'values'));
+    }
+
+    public function update(Request $request, Surat $surat)
+    {
+        $validated = $request->validate([
+            'fields'   => ['required', 'array'],
+            'fields.*' => ['required', 'string'],
+        ]);
+
+        foreach ($validated['fields'] as $namaField => $nilaiField) {
+            IsiSurat::updateOrCreate(
+                ['surat_id' => $surat->id, 'nama_field' => $namaField],
+                ['nilai_field' => $nilaiField]
+            );
+        }
+
+        LogAktivitas::catat('Mengubah', 'Surat', "Mengedit isi surat \"{$surat->nomor_surat}\"");
+
+        return redirect()->route('surat.show', $surat)
+            ->with('success', 'Isi surat berhasil diperbarui.');
+    }
+
     private function generateNomorSurat(TemplateSurat $template): string
     {
         $tahunPenuh    = now()->year;
@@ -128,7 +157,7 @@ class SuratController extends Controller
 
     private function deriveKodeTemplate(string $namaTemplate): string
     {
-        $bersih   = preg_replace('/\(.*?\)/', '', $namaTemplate); // hapus teks dalam kurung
+        $bersih   = preg_replace('/\(.*?\)/', '', $namaTemplate);
         $kataKata = preg_split('/\s+/', trim($bersih));
         $inisial  = array_map(fn($kata) => strtoupper(substr($kata, 0, 1)), $kataKata);
 

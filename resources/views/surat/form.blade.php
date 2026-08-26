@@ -23,22 +23,27 @@
 
             @forelse ($fields as $field)
                 @php
-                    $key   = is_string($field) ? $field : (is_array($field) ? ($field['key'] ?? '') : ($field->key ?? ''));
-                    $label = is_string($field) ? ucwords(str_replace('_', ' ', $field)) : (is_array($field) ? ($field['label'] ?? $key) : ($field->label ?? $key));
-                    
-                    $isDate = str_contains($key, 'tanggal');
-                    $isEmployeeName = $key === 'nama_karyawan';
+                    if (is_array($field)) {
+                        $key = $field['name'] ?? ($field['key'] ?? '');
+                        $label = $field['label'] ?? ucwords(str_replace(['_', '-'], ' ', $key));
+                        $type = $field['type'] ?? 'text';
+                    } else {
+                        $key = is_string($field) ? $field : ($field->name ?? ($field->key ?? ''));
+                        $label = ucwords(str_replace(['_', '-'], ' ', $key));
+                        $type = 'text';
+                    }
+
                     $oldValue = old('fields.' . $key);
                 @endphp
 
                 <div class="form-field">
-                    <label for="field_{{ $key }}">{{ $label }}:</label>
+                    <label for="field_{{ Str::slug($key) }}">{{ $label }}:</label>
 
-                    @if ($isEmployeeName)
+                    @if ($type === 'autocomplete_user' || $key === 'nama_karyawan')
                         <div class="autocomplete">
                             <input
                                 type="text"
-                                id="field_{{ $key }}"
+                                id="field_{{ Str::slug($key) }}"
                                 name="fields[{{ $key }}]"
                                 value="{{ $oldValue }}"
                                 data-autocomplete="user"
@@ -46,12 +51,24 @@
                                 autocomplete="off"
                                 required
                             >
-                            <div class="autocomplete__results" id="results_{{ $key }}"></div>
+                            <div class="autocomplete__results" id="results_{{ Str::slug($key) }}"></div>
                         </div>
-                    @elseif ($isDate)
-                        <input type="date" id="field_{{ $key }}" name="fields[{{ $key }}]" value="{{ $oldValue }}" required>
+                    @elseif ($type === 'date' || str_contains(strtolower($key), 'tanggal'))
+                        <input 
+                            type="date" 
+                            id="field_{{ Str::slug($key) }}" 
+                            name="fields[{{ $key }}]" 
+                            value="{{ $oldValue }}" 
+                            required
+                        >
                     @else
-                        <input type="text" id="field_{{ $key }}" name="fields[{{ $key }}]" value="{{ $oldValue }}" required>
+                        <input 
+                            type="text" 
+                            id="field_{{ Str::slug($key) }}" 
+                            name="fields[{{ $key }}]" 
+                            value="{{ $oldValue }}" 
+                            required
+                        >
                     @endif
 
                     @error('fields.' . $key)

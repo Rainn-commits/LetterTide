@@ -6,9 +6,13 @@ class PlaceholderParser
 {
     public static function extract(string $text): array
     {
-        preg_match_all('/\{\{\s*([a-zA-Z_][a-zA-Z0-9_]*)\s*\}\}/', $text, $matches);
+        preg_match_all('/\{\{\s*(.*?)\s*\}\}|\[\s*(.*?)\s*\]|\{\s*(.*?)\s*\}/', $text, $matches);
 
-        return array_values(array_unique($matches[1]));
+        $rawFields = array_merge($matches[1], $matches[2], $matches[3]);
+
+        $fields = array_filter(array_map('trim', $rawFields));
+
+        return array_values(array_unique($fields));
     }
 
     public static function toFormFields(string $text): array
@@ -18,7 +22,7 @@ class PlaceholderParser
         return array_map(function ($name) {
             return [
                 'name'  => $name,
-                'label' => ucwords(str_replace('_', ' ', $name)),
+                'label' => ucwords(str_replace(['_', '-'], ' ', $name)),
                 'type'  => self::inferType($name),
             ];
         }, $names);
@@ -26,9 +30,23 @@ class PlaceholderParser
 
     public static function render(string $text, array $values): string
     {
+        foreach ($values as $name => $value) {
+            $search = [
+                '{{ ' . $name . ' }}',
+                '{{' . $name . '}}',
+                '[' . $name . ']',
+                '{' . $name . '}',
+            ];
+
+            $text = str_replace($search, $value, $text);
+        }
+
         return preg_replace_callback(
-            '/\{\{\s*([a-zA-Z_][a-zA-Z0-9_]*)\s*\}\}/',
-            fn($matches) => $values[$matches[1]] ?? '',
+            '/\{\{\s*(.*?)\s*\}\}|\[\s*(.*?)\s*\]|\{\s*(.*?)\s*\}/',
+            function ($matches) use ($values) {
+                $key = trim($matches[1] ?: ($matches[2] ?: $matches[3]));
+                return $values[$key] ?? '';
+            },
             $text
         );
     }
@@ -41,10 +59,11 @@ class PlaceholderParser
             return 'date';
         }
 
-        if (str_contains($lower, 'nama')) {
+        if (str_contains($lower, 'karyawan') || str_contains($lower, 'pegawai') || str_contains($lower, 'user')) {
             return 'autocomplete_user';
         }
 
         return 'text';
     }
 }
+

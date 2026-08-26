@@ -54,6 +54,9 @@ Route::middleware('auth')->group(function () {
         Route::post('/kop-surat', [KopSuratController::class, 'store'])->name('kop-surat.store');
     });
 
+    Route::get('/surat/{surat}/edit', [SuratController::class, 'edit'])->name('surat.edit');
+    Route::put('/surat/{surat}', [SuratController::class, 'update'])->name('surat.update');
+
     Route::middleware('permission:user.manage')->group(function () {
         Route::get('/pengguna', [PenggunaController::class, 'index'])->name('pengguna.index');
         Route::get('/pengguna/create', [PenggunaController::class, 'create'])->name('pengguna.create');
@@ -106,5 +109,9 @@ Route::middleware('auth')->group(function () {
         Route::get('/evaluasi-retensi', [EvaluasiRetensiController::class, 'index'])->name('evaluasi-retensi.index');
         Route::post('/evaluasi-retensi/{surat}/nilai', [EvaluasiRetensiController::class, 'simpanPenilaian'])->name('evaluasi-retensi.nilai');
         Route::post('/evaluasi-retensi/jalankan', [EvaluasiRetensiController::class, 'jalankanEvaluasi'])->name('evaluasi-retensi.jalankan');
+    });
+
+    Route::middleware(['auth', 'role:Super Admin,Admin'])->group(function () {
+        Route::resource('template-surat', TemplateSuratController::class)->except(['show']);
     });
 });
