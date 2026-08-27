@@ -22,41 +22,25 @@
   animation: fadeSlideUp 0.4s var(--ease);
 }
 
-.surat-search {
-  background: var(--color-white);
-  border-radius: var(--radius-md);
-  box-shadow: var(--shadow-soft);
-  padding: 4px;
-  margin-bottom: 24px;
-}
-
-.surat-search__field {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-sm);
-  padding: 10px 14px;
-}
-
-.surat-search__field svg {
-  width: 18px;
-  height: 18px;
+.template-table th {
+  padding: 14px 18px;
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
   color: var(--color-ink-soft);
-  flex-shrink: 0;
+  border-bottom: 2px solid var(--color-border);
+  white-space: nowrap;
+  text-align: left;
 }
 
-.surat-search__field input {
-  border: none;
-  outline: none;
-  width: 100%;
-  font-size: 15px;
+.template-table td {
+  padding: 14px 18px;
+  font-size: 14px;
   color: var(--color-ink);
-  background: transparent;
-}
-
-.surat-search__field input::placeholder {
-  color: #A6B2B6;
+  border-bottom: 1px solid var(--color-border);
+  vertical-align: middle;
+  transition: background-color 0.15s ease;
 }
 
 .wizard-step {
@@ -483,4 +467,3 @@
     background: none;
   }
 }
-
