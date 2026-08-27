@@ -1,7 +1,8 @@
 document.addEventListener('DOMContentLoaded', function () {
 
     var searchInput = document.getElementById('activitySearch');
-    var activityItems = document.querySelectorAll('.activity-item');
+    // FIX: Samakan selector dengan class HTML di Blade (.activity-feed__item)
+    var activityItems = document.querySelectorAll('.activity-feed__item');
     var searchEmptyMsg = document.getElementById('activitySearchEmpty');
 
     if (searchInput && activityItems.length) {
@@ -11,17 +12,24 @@ document.addEventListener('DOMContentLoaded', function () {
 
             activityItems.forEach(function (item) {
                 var matches = item.textContent.toLowerCase().includes(query);
-                item.classList.toggle('is-hidden', !matches);
-                if (matches) visibleCount++;
+                
+                // FIX: Langsung kontrol style display agar pasti tersembunyi/tampil
+                if (matches) {
+                    item.style.display = 'flex';
+                    visibleCount++;
+                } else {
+                    item.style.display = 'none';
+                }
             });
 
             if (searchEmptyMsg) {
-                searchEmptyMsg.classList.toggle('is-visible', visibleCount === 0 && query !== '');
+                searchEmptyMsg.style.display = (visibleCount === 0 && query !== '') ? 'block' : 'none';
             }
         });
     }
 
-    var trafficCols = document.querySelectorAll('.traffic-chart__col');
+    // Traffic Chart Click Event
+    var trafficCols = document.querySelectorAll('.traffic-chart-pro__col');
     var trafficDetail = document.getElementById('trafficDetail');
 
     if (trafficCols.length && trafficDetail) {

@@ -1230,3 +1230,13 @@ a.stat-card-pro:hover .skeuo-icon {
     display: none !important;
     content: none !important;
 }
+
+.dash-pro-sidebar .card-pro__header {
+  justify-content: center !important;
+  text-align: center !important;
+}
+
+.dash-pro-sidebar .card-pro__title {
+  text-align: center !important;
+  width: 100%;
+}
