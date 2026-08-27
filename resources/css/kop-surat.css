@@ -1,3 +1,5 @@
+@import url('variables.css');
+
 h2 {
     color: #008793;
     font-size: 1.5rem;
@@ -182,4 +184,27 @@ table[border="1"] td:first-child {
     color: #008793;
     width: 130px;
     background-color: rgba(0, 195, 208, 0.06);
+}
+
+form[action*="kop-surat"] {
+    animation: fadeSlideUp 0.4s var(--ease, ease);
+}
+
+@media (max-width: 640px) {
+    h2 { font-size: 1.25rem; }
+
+    form[action*="kop-surat"] {
+        padding: 20px;
+    }
+
+    table[border="1"] {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    table[border="1"] td:first-child {
+        width: auto;
+    }
 }

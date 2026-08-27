@@ -33,11 +33,11 @@
                 
                 <div style="background: #e6f7f7 !important; height: 160px !important; width: 100% !important; display: flex !important; align-items: center !important; justify-content: center !important; padding: 0 !important; margin: 0 !important;">
                     <div style="width: 80px !important; height: 110px !important; background: #ffffff !important; border-radius: 6px !important; padding: 10px 8px !important; box-shadow: 0 4px 10px rgba(0,0,0,0.08) !important; position: relative !important; display: flex !important; flex-direction: column !important; gap: 5px !important; box-sizing: border-box !important;">
-                        <div style="height: 4px !important; background: #008080 !important; border-radius: 2px !important; margin-bottom: 4px !important; width: 100% !important;"></div>
+                        <div style="height: 4px !important; background: #00C3D0 !important; border-radius: 2px !important; margin-bottom: 4px !important; width: 100% !important;"></div>
                         <div style="height: 3px !important; background: #cbd5e1 !important; border-radius: 2px !important; width: 80% !important;"></div>
                         <div style="height: 3px !important; background: #cbd5e1 !important; border-radius: 2px !important; width: 100% !important;"></div>
                         <div style="height: 3px !important; background: #cbd5e1 !important; border-radius: 2px !important; width: 60% !important;"></div>
-                        <span style="position: absolute !important; bottom: 6px !important; right: 6px !important; font-size: 8px !important; font-weight: 700 !important; color: #008080 !important; background: #e6f7f7 !important; padding: 2px 4px !important; border-radius: 3px !important;">DOC</span>
+                        <span style="position: absolute !important; bottom: 6px !important; right: 6px !important; font-size: 8px !important; font-weight: 700 !important; color: #00C3D0 !important; background: #e6f7f7 !important; padding: 2px 4px !important; border-radius: 3px !important;">DOC</span>
                     </div>
                 </div>
 

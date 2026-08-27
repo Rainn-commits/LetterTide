@@ -1,39 +1,55 @@
+@import url('variables.css');
+
 .log-page {
     padding: 24px;
-    max-width: 1000px;
+    max-width: 1100px;
     margin: 0 auto;
 }
 
 .log-page__title {
-    font-size: 22px;
-    font-weight: 600;
+    font-family: var(--font-display);
+    font-size: 24px;
+    font-weight: 700;
     margin-bottom: 20px;
-    color: #101820;
+    color: var(--color-ink);
 }
 
 .log-table {
     width: 100%;
     border-collapse: collapse;
-    background: #fff;
-    border-radius: 8px;
+    background: var(--color-white);
+    border-radius: var(--radius-lg);
     overflow: hidden;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    box-shadow: var(--shadow-card);
+    animation: fadeSlideUp 0.4s var(--ease);
 }
 
 .log-table th {
-    background: #101820;
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
     color: #fff;
     text-align: left;
-    padding: 12px 16px;
-    font-size: 13px;
-    font-weight: 600;
+    padding: 14px 18px;
+    font-size: 12.5px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    white-space: nowrap;
 }
 
 .log-table td {
-    padding: 12px 16px;
+    padding: 14px 18px;
     font-size: 14px;
-    border-bottom: 1px solid #eee;
-    color: #333;
+    border-bottom: 1px solid var(--color-border);
+    color: var(--color-ink-soft);
+    vertical-align: middle;
+}
+
+.log-table tbody tr {
+    transition: background-color var(--transition-fast);
+}
+
+.log-table tbody tr:hover {
+    background-color: var(--color-bg-tint);
 }
 
 .log-table tr:last-child td {
@@ -42,23 +58,34 @@
 
 .log-badge {
     display: inline-block;
-    padding: 3px 10px;
-    border-radius: 999px;
+    padding: 4px 12px;
+    border-radius: var(--radius-pill);
     font-size: 12px;
-    font-weight: 600;
+    font-weight: 700;
 }
 
-.log-badge--create   { background: #E6F9F0; color: #0B8A4A; }
-.log-badge--update   { background: #E6F4FB; color: #0B6FA8; }
-.log-badge--delete   { background: #FDEAEA; color: #C43D3D; }
+.log-badge--create   { background: var(--color-success-bg); color: var(--color-success); }
+.log-badge--update   { background: var(--color-bg-tint-2); color: var(--color-primary-darker); }
+.log-badge--delete   { background: var(--color-danger-bg); color: var(--color-danger); }
 .log-badge--default  { background: #F0F0F0; color: #555; }
 
 .log-empty {
     text-align: center;
-    padding: 40px;
-    color: #888;
+    padding: 48px 20px;
+    color: var(--color-ink-soft);
+    font-size: 14.5px;
 }
 
 .log-pagination {
     margin-top: 20px;
+}
+
+@media (max-width: 720px) {
+    .log-page { padding: 16px; }
+    .log-table {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+        -webkit-overflow-scrolling: touch;
+    }
 }

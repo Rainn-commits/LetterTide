@@ -40,11 +40,20 @@
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-card);
   padding: 32px;
+  animation: fadeSlideUp 0.4s var(--ease);
 }
 
 .card--table {
   padding: 0;
   overflow: hidden;
+}
+
+.icon-btn {
+  transition: background var(--transition-fast), transform var(--transition-fast);
+}
+
+.icon-btn:hover {
+  transform: translateY(-2px);
 }
 
 .template-table {
@@ -296,4 +305,18 @@
 @media (max-width: 720px) {
   .card { padding: 20px; }
   .template-form { max-width: none; }
+  .page-toolbar { flex-wrap: wrap; gap: 12px; }
+  .template-table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+@media (max-width: 480px) {
+  .btn-teal,
+  .btn-dark,
+  .btn-ghost { width: 100%; justify-content: center; text-align: center; }
+  .form-actions { flex-direction: column-reverse; align-items: stretch; }
 }

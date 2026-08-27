@@ -19,6 +19,7 @@
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-card);
   padding: 32px;
+  animation: fadeSlideUp 0.4s var(--ease);
 }
 
 .surat-search {
@@ -104,6 +105,16 @@
 .template-card:hover {
   transform: translateY(-3px);
   box-shadow: var(--shadow-card);
+}
+
+.template-card-fixed {
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast) !important;
+}
+
+.template-card-fixed:hover {
+  transform: translateY(-4px) !important;
+  box-shadow: 0 14px 28px -10px rgba(0, 195, 208, 0.35) !important;
+  border-color: var(--color-primary) !important;
 }
 
 .template-card__thumb {
@@ -435,6 +446,7 @@
 }
 
 @media (max-width: 780px) {
+  .card { padding: 20px; }
   .template-grid { grid-template-columns: repeat(2, 1fr); }
   .btn-block-wide { max-width: none; }
   .template-table {
@@ -443,6 +455,15 @@
     white-space: nowrap;
   }
   .surat-preview-toolbar { flex-direction: column-reverse; align-items: stretch; gap: 12px; }
+  .surat-preview-toolbar .btn-dark,
+  .surat-preview-toolbar .btn-ghost { width: 100%; justify-content: center; text-align: center; }
+  .wizard-step__title { font-size: 16px; }
+}
+
+@media (max-width: 520px) {
+  .template-grid { grid-template-columns: 1fr; }
+  .surat-form,
+  .btn-block-wide { max-width: none; }
 }
 
 @media print {

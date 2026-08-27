@@ -21,7 +21,7 @@
 @section('content')
 <div class="kop-grid-layout">
 
-    <div class="card" style="padding: 24px; background: #ffffff; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.04);">
+    <div class="card" style="padding: 24px; background: #ffffff; border-radius: 16px; box-shadow: 0 20px 50px -20px rgba(16,24,32,0.25);">
         <h2 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 20px; color: #0f172a;">
             {{ $kopSuratAktif ? 'Simpan sebagai Versi Baru' : 'Atur Kop Surat' }}
         </h2>
@@ -35,7 +35,7 @@
                     <span style="font-size: 0.8rem; color: #64748b;">PNG, JPG, JPEG (Max 10MB)</span>
                 </div>
 
-                <label for="logo" style="display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; padding: 10px; background-color: #5eead4; color: #0f172a; font-weight: 600; border-radius: 8px; cursor: pointer; text-align: center; border: none;">
+                <label for="logo" style="display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; padding: 10px; background: linear-gradient(135deg, #00C3D0 0%, #0090A0 100%); color: #ffffff; font-weight: 600; border-radius: 8px; cursor: pointer; text-align: center; border: none; transition: transform 0.15s ease, box-shadow 0.15s ease; box-shadow: 0 4px 12px rgba(0,195,208,0.3);" onmouseover="this.style.transform='translateY(-1px)'" onmouseout="this.style.transform='translateY(0)'">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
                         <polyline points="17 8 12 3 7 8"></polyline>
@@ -78,7 +78,7 @@
             </div>
 
         <div>
-            <button type="submit" style="width: 100%; padding: 12px; background-color: #0d9488; color: #ffffff; font-weight: 600; border: none; border-radius: 8px; cursor: pointer; font-size: 0.95rem;">
+            <button type="submit" style="width: 100%; padding: 13px; background: linear-gradient(135deg, #00C3D0 0%, #0090A0 100%); color: #ffffff; font-weight: 700; border: none; border-radius: 8px; cursor: pointer; font-size: 0.95rem; box-shadow: 0 6px 16px -4px rgba(0,195,208,0.45); transition: transform 0.15s ease, box-shadow 0.15s ease;" onmouseover="this.style.transform='translateY(-1px)'" onmouseout="this.style.transform='translateY(0)'">
                 Simpan sebagai versi baru
             </button>
         </form>
@@ -86,7 +86,7 @@
 
     <div style="position: sticky; top: 20px;">
         <label style="font-weight: 700; margin-bottom: 10px; display: block; color: #0f172a;">Live Preview Kop Surat:</label>
-        <div class="surat-paper" style="width: 100%; min-height: auto; padding: 25px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); background: #fff; border-radius: 8px;">
+        <div class="surat-paper" style="width: 100%; min-height: auto; padding: 25px; box-shadow: 0 10px 30px -8px rgba(0,195,208,0.25); background: #fff; border-radius: 12px; border: 1px solid rgba(0,195,208,0.15);">
             <div class="surat-paper__header" style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
                 <div class="surat-paper__logo-left" style="width: 25%;">
                     <img id="prev_logo" src="{{ ($kopSuratAktif && $kopSuratAktif->logo) ? Storage::url($kopSuratAktif->logo) : '' }}" class="surat-paper__logo" style="max-height: 75px; width: auto; {{ (!$kopSuratAktif || !$kopSuratAktif->logo) ? 'display: none;' : '' }}">

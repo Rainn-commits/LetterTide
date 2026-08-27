@@ -1,103 +1,146 @@
+@import url('variables.css');
+
 .rk-page {
     padding: 24px;
-    max-width: 900px;
+    max-width: 960px;
     margin: 0 auto;
 }
 
 .rk-page__title {
-    font-size: 22px;
-    font-weight: 600;
+    font-family: var(--font-display);
+    font-size: 24px;
+    font-weight: 700;
     margin-bottom: 6px;
-    color: #101820;
+    color: var(--color-ink);
 }
 
 .rk-page__subtitle {
     font-size: 14px;
-    color: #666;
+    color: var(--color-ink-soft);
     margin-bottom: 20px;
 }
 
 .rk-alert {
-    padding: 12px 16px;
-    border-radius: 8px;
+    padding: 14px 18px;
+    border-radius: var(--radius-sm);
     margin-bottom: 20px;
     font-size: 14px;
+    font-weight: 600;
+    animation: fadeSlideUp 0.3s var(--ease);
 }
 
-.rk-alert--success { background: #E6F9F0; color: #0B8A4A; }
-.rk-alert--warning { background: #FFF6E0; color: #A87400; }
-.rk-alert--error   { background: #FDEAEA; color: #C43D3D; }
+.rk-alert--success { background: var(--color-success-bg); color: var(--color-success); }
+.rk-alert--warning { background: var(--color-warning-bg); color: var(--color-warning); }
+.rk-alert--error   { background: var(--color-danger-bg); color: var(--color-danger); }
 
 .rk-total-bobot {
     display: inline-block;
-    padding: 8px 16px;
-    border-radius: 8px;
+    padding: 10px 18px;
+    border-radius: var(--radius-pill);
     background: #F0F0F0;
     font-size: 14px;
-    font-weight: 600;
+    font-weight: 700;
     margin-bottom: 20px;
 }
 
-.rk-total-bobot--ok    { background: #E6F9F0; color: #0B8A4A; }
-.rk-total-bobot--warn  { background: #FFF6E0; color: #A87400; }
+.rk-total-bobot--ok    { background: var(--color-success-bg); color: var(--color-success); }
+.rk-total-bobot--warn  { background: var(--color-warning-bg); color: var(--color-warning); }
 
 .rk-table {
     width: 100%;
     border-collapse: collapse;
-    background: #fff;
-    border-radius: 8px;
+    background: var(--color-white);
+    border-radius: var(--radius-lg);
     overflow: hidden;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    box-shadow: var(--shadow-card);
+    animation: fadeSlideUp 0.4s var(--ease);
 }
 
 .rk-table th {
-    background: #101820;
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
     color: #fff;
     text-align: left;
-    padding: 12px 16px;
-    font-size: 13px;
+    padding: 14px 18px;
+    font-size: 12.5px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    white-space: nowrap;
 }
 
 .rk-table td {
-    padding: 12px 16px;
+    padding: 14px 18px;
     font-size: 14px;
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid var(--color-border);
+    color: var(--color-ink-soft);
+}
+
+.rk-table tbody tr {
+    transition: background-color var(--transition-fast);
+}
+
+.rk-table tbody tr:hover {
+    background-color: var(--color-bg-tint);
+}
+
+.rk-table tr:last-child td {
+    border-bottom: none;
 }
 
 .rk-tipe-badge {
     display: inline-block;
-    padding: 3px 10px;
-    border-radius: 999px;
+    padding: 4px 12px;
+    border-radius: var(--radius-pill);
     font-size: 12px;
-    font-weight: 600;
+    font-weight: 700;
 }
 
-.rk-tipe-badge--benefit { background: #E6F4FB; color: #0B6FA8; }
+.rk-tipe-badge--benefit { background: var(--color-bg-tint-2); color: var(--color-primary-darker); }
 .rk-tipe-badge--cost    { background: #FDF0E6; color: #B85C00; }
 
 .rk-bobot-form {
     display: flex;
     gap: 8px;
     align-items: center;
+    flex-wrap: wrap;
 }
 
 .rk-bobot-form input[type="number"] {
     width: 80px;
-    padding: 6px 8px;
-    border: 1px solid #ccc;
-    border-radius: 6px;
+    padding: 7px 10px;
+    border: 1.5px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    transition: border-color var(--transition-fast);
+}
+
+.rk-bobot-form input[type="number"]:focus {
+    outline: none;
+    border-color: var(--color-primary);
 }
 
 .rk-bobot-form button {
-    padding: 6px 14px;
-    background: #101820;
+    padding: 7px 16px;
+    background: var(--color-primary);
     color: #fff;
     border: none;
-    border-radius: 6px;
+    border-radius: var(--radius-pill);
     cursor: pointer;
     font-size: 13px;
+    font-weight: 700;
+    transition: background var(--transition-fast), transform var(--transition-fast);
 }
 
 .rk-bobot-form button:hover {
-    background: #2FC4D0;
+    background: var(--color-primary-dark);
+    transform: translateY(-1px);
+}
+
+@media (max-width: 720px) {
+    .rk-page { padding: 16px; }
+    .rk-table {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+        -webkit-overflow-scrolling: touch;
+    }
 }
