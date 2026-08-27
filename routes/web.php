@@ -51,6 +51,8 @@ Route::middleware('auth')->group(function () {
         Route::post('/kop-surat', [KopSuratController::class, 'store'])->name('kop-surat.store');
     });
 
+    Route::post('/surat/{surat}/ttd-digital', [SuratController::class, 'ttdDigital'])->name('surat.ttd-digital');
+    Route::delete('/surat/{surat}', [SuratController::class, 'destroy'])->name('surat.destroy');
     Route::get('/surat/{surat}/edit', [SuratController::class, 'edit'])->name('surat.edit');
     Route::put('/surat/{surat}', [SuratController::class, 'update'])->name('surat.update');
 
@@ -95,9 +97,7 @@ Route::middleware('auth')->group(function () {
         Route::delete('/role/{role}', [RoleController::class, 'destroy'])->name('role.destroy');
     });
 
-    Route::middleware('auth')->group(function () {
-        Route::get('/log-aktivitas', [LogAktivitasController::class, 'index'])->name('log-aktivitas.index');
-    });
+    Route::get('/log-aktivitas', [LogAktivitasController::class, 'index'])->name('log-aktivitas.index');
 
     Route::middleware('permission:retensi.manage')->group(function () {
         Route::get('/retensi-kriteria', [RetensiKriteriaController::class, 'index'])->name('retensi-kriteria.index');

@@ -167,6 +167,27 @@ class SuratController extends Controller
             ->with('success', 'Isi surat berhasil diperbarui.');
     }
 
+    public function ttdDigital(Surat $surat)
+    {
+        $surat->status = 'Disetujui';
+        $surat->save(); 
+
+        return redirect()->back()->with('success', 'Surat berhasil disetujui dan ditandatangani secara digital!');
+    }
+
+    
+
+    public function destroy(Surat $surat)
+    {
+        if ($surat->file_arsip && Storage::disk('public')->exists($surat->file_arsip)) {
+            Storage::disk('public')->delete($surat->file_arsip);
+        }
+
+        $surat->delete();
+
+        return redirect()->back()->with('success', 'Surat berhasil dihapus!');
+    }
+
     private function generateNomorSurat(TemplateSurat $template): string
     {
         $tahunPenuh    = now()->year;
@@ -195,3 +216,4 @@ class SuratController extends Controller
         return $romawi[$bulan - 1];
     }
 }
+

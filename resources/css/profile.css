@@ -98,19 +98,21 @@
     border-radius: 24px !important; 
     background: linear-gradient(
         145deg,
-        rgba(255, 255, 255, 0.75),
-        rgba(255, 255, 255, 0.45)
-    );
-    border: 1px solid rgba(255, 255, 255, 0.85);
-    -webkit-backdrop-filter: blur(20px) saturate(165%);
-    backdrop-filter: blur(20px) saturate(165%);
+        rgba(255, 255, 255, 0.92) 0%,
+        rgba(255, 255, 255, 0.70) 100%
+    ) !important;
+    border: 1.5px solid rgba(255, 255, 255, 0.95) !important;
+
+    -webkit-backdrop-filter: blur(24px) saturate(180%);
+    backdrop-filter: blur(24px) saturate(180%);
+
     box-shadow:
-        0 18px 40px rgba(15, 23, 42, 0.05),
-        0 5px 18px rgba(0, 195, 208, 0.05),
-        inset 0 1px 1px rgba(255, 255, 255, 0.95);
+        0 20px 40px -10px rgba(15, 23, 42, 0.10),
+        0 8px 16px -4px rgba(0, 195, 208, 0.12),
+        inset 0 1.5px 1.5px 0 rgba(255, 255, 255, 1) !important;
+
     animation: fadeSlideUp 0.45s var(--ease);
 }
-
 .profile-card__shine {
     position: absolute;
     top: 0;

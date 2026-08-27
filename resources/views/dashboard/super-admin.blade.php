@@ -20,20 +20,20 @@
                     <div class="stat-card-pro__value">{{ number_format($stats['total_surat']) }}</div>
                 </a>
 
-                <div class="glass-card stat-card-pro stat-card-pro--emerald stat-card-pro--static">
+                <div class="glass-card stat-card-pro stat-card-pro--blue stat-card-pro--static">
                     <div class="stat-card-pro__top">
                         <span class="stat-card-pro__label">Surat Bulan Ini</span>
-                        <span class="skeuo-icon skeuo-icon--emerald">
+                        <span class="skeuo-icon skeuo-icon--blue">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
                         </span>
                     </div>
                     <div class="stat-card-pro__value">{{ number_format($stats['surat_bulan_ini']) }}</div>
                 </div>
 
-                <a href="{{ Route::has('pengguna.index') ? route('pengguna.index') : url('/pengguna') }}" class="glass-card stat-card-pro stat-card-pro--purple">
+                <a href="{{ Route::has('pengguna.index') ? route('pengguna.index') : url('/pengguna') }}" class="glass-card stat-card-pro stat-card-pro--red">
                     <div class="stat-card-pro__top">
                         <span class="stat-card-pro__label">Total Pengguna</span>
-                        <span class="skeuo-icon skeuo-icon--blue">
+                        <span class="skeuo-icon skeuo-icon--red">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
                         </span>
                     </div>
@@ -88,7 +88,6 @@
                             @foreach ($trafficData as $label => $count)
                                 @php 
                                     $shortMonth = $monthMap[$label] ?? $label;
-                                    // Jika count 0, set height 0% (tampil sebagai garis dasar)
                                     $heightPercentage = $count > 0 ? max(12, round(($count / $max) * 100)) : 0; 
                                 @endphp
                                 <div class="traffic-chart-pro__col {{ $loop->last ? 'traffic-chart-pro__col--current' : '' }}">
