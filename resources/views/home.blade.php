@@ -158,21 +158,28 @@
 
         </div>
 
-        <div class="hero__walker" aria-hidden="true">
-            <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-                <g class="walker__body">
-                    <circle cx="50" cy="18" r="9" fill="#101820"/>
-                    <rect x="41" y="27" width="18" height="32" rx="8" fill="#0FA9B4"/>
-                    <line x1="42" y1="33" x2="30" y2="48" stroke="#101820" stroke-width="5" stroke-linecap="round" class="walker__arm-back"/>
-                    <line x1="58" y1="33" x2="70" y2="44" stroke="#101820" stroke-width="5" stroke-linecap="round"/>
-                    <g transform="rotate(15 74 43)">
-                        <rect x="66" y="38" width="16" height="11" rx="1.5" fill="#FFFFFF" stroke="#101820" stroke-width="2"/>
-                        <path d="M67 39 L74 44 L81 39" stroke="#101820" stroke-width="1.5" fill="none"/>
-                    </g>
-                    <line x1="45" y1="58" x2="38" y2="80" stroke="#101820" stroke-width="6" stroke-linecap="round" class="walker__leg-back"/>
-                    <line x1="55" y1="58" x2="62" y2="80" stroke="#101820" stroke-width="6" stroke-linecap="round" class="walker__leg-front"/>
-                </g>
-            </svg>
+        <div class="hero__flying-container" aria-hidden="true">
+            <div class="hero__flying-object">
+                <svg class="flying-svg flying-svg--envelope" viewBox="0 0 40 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="40" height="28" rx="4" fill="#0B1220"/>
+                    <path d="M2 3L20 17L38 3" stroke="#6FE0E8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M2 25L14 14" stroke="rgba(111,224,232,0.4)" stroke-width="2"/>
+                    <path d="M38 25L26 14" stroke="rgba(111,224,232,0.4)" stroke-width="2"/>
+                </svg>
+
+                <svg class="flying-svg flying-svg--plane" viewBox="0 0 44 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M2 14L42 2L28 14L42 26Z" fill="#0B1220"/>
+                    <path d="M28 14L16 18L2 14L28 14Z" fill="#0EA1AB"/>
+                    <path d="M28 14L42 2L36 26Z" fill="#233240" opacity="0.9"/>
+                </svg>
+
+                <div class="hero__sparkles">
+                    <span class="sparkle sp-1"></span>
+                    <span class="sparkle sp-2"></span>
+                    <span class="sparkle sp-3"></span>
+                    <span class="sparkle sp-4"></span>
+                </div>
+            </div>
         </div>
 
         <div class="hero__plane hero__plane--1" aria-hidden="true">

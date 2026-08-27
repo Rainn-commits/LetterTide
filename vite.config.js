@@ -7,7 +7,6 @@ export default defineConfig({
     plugins: [
         laravel({
             input: [
-                'resources/views/home.blade.php',
                 'resources/css/app.css',
                 'resources/css/home.css',
                 'resources/css/login.css',
