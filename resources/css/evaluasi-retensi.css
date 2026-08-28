@@ -1,156 +1,271 @@
 @import url('variables.css');
 
-.er-page {
-    padding: 24px;
-    max-width: 1150px;
-    margin: 0 auto;
+/* ==========================================================================
+   1. HEADER & NAVIGATION LAYOUT
+   ========================================================================== */
+.retensi-header-wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-bottom: 24px;
 }
 
-.er-page__header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 12px;
-    margin-bottom: 20px;
+.retensi-header-title {
+  font-family: var(--font-display);
+  font-size: 26px;
+  font-weight: 800;
+  color: var(--color-ink);
+  letter-spacing: -0.5px;
+  margin: 0 0 6px 0;
 }
 
-.er-page__title {
-    font-family: var(--font-display);
-    font-size: 24px;
-    font-weight: 700;
-    color: var(--color-ink);
+.retensi-header-sub {
+  margin: 0;
+  font-size: 14px;
+  color: var(--color-ink-soft);
 }
 
-.er-btn-jalankan {
-    padding: 11px 22px;
-    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
-    color: #fff;
-    border: none;
-    border-radius: var(--radius-pill);
-    cursor: pointer;
-    font-size: 14px;
-    font-weight: 700;
-    box-shadow: 0 6px 16px -4px rgba(0, 195, 208, 0.45);
-    transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+.btn-futuristic-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 11px 22px;
+  background: linear-gradient(
+    135deg,
+    var(--color-primary) 0%,
+    var(--color-primary-dark) 100%
+  );
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-pill);
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 700;
+  box-shadow: 0 6px 16px -4px rgba(0, 195, 208, 0.45);
+  transition:
+    transform var(--transition-fast),
+    box-shadow var(--transition-fast);
 }
 
-.er-btn-jalankan:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 10px 20px -6px rgba(0, 195, 208, 0.55);
+.btn-futuristic-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 20px -6px rgba(0, 195, 208, 0.55);
 }
 
-.er-alert {
-    padding: 14px 18px;
-    border-radius: var(--radius-sm);
-    margin-bottom: 20px;
-    font-size: 14px;
-    font-weight: 600;
-    animation: fadeSlideUp 0.3s var(--ease);
+.btn-futuristic-primary svg {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
 }
 
-.er-alert--success { background: var(--color-success-bg); color: var(--color-success); }
-.er-alert--error   { background: var(--color-danger-bg); color: var(--color-danger); }
-
-.er-table {
-    width: 100%;
-    border-collapse: collapse;
-    background: var(--color-white);
-    border-radius: var(--radius-lg);
-    overflow: hidden;
-    box-shadow: var(--shadow-card);
-    animation: fadeSlideUp 0.4s var(--ease);
+/* ==========================================================================
+   2. CARD & TABLE LAYOUT (ALL TH CENTERED)
+   ========================================================================== */
+.retensi-card-expanded {
+  background: var(--color-white);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+  padding: 16px;
+  overflow-x: auto;
+  animation: fadeSlideUp 0.4s var(--ease);
 }
 
-.er-table th {
-    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
-    color: #fff;
-    text-align: left;
-    padding: 14px 18px;
-    font-size: 12.5px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.03em;
-    white-space: nowrap;
+.retensi-table-modern {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0 6px;
+  min-width: 900px;
 }
 
-.er-table td {
-    padding: 14px 18px;
-    font-size: 14px;
-    border-bottom: 1px solid var(--color-border);
-    color: var(--color-ink-soft);
-    vertical-align: middle;
+/* SEMUA JUDUL HEADER TABEL MENJADI CENTER */
+.retensi-table-modern th {
+  padding: 14px 16px;
+  color: var(--color-ink-soft);
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  border-bottom: 2px solid var(--color-border);
+  text-align: center !important; /* Dibuat center rata tengah */
+  white-space: nowrap;
 }
 
-.er-table tbody tr {
-    transition: background-color var(--transition-fast);
+.retensi-table-modern td {
+  padding: 14px 16px;
+  background: var(--color-white);
+  font-size: 13.5px;
+  color: var(--color-ink);
+  vertical-align: middle;
+  border-bottom: 1px solid var(--color-border);
+  text-align: center; /* Isi sel juga disesuaikan ke tengah */
+  white-space: nowrap;
 }
 
-.er-table tbody tr:hover {
-    background-color: var(--color-bg-tint);
+.retensi-table-modern tbody tr {
+  transition: background-color var(--transition-fast);
 }
 
-.er-table tr:last-child td {
-    border-bottom: none;
+.retensi-table-modern tbody tr:hover td {
+  background-color: var(--color-bg-tint);
 }
 
-.er-status {
-    display: inline-block;
-    padding: 5px 14px;
-    border-radius: var(--radius-pill);
-    font-size: 12px;
-    font-weight: 700;
+.retensi-table-modern tbody tr:last-child td {
+  border-bottom: none;
 }
 
-.er-status--Musnah        { background: var(--color-danger-bg); color: var(--color-danger); }
-.er-status--Simpan.Lokal  { background: var(--color-warning-bg); color: var(--color-warning); }
-.er-status--Permanen      { background: var(--color-success-bg); color: var(--color-success); }
-.er-status--belum         { background: #F0F0F0; color: #777; }
-
-.er-mini-form {
-    display: flex;
-    gap: 6px;
-    align-items: center;
-    flex-wrap: wrap;
+.col-nomor, .text-nomor {
+  color: var(--color-ink);
+  font-weight: 700;
 }
 
-.er-mini-form select,
-.er-mini-form button {
-    font-size: 12px;
-    padding: 6px 10px;
-    border-radius: var(--radius-sm);
-    border: 1.5px solid var(--color-border);
+.col-tanggal {
+  color: var(--color-ink-soft);
 }
 
-.er-mini-form select:focus {
-    outline: none;
-    border-color: var(--color-primary);
+/* ==========================================================================
+   3. FORM PENILAIAN INLINE (1 BARIS SEJAJAR MENDATAR)
+   ========================================================================== */
+.form-penilaian-inline {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 8px !important;
+  flex-wrap: nowrap !important; /* Mencegah elemen turun ke bawah */
+  margin: 0 !important;
 }
 
-.er-mini-form button {
-    background: var(--color-primary);
-    color: #fff;
-    border: none;
-    cursor: pointer;
-    font-weight: 700;
-    transition: background var(--transition-fast), transform var(--transition-fast);
+.select-futuristic {
+  min-width: 130px;
+  max-width: 150px;
+  height: 38px;
+  padding: 0 28px 0 11px;
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background-color: #f1f5f9;
+  color: var(--color-ink);
+  font-size: 12.5px;
+  font-weight: 600;
+  cursor: pointer;
+  outline: none;
+  transition:
+    border-color var(--transition-fast),
+    box-shadow var(--transition-fast),
+    background-color var(--transition-fast);
 }
 
-.er-mini-form button:hover {
-    background: var(--color-primary-dark);
-    transform: translateY(-1px);
+.select-futuristic:focus {
+  background-color: var(--color-white);
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(0, 195, 208, 0.15);
+}
+
+.btn-futuristic-save {
+  height: 38px;
+  padding: 0 16px;
+  background: var(--color-primary);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-pill);
+  cursor: pointer;
+  font-size: 12.5px;
+  font-weight: 700;
+  white-space: nowrap;
+  flex-shrink: 0; /* Mencegah tombol mengkerut */
+  transition:
+    background var(--transition-fast),
+    transform var(--transition-fast),
+    box-shadow var(--transition-fast);
+}
+
+.btn-futuristic-save:hover {
+  background: var(--color-primary-dark);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 195, 208, 0.25);
+}
+
+/* ==========================================================================
+   4. BADGES & ALERTS
+   ========================================================================== */
+.badge-akses-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 42px;
+  padding: 5px 10px;
+  border-radius: var(--radius-pill);
+  background: var(--color-bg-tint-2);
+  color: var(--color-primary-dark);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.skor-retensi-val {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 48px;
+  padding: 6px 10px;
+  border-radius: var(--radius-pill);
+  background: #f1f5f9;
+  color: var(--color-ink);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.badge-retensi {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 12px;
+  border-radius: var(--radius-pill);
+  font-size: 11.5px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.badge-retensi--musnah   { background: var(--color-danger-bg); color: var(--color-danger); }
+.badge-retensi--simpan   { background: var(--color-warning-bg); color: var(--color-warning); }
+.badge-retensi--permanen { background: var(--color-success-bg); color: var(--color-success); }
+.badge-retensi--pending  { background: #f1f5f9; color: #64748b; }
+
+.table-empty-state {
+  padding: 40px 20px !important;
+  text-align: center !important;
+  color: var(--color-ink-soft) !important;
+  font-size: 14px !important;
+}
+
+.surat-alert {
+  max-width: none;
+  padding: 14px 18px;
+  border-radius: var(--radius-sm);
+  margin-bottom: 20px;
+  font-size: 14px;
+  font-weight: 600;
+  animation: fadeSlideUp 0.3s var(--ease);
+}
+
+.surat-alert--success { background: var(--color-success-bg); color: var(--color-success); }
+.surat-alert--danger  { background: var(--color-danger-bg); color: var(--color-danger); }
+
+/* ==========================================================================
+   5. RESPONSIVE MEDIA QUERIES
+   ========================================================================== */
+@media (max-width: 900px) {
+  .retensi-header-wrapper { align-items: flex-start; }
+  .retensi-header-wrapper form { width: 100%; }
+  .btn-futuristic-primary { width: 100%; }
+  .retensi-card-expanded { overflow-x: auto; }
 }
 
 @media (max-width: 720px) {
-    .er-page { padding: 16px; }
-    .er-table {
-        display: block;
-        overflow-x: auto;
-        white-space: nowrap;
-        -webkit-overflow-scrolling: touch;
-    }
-}
-
-@media (max-width: 480px) {
-    .er-btn-jalankan { width: 100%; }
+  .retensi-header-title { font-size: 22px; }
+  .retensi-header-sub { font-size: 13px; }
+  .retensi-card-expanded { padding: 6px; }
+  .retensi-table-modern th,
+  .retensi-table-modern td { padding: 12px 14px; }
 }

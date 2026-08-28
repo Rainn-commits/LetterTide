@@ -12,13 +12,12 @@ class EvaluasiRetensiController extends Controller
 {
     public function index()
     {
-        $arsip = Surat::where('jenis', 'Masuk')
-            ->with('evaluasiRetensi', 'template')
-            ->orderByDesc('tanggal_surat')
-            ->get();
+        $arsip = Surat::with('evaluasiRetensi', 'template')
+                ->orderByDesc('tanggal_surat')
+                ->get();
 
-        return view('evaluasi-retensi.index', compact('arsip'));
-    }
+            return view('evaluasi-retensi.index', compact('arsip'));
+        }
 
     public function simpanPenilaian(Request $request, Surat $surat)
     {

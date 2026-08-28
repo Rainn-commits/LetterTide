@@ -30,7 +30,7 @@ class RetensiScoringService
     {
         $bobotKriteria = RetensiKriteria::all()->keyBy('kode');
 
-        $evaluasiSiap = EvaluasiRetensi::with('surat')
+        $evaluasiSiap = EvaluasiRetensi::whereHas('surat')
             ->whereNotNull('nilai_guna')
             ->whereNotNull('kerahasiaan')
             ->get();
@@ -45,7 +45,7 @@ class RetensiScoringService
         foreach ($evaluasiSiap as $item) {
             $umurHari = Carbon::parse($item->surat->tanggal_surat)->diffInDays(now());
             $rawK3[$item->id] = $umurHari;
-            $rawK4[$item->id] = $item->surat->jumlah_akses;
+            $rawK4[$item->id] = $item->surat->jumlah_akses ?? 0;
         }
 
         $minK3 = min($rawK3); $maxK3 = max($rawK3);
@@ -59,14 +59,18 @@ class RetensiScoringService
             $normK2 = $skorK2 / max(self::SKALA_KERAHASIAAN);
 
             $normK3 = $this->normalisasiCost($rawK3[$item->id], $minK3, $maxK3);
-
             $normK4 = $this->normalisasiBenefit($rawK4[$item->id], $minK4, $maxK4);
 
+            $bobotK1 = $bobotKriteria['K1']->bobot ?? 0.25;
+            $bobotK2 = $bobotKriteria['K2']->bobot ?? 0.25;
+            $bobotK3 = $bobotKriteria['K3']->bobot ?? 0.25;
+            $bobotK4 = $bobotKriteria['K4']->bobot ?? 0.25;
+
             $skorTotal =
-                ($bobotKriteria['K1']->bobot ?? 0) * $normK1 +
-                ($bobotKriteria['K2']->bobot ?? 0) * $normK2 +
-                ($bobotKriteria['K3']->bobot ?? 0) * $normK3 +
-                ($bobotKriteria['K4']->bobot ?? 0) * $normK4;
+                ($bobotK1 * $normK1) +
+                ($bobotK2 * $normK2) +
+                ($bobotK3 * $normK3) +
+                ($bobotK4 * $normK4);
 
             $item->update([
                 'skor_total'         => round($skorTotal, 4),

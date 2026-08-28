@@ -104,8 +104,8 @@ Route::middleware('auth')->group(function () {
         Route::put('/retensi-kriteria/{retensiKriterion}', [RetensiKriteriaController::class, 'update'])->name('retensi-kriteria.update');
 
         Route::get('/evaluasi-retensi', [EvaluasiRetensiController::class, 'index'])->name('evaluasi-retensi.index');
-        Route::post('/evaluasi-retensi/{surat}/nilai', [EvaluasiRetensiController::class, 'simpanPenilaian'])->name('evaluasi-retensi.nilai');
-        Route::post('/evaluasi-retensi/jalankan', [EvaluasiRetensiController::class, 'jalankanEvaluasi'])->name('evaluasi-retensi.jalankan');
+        Route::post('/evaluasi-retensi/{surat}/nilai', [EvaluasiRetensiController::class, 'simpanPenilaian'])->name('retensi.simpan-penilaian');
+        Route::post('/evaluasi-retensi/jalankan', [EvaluasiRetensiController::class, 'jalankanEvaluasi'])->name('retensi.jalankan');
     });
 
 });
