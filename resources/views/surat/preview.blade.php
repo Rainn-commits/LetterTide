@@ -109,13 +109,23 @@
                 <div>Hormat Kami,</div>
                 <div>{{ $jabatanPenandatangan }}</div>
 
-                <div class="signature-space"></div>
+                <div style="height: 90px; display: flex; flex-direction: column; align-items: center; justify-content: center; margin: 5px 0;">
+                    @if (strtolower($surat->status ?? '') === 'disetujui')
+                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=100x100&data={{ urlencode(route('surat.show', $surat)) }}" alt="QR TTD Digital" style="width: 70px; height: 70px;">
+                        <span style="font-size: 7.5pt; color: #15803d; font-weight: bold; margin-top: 2px;">
+                            ✓ Signed Digital by {{ $surat->penandatangan->name ?? $namaPenandatangan }}
+                        </span>
+                    @else
+                        <span style="color: #ef4444; font-size: 9pt; font-style: italic;">
+                            (Belum Menyetujui / Ditandatangani)
+                        </span>
+                    @endif
+                </div>
 
                 <div class="signature-name">{{ $namaPenandatangan }}</div>
                 <div class="signature-sub">{{ $surat->kopSurat?->website ?? 'www.inovindo.co.id' }}</div>
             </div>
         </div>
-
     </div>
 
 @endsection

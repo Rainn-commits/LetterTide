@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use App\Models\Surat;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -59,6 +60,7 @@ class ArsipController extends Controller
 
         $suratList = $query->paginate(10)->withQueryString();
 
-        return view('surat.arsip', compact('suratList'));
-    }
+        $pejabatList = User::orderBy('name')->get();
+
+        return view('surat.arsip', compact('suratList', 'pejabatList'));    }
 }

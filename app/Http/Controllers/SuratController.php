@@ -36,22 +36,24 @@ class SuratController extends Controller
     public function store(Request $request, TemplateSurat $template)
     {
         $validated = $request->validate([
-            'kop_surat_id' => ['required', 'exists:pengaturan_kop_surats,id'],
-            'lampiran'     => ['nullable', 'string'],
-            'fields'       => ['required', 'array'],
-            'fields.*'     => ['required', 'string'],
+            'kop_surat_id'   => ['required', 'exists:pengaturan_kop_surat,id'],
+            'ttd_by_user_id' => ['required', 'exists:users,id'],
+            'lampiran'       => ['nullable', 'string'],
+            'fields'         => ['required', 'array'],
+            'fields.*'       => ['required', 'string'],
         ]);
 
         $nomorSurat = $this->generateNomorSurat($template);
 
         $surat = Surat::create([
-            'template_id'   => $template->id,
-            'user_id'       => Auth::id(),
-            'kop_surat_id'  => $validated['kop_surat_id'],
-            'nomor_surat'   => $nomorSurat,
-            'lampiran'      => $request->input('lampiran', '-'),
-            'jenis'         => 'Keluar',
-            'tanggal_surat' => now()->toDateString(),
+            'template_id'    => $template->id,
+            'user_id'        => Auth::id(),
+            'ttd_by_user_id' => $validated['ttd_by_user_id'],
+            'kop_surat_id'   => $validated['kop_surat_id'],
+            'nomor_surat'    => $nomorSurat,
+            'lampiran'       => $request->input('lampiran', '-'),
+            'jenis'          => 'Keluar',
+            'tanggal_surat'  => now()->toDateString(),
         ]);
 
         foreach ($validated['fields'] as $namaField => $nilaiField) {
@@ -63,7 +65,11 @@ class SuratController extends Controller
             ]);
         }
 
-        LogAktivitas::catat('Membuat', 'Surat', "Membuat surat \"{$nomorSurat}\" dari template \"{$template->nama_template}\"");
+        LogAktivitas::catat(
+            'Membuat',
+            'Surat',
+            "Membuat surat \"{$nomorSurat}\" dari template \"{$template->nama_template}\""
+        );
 
         return redirect()->route('surat.show', $surat)
             ->with('success', "Surat berhasil dibuat dengan nomor {$nomorSurat}.");
@@ -169,13 +175,52 @@ class SuratController extends Controller
 
     public function ttdDigital(Surat $surat)
     {
-        $surat->status = 'Disetujui';
-        $surat->save(); 
+        $user = Auth::user();
 
-        return redirect()->back()->with('success', 'Surat berhasil disetujui dan ditandatangani secara digital!');
+        $isAdmin = $user && in_array(
+            $user->role?->nama_role,
+            ['Super Admin', 'Admin']
+        );
+
+        if (
+            !$user ||
+            ($user->id != $surat->ttd_by_user_id && !$isAdmin)
+        ) {
+            return redirect()->back()->with(
+                'error',
+                'Anda tidak memiliki hak untuk menandatangani surat ini!'
+            );
+        }
+
+        $surat->status = 'Disetujui';
+        $surat->save();
+
+        LogAktivitas::catat(
+            'ACC',
+            'Surat',
+            "Menandatangani digital surat \"{$surat->nomor_surat}\""
+        );
+
+        return redirect()->back()->with(
+            'success',
+            'Surat berhasil disetujui dan ditandatangani secara digital!'
+        );
     }
 
-    
+    public function updatePenandatangan(Request $request, Surat $surat)
+    {
+        $validated = $request->validate([
+            'ttd_by_user_id' => ['required', 'exists:users,id'],
+        ]);
+
+        $surat->update([
+            'ttd_by_user_id' => $validated['ttd_by_user_id']
+        ]);
+
+        LogAktivitas::catat('Mengubah', 'Surat', "Mengubah penandatangan surat \"{$surat->nomor_surat}\"");
+
+        return redirect()->back()->with('success', 'Penandatangan surat berhasil diperbarui!');
+    }
 
     public function destroy(Surat $surat)
     {
@@ -190,14 +235,17 @@ class SuratController extends Controller
 
     private function generateNomorSurat(TemplateSurat $template): string
     {
-        $tahunPenuh    = now()->year;
-        $tahunSingkat  = now()->format('y');
-        $runningNumber = Surat::whereYear('created_at', $tahunPenuh)->count() + 1;
-        $nomorUrut     = str_pad($runningNumber, 3, '0', STR_PAD_LEFT);
-        $kodeTemplate  = $this->deriveKodeTemplate($template->nama_template);
-        $bulanRomawi   = $this->bulanRomawi(now()->month);
+        $tahunPenuh = now()->year;
 
-        return "{$nomorUrut}/{$kodeTemplate}/INOVINDO/{$bulanRomawi}/{$tahunSingkat}";
+        $runningNumber = Surat::whereYear('created_at', $tahunPenuh)
+            ->whereMonth('created_at', now()->month)
+            ->count() + 1;
+
+        $nomorUrut = str_pad($runningNumber, 3, '0', STR_PAD_LEFT);
+        $kodeTemplate = $this->deriveKodeTemplate($template->nama_template);
+        $bulanRomawi = $this->bulanRomawi(now()->month);
+
+        return "{$nomorUrut}/{$kodeTemplate}/INOVINDO/{$bulanRomawi}/{$tahunPenuh}";
     }
 
     private function deriveKodeTemplate(string $namaTemplate): string

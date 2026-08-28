@@ -8,7 +8,6 @@ class PengaturanKopSurat extends Model
 {
     protected $table = 'pengaturan_kop_surat';
 
-    // TAMBAHKAN BARIS INI: Matikan timestamp otomatis Eloquent
     public $timestamps = false;
 
     protected $fillable = [

@@ -11,6 +11,7 @@ class Surat extends Model
     protected $fillable = [
         'template_id',
         'user_id',
+        'ttd_by_user_id',
         'kop_surat_id',
         'nomor_surat',
         'jenis',
