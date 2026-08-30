@@ -183,15 +183,9 @@
                                 };
                             @endphp
 
-                            <div style="display: flex; flex-direction: column; align-items: center; gap: 4px;">
-                                <span style="font-weight: 600; font-size: 13px; color: #334155;">
-                                    {{ $surat->user->name ?? '-' }}
-                                </span>
-
-                                <span class="{{ $badgeClass }}">
-                                    {{ $roleName }}
-                                </span>
-                            </div>
+                            <span class="{{ $badgeClass }}">
+                                {{ $roleName }}
+                            </span>
                         </td>
                         <td>{{ $surat->tanggal_surat->format('d/m/Y') }}</td>
                         <td>
@@ -207,35 +201,47 @@
                         <td>
                             <div class="action-buttons-group-expanded">
                                 @if ($surat->jenis === 'Keluar')
-                                    <a href="{{ route('surat.show', $surat) }}" class="btn-modern btn-modern--detail">Detail</a>
-                                    <a href="{{ route('surat.cetak', $surat) }}" target="_blank" class="btn-modern btn-modern--cetak">Cetak</a>
+                                    <a href="{{ route('surat.show', $surat) }}" class="btn-modern btn-modern--detail btn-modern--icon-only" title="Lihat Detail">
+                                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+                                    </a>
+                                    <a href="{{ route('surat.cetak', $surat) }}" target="_blank" class="btn-modern btn-modern--cetak btn-modern--icon-only" title="Cetak Surat">
+                                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+                                    </a>
 
                                     @if (strtolower($surat->status ?? '') === 'disetujui')
-                                        <span class="btn-modern--approved">✓ Sudah TTD</span>
+                                        <span class="btn-modern--approved btn-modern--icon-only" title="Sudah Ditandatangani">
+                                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                                        </span>
                                     @else
                                         <form action="{{ route('surat.ttd-digital', $surat) }}" method="POST" style="display: inline-block;" onsubmit="return confirm('Apakah Anda yakin ingin menyetujui dan menandatangani surat ini secara digital?')">
                                             @csrf
-                                            <button type="submit" class="btn-modern btn-modern--ttd">ACC & TTD</button>
+                                            <button type="submit" class="btn-modern btn-modern--ttd btn-modern--icon-only" title="ACC & Tanda Tangan Digital">
+                                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+                                            </button>
                                         </form>
                                     @endif
                                 @else
                                     @if ($surat->file_arsip)
-                                        <a href="{{ asset('storage/' . $surat->file_arsip) }}" target="_blank" class="btn-modern btn-modern--detail">Lihat File</a>
+                                        <a href="{{ asset('storage/' . $surat->file_arsip) }}" target="_blank" class="btn-modern btn-modern--detail btn-modern--icon-only" title="Lihat File">
+                                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+                                        </a>
                                     @endif
                                 @endif
 
                                 <form action="{{ route('surat.upload-arsip', $surat) }}" method="POST" enctype="multipart/form-data" class="upload-inline-form">
                                     @csrf
                                     <input type="file" name="file_arsip" required id="file-{{ $surat->id }}" class="hide-file-input" onchange="this.form.submit()">
-                                    <button type="button" onclick="document.getElementById('file-{{ $surat->id }}').click()" class="btn-modern btn-modern--upload">
-                                        {{ $surat->file_arsip ? 'Ganti File' : 'Upload File' }}
+                                    <button type="button" onclick="document.getElementById('file-{{ $surat->id }}').click()" class="btn-modern btn-modern--upload btn-modern--icon-only" title="{{ $surat->file_arsip ? 'Ganti File' : 'Upload File' }}">
+                                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
                                     </button>
                                 </form>
 
                                 <form action="{{ route('surat.destroy', $surat) }}" method="POST" style="display: inline-block;" onsubmit="return confirm('Apakah Anda yakin ingin menghapus surat ini? Data yang dihapus tidak bisa dikembalikan.')">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="btn-modern btn-modern--delete" title="Hapus Surat">Hapus</button>
+                                    <button type="submit" class="btn-modern btn-modern--delete btn-modern--icon-only" title="Hapus Surat">
+                                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
+                                    </button>
                                 </form>
                             </div>
                         </td>

@@ -82,14 +82,22 @@
                         </td>
                         <td>
                             <div class="action-buttons-group-expanded">
-                                <a href="{{ route('surat.show', $surat) }}" class="btn-modern btn-modern--detail">Lihat</a>
-                                <a href="{{ route('surat.edit', $surat) }}" class="btn-modern btn-modern--upload">Edit</a>
-                                <a href="{{ route('surat.cetak', $surat) }}" target="_blank" class="btn-modern btn-modern--cetak">Cetak</a>
+                                <a href="{{ route('surat.show', $surat) }}" class="btn-modern btn-modern--detail btn-modern--icon-only" title="Lihat Detail">
+                                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+                                </a>
+                                <a href="{{ route('surat.edit', $surat) }}" class="btn-modern btn-modern--upload btn-modern--icon-only" title="Edit Isi Surat">
+                                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                                </a>
+                                <a href="{{ route('surat.cetak', $surat) }}" target="_blank" class="btn-modern btn-modern--cetak btn-modern--icon-only" title="Cetak Surat">
+                                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+                                </a>
 
                                 <form action="{{ route('surat.destroy', $surat) }}" method="POST" style="display: inline-block;" onsubmit="return confirm('Apakah Anda yakin ingin menghapus surat ini? Data yang dihapus tidak bisa dikembalikan.')">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="btn-modern btn-modern--delete" title="Hapus Surat">Hapus</button>
+                                    <button type="submit" class="btn-modern btn-modern--delete btn-modern--icon-only" title="Hapus Surat">
+                                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
+                                    </button>
                                 </form>
                             </div>
                         </td>
