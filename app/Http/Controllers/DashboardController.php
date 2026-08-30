@@ -54,7 +54,6 @@ class DashboardController extends Controller
         $stats = [
             'total_surat'     => Surat::count(),
             'total_pengguna'  => User::count(),
-            'total_role'      => Role::count(),
             'surat_bulan_ini' => Surat::whereMonth('tanggal_surat', now()->month)
                 ->whereYear('tanggal_surat', now()->year)
                 ->count(),

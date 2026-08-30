@@ -22,7 +22,10 @@
     font-weight: 700;
     color: var(--color-ink);
     letter-spacing: -0.01em;
-    text-shadow: 0 1px 2px rgba(255, 255, 255, 0.9);
+    text-shadow:
+        0 1px 3px rgba(255, 255, 255, 0.9),
+        0 2px 8px rgba(255, 255, 255, 0.8),
+        0 0 12px rgba(255, 255, 255, 0.6);
 }
 
 .alert-message {
@@ -174,6 +177,7 @@
     padding: 0.8rem 1rem;
     border-bottom: 1px solid var(--color-border);
     white-space: nowrap;
+    text-align: left;
 }
 
 .table-pengguna td {
@@ -181,6 +185,16 @@
     border-bottom: 1px solid var(--color-border);
     color: var(--color-ink);
     vertical-align: middle;
+    text-align: left;
+}
+
+.table-pengguna th:nth-child(3),
+.table-pengguna td:nth-child(3),
+.table-pengguna th:nth-child(4),
+.table-pengguna td:nth-child(4),
+.table-pengguna th:nth-child(5),
+.table-pengguna td:nth-child(5) {
+    text-align: center !important;
 }
 
 .table-pengguna tbody tr {
