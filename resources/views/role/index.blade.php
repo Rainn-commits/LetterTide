@@ -38,7 +38,18 @@
                 <tbody>
                     @forelse($roles as $role)
                         <tr>
-                            <td class="role-name">{{ $role->nama_role }}</td>
+                            <td>
+                                @php
+                                    $roleClass = match($role->nama_role) {
+                                        'Super Admin' => 'badge-role--super-admin',
+                                        'Admin'       => 'badge-role--admin',
+                                        default       => 'badge-role--user',
+                                    };
+                                @endphp
+                                <span class="badge-role {{ $roleClass }}">
+                                    {{ $role->nama_role }}
+                                </span>
+                            </td>
                             <td class="text-center font-bold">{{ $role->users_count }}</td>
                             <td class="text-center">
                                 <div class="row-actions">

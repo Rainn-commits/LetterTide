@@ -1,8 +1,5 @@
 @import url('variables.css');
 
-/* ==========================================================================
-   1. HEADER & NAVIGATION LAYOUT
-   ========================================================================== */
 .retensi-header-wrapper {
   display: flex;
   justify-content: space-between;
@@ -16,15 +13,18 @@
   font-family: var(--font-display);
   font-size: 26px;
   font-weight: 800;
-  color: var(--color-ink);
+  color: #1e293b;
   letter-spacing: -0.5px;
   margin: 0 0 6px 0;
+  text-shadow: 
+    0 1px 3px rgba(255, 255, 255, 0.95), 
+    0 0 8px rgba(255, 255, 255, 0.8);
 }
 
 .retensi-header-sub {
   margin: 0;
   font-size: 14px;
-  color: var(--color-ink-soft);
+  color: #334155;
 }
 
 .btn-futuristic-primary {
@@ -61,9 +61,6 @@
   flex-shrink: 0;
 }
 
-/* ==========================================================================
-   2. CARD & TABLE LAYOUT (ALL TH CENTERED)
-   ========================================================================== */
 .retensi-card-expanded {
   background: var(--color-white);
   border-radius: var(--radius-lg);
@@ -80,7 +77,6 @@
   min-width: 900px;
 }
 
-/* SEMUA JUDUL HEADER TABEL MENJADI CENTER */
 .retensi-table-modern th {
   padding: 14px 16px;
   color: var(--color-ink-soft);
@@ -89,7 +85,7 @@
   text-transform: uppercase;
   letter-spacing: 0.03em;
   border-bottom: 2px solid var(--color-border);
-  text-align: center !important; /* Dibuat center rata tengah */
+  text-align: center !important;
   white-space: nowrap;
 }
 
@@ -100,7 +96,7 @@
   color: var(--color-ink);
   vertical-align: middle;
   border-bottom: 1px solid var(--color-border);
-  text-align: center; /* Isi sel juga disesuaikan ke tengah */
+  text-align: center;
   white-space: nowrap;
 }
 
@@ -125,16 +121,13 @@
   color: var(--color-ink-soft);
 }
 
-/* ==========================================================================
-   3. FORM PENILAIAN INLINE (1 BARIS SEJAJAR MENDATAR)
-   ========================================================================== */
 .form-penilaian-inline {
   display: flex !important;
   flex-direction: row !important;
   align-items: center !important;
   justify-content: center !important;
   gap: 8px !important;
-  flex-wrap: nowrap !important; /* Mencegah elemen turun ke bawah */
+  flex-wrap: nowrap !important;
   margin: 0 !important;
 }
 
@@ -174,7 +167,7 @@
   font-size: 12.5px;
   font-weight: 700;
   white-space: nowrap;
-  flex-shrink: 0; /* Mencegah tombol mengkerut */
+  flex-shrink: 0;
   transition:
     background var(--transition-fast),
     transform var(--transition-fast),
@@ -187,9 +180,6 @@
   box-shadow: 0 4px 12px rgba(0, 195, 208, 0.25);
 }
 
-/* ==========================================================================
-   4. BADGES & ALERTS
-   ========================================================================== */
 .badge-akses-count {
   display: inline-flex;
   align-items: center;
@@ -252,9 +242,6 @@
 .surat-alert--success { background: var(--color-success-bg); color: var(--color-success); }
 .surat-alert--danger  { background: var(--color-danger-bg); color: var(--color-danger); }
 
-/* ==========================================================================
-   5. RESPONSIVE MEDIA QUERIES
-   ========================================================================== */
 @media (max-width: 900px) {
   .retensi-header-wrapper { align-items: flex-start; }
   .retensi-header-wrapper form { width: 100%; }

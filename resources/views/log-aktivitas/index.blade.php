@@ -13,37 +13,42 @@
     @if($logs->isEmpty())
         <div class="log-empty">Belum ada aktivitas yang tercatat.</div>
     @else
-        <table class="log-table">
-            <thead>
-                <tr>
-                    <th>Waktu</th>
-                    <th>Pengguna</th>
-                    <th>Aksi</th>
-                    <th>Modul</th>
-                    <th>Keterangan</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach($logs as $log)
-                    @php
-                        $badgeClass = match($log->aksi) {
-                            'Membuat'          => 'log-badge--create',
-                            'Mengubah'         => 'log-badge--update',
-                            'Menghapus',
-                            'Menonaktifkan'    => 'log-badge--delete',
-                            default            => 'log-badge--default',
-                        };
-                    @endphp
+        <div class="log-table-container">
+            <table class="log-table">
+                <thead>
                     <tr>
-                        <td>{{ $log->created_at->format('d M Y, H:i') }}</td>
-                        <td>{{ $log->user->name ?? '(pengguna dihapus)' }}</td>
-                        <td><span class="log-badge {{ $badgeClass }}">{{ $log->aksi }}</span></td>
-                        <td>{{ $log->modul }}</td>
-                        <td>{{ $log->keterangan }}</td>
+                        <th class="text-left">WAKTU</th>
+                        <th class="text-center">PENGGUNA</th>
+                        <th class="text-center">AKSI</th>
+                        <th class="text-center">MODUL</th>
+                        <th class="text-left">KETERANGAN</th>
                     </tr>
-                @endforeach
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    @foreach($logs as $log)
+                        @php
+                            $badgeClass = match($log->aksi) {
+                                'ACC', 'Acc', 'acc' => 'log-badge--acc',
+                                'Mengubah'          => 'log-badge--update',
+                                'Membuat'           => 'log-badge--create',
+                                'Menghapus',
+                                'Menonaktifkan'     => 'log-badge--delete',
+                                default             => 'log-badge--default',
+                            };
+                        @endphp
+                        <tr>
+                            <td class="text-left font-medium">{{ $log->created_at->format('d M Y, H:i') }}</td>
+                            <td class="text-center font-bold">{{ $log->user->name ?? '(pengguna dihapus)' }}</td>
+                            <td class="text-center">
+                                <span class="log-badge {{ $badgeClass }}">{{ $log->aksi }}</span>
+                            </td>
+                            <td class="text-center font-medium">{{ $log->modul }}</td>
+                            <td class="text-left">{{ $log->keterangan }}</td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
 
         <div class="log-pagination">
             {{ $logs->links() }}

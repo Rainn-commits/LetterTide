@@ -882,6 +882,7 @@ h2,
   font-weight: 700;
   text-transform: uppercase;
   border-bottom: 2px solid #f1f5f9;
+  text-align: center;
 }
 
 .template-table-modern td {
@@ -890,6 +891,7 @@ h2,
   font-size: 13.5px;
   color: #334155;
   vertical-align: middle;
+  text-align: center;
 }
 
 .template-table-modern tbody tr:hover td {
