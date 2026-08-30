@@ -64,7 +64,6 @@ Route::middleware('auth')->group(function () {
         Route::post('/pengguna', [PenggunaController::class, 'store'])->name('pengguna.store');
         Route::get('/pengguna/{pengguna}/edit', [PenggunaController::class, 'edit'])->name('pengguna.edit');
         Route::put('/pengguna/{pengguna}', [PenggunaController::class, 'update'])->name('pengguna.update');
-        Route::put('/pengguna/{pengguna}/reset-password', [PenggunaController::class, 'resetPassword'])->name('pengguna.reset-password');
         Route::delete('/pengguna/{pengguna}', [PenggunaController::class, 'destroy'])->name('pengguna.destroy');
     });
 

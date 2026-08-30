@@ -83,21 +83,6 @@ class PenggunaController extends Controller
             ->with('success', 'Data pengguna berhasil diperbarui.');
     }
 
-    public function resetPassword(Request $request, User $pengguna)
-    {
-        $this->cegahEditSuperAdminOlehAdmin($pengguna);
-
-        $validated = $request->validate([
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
-        ]);
-
-        $pengguna->update(['password' => Hash::make($validated['password'])]);
-
-        LogAktivitas::catat('Reset Password', 'Pengguna', "Reset password untuk \"{$pengguna->name}\"");
-
-        return back()->with('success', "Password untuk {$pengguna->name} berhasil direset.");
-    }
-
     public function destroy(User $pengguna)
     {
         $this->cegahEditSuperAdminOlehAdmin($pengguna);
