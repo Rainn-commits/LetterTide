@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cetak Surat - {{ $surat->nomor_surat }}</title>
-    @vite('resources/css/surat.css')
+    @vite('resources/css/surat-cetak.css')
     @vite('resources/css/surat-preview.css')
     <style>
         @media print {
@@ -56,20 +56,20 @@
             <div style="border-top: 2px solid #000; margin-top: 6px; margin-bottom: 20px;"></div>
         @endif
 
-        <div style="text-align: right; margin-bottom: 15px;">
-            Bandung, {{ \Carbon\Carbon::parse($surat->tanggal_surat)->translatedFormat('d F Y') }}
-        </div>
-
-        <table style="margin-bottom: 20px; border-collapse: collapse;">
+        <table style="width: 100%; margin-bottom: 20px; border-collapse: collapse;">
             <tr>
-                <td style="width: 80px;">Nomor</td>
-                <td style="width: 15px;">:</td>
-                <td>{{ $surat->nomor_surat }}</td>
+                <td style="width: 80px; vertical-align: top;">Nomor</td>
+                <td style="width: 15px; vertical-align: top;">:</td>
+                <td style="vertical-align: top;">{{ $surat->nomor_surat }}</td>
+                <td style="text-align: right; vertical-align: top;">
+                    Bandung, {{ \Carbon\Carbon::parse($surat->tanggal_surat)->locale('id')->translatedFormat('d F Y') }}
+                </td>
             </tr>
             <tr>
-                <td>Lampiran</td>
-                <td>:</td>
-                <td>{{ $surat->lampiran ?? '-' }}</td>
+                <td style="vertical-align: top;">Lampiran</td>
+                <td style="vertical-align: top;">:</td>
+                <td style="vertical-align: top;">{{ $surat->lampiran ?? '-' }}</td>
+                <td></td>
             </tr>
         </table>
 
@@ -78,7 +78,7 @@
         </div>
 
         <div style="font-size: 12pt; line-height: 1.5; text-align: justify; margin-bottom: 30px;">
-            {!! nl2br(e($isiSuratRendered)) !!}
+            {!! $isiSuratRendered !!}
         </div>
 
         <div class="signature-wrapper">

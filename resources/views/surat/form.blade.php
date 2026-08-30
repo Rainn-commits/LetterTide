@@ -3,7 +3,7 @@
 @section('page-title', 'Buat Surat Baru')
 
 @section('page-css')
-    @vite('resources/css/surat.css')
+    @vite('resources/css/surat-form.css')
 @endsection
 
 @section('content')

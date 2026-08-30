@@ -79,7 +79,7 @@
             'label'  => 'Evaluasi Retensi Arsip',
             'route'  => 'evaluasi-retensi.index',
             'active' => request()->routeIs('evaluasi-retensi.*'),
-            'roles'  => ['Super Admin', 'Admin'], 
+            'roles'  => ['Super Admin', 'Admin', 'User'], 
             'icon'   => 'archive-clock', 
         ],
     ];

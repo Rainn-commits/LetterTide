@@ -1,0 +1,196 @@
+@import url('variables.css');
+
+.card {
+  background: var(--color-white);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+  padding: 32px;
+  animation: fadeSlideUp 0.4s var(--ease);
+}
+
+.wizard-step {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 20px;
+}
+
+.wizard-step__badge {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--color-ink);
+  color: var(--color-white);
+  font-weight: 700;
+  font-size: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.wizard-step__title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 18px;
+  color: var(--color-ink);
+}
+
+.template-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 20px;
+}
+
+.template-card {
+  display: block;
+  background: var(--color-white);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  box-shadow: var(--shadow-soft);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.template-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-card);
+}
+
+.template-card-fixed {
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast) !important;
+}
+
+.template-card-fixed:hover {
+  transform: translateY(-4px) !important;
+  box-shadow: 0 14px 28px -10px rgba(0, 195, 208, 0.35) !important;
+  border-color: var(--color-primary) !important;
+}
+
+.template-card__thumb {
+  background: #e6f7f7;
+  height: 180px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px 8px 0 0;
+}
+
+.template-card__name {
+  padding: 12px 14px;
+  font-size: 14.5px;
+  font-weight: 600;
+  color: var(--color-ink);
+  text-align: center;
+}
+
+.template-grid__empty {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--color-ink-soft);
+  font-size: 14.5px;
+}
+
+.mini-paper {
+  width: 90px;
+  height: 120px;
+  background: #ffffff;
+  border-radius: 6px;
+  padding: 10px 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  transition: transform 0.2s ease;
+}
+
+.template-card:hover .mini-paper {
+  transform: translateY(-4px);
+}
+
+.mini-header {
+  height: 5px;
+  background: #008080;
+  border-radius: 2px;
+  margin-bottom: 4px;
+}
+
+.mini-line {
+  height: 3px;
+  background: #cbd5e1;
+  border-radius: 2px;
+}
+
+.w-80 { width: 80%; }
+.w-100 { width: 100%; }
+.w-60 { width: 60%; }
+
+.mini-badge {
+  position: absolute;
+  bottom: 6px;
+  right: 6px;
+  font-size: 8px;
+  font-weight: 700;
+  color: #008080;
+  background: #e6f7f7;
+  padding: 2px 4px;
+  border-radius: 3px;
+}
+
+.surat-search {
+  background: transparent;
+  box-shadow: none;
+  padding: 0;
+  margin-bottom: 24px;
+}
+
+.surat-search__field {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.surat-search__field svg {
+  position: absolute;
+  left: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 18px;
+  height: 18px;
+  color: #94a3b8;
+  stroke: #94a3b8;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.surat-search__field input {
+  width: 100%;
+  height: 46px;
+  padding: 0 18px 0 45px;
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.85);
+  font-size: 14px;
+  color: #475569;
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.04);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  box-sizing: border-box;
+  transition: all 0.2s ease;
+}
+
+.surat-search__field input:focus {
+  outline: none;
+  background: #ffffff;
+  box-shadow: 0 6px 16px rgba(15, 23, 42, 0.08);
+}
+
+@media (max-width: 780px) {
+  .template-grid { grid-template-columns: repeat(2, 1fr); }
+  .wizard-step__title { font-size: 16px; }
+}
+
+@media (max-width: 520px) {
+  .template-grid { grid-template-columns: 1fr; }
+}

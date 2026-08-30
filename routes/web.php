@@ -47,6 +47,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/arsip', [ArsipController::class, 'index'])->name('arsip.index');
     Route::post('/arsip/surat-masuk', [SuratMasukController::class, 'store'])->name('arsip.surat-masuk.store');
 
+    Route::get('/evaluasi-retensi', [EvaluasiRetensiController::class, 'index'])->name('evaluasi-retensi.index');
+    Route::post('/evaluasi-retensi/{surat}/usulkan', [EvaluasiRetensiController::class, 'usulkan'])->name('evaluasi-retensi.usulkan');
+
     Route::middleware('permission:kopsurat.manage')->group(function () {
         Route::get('/kop-surat', [KopSuratController::class, 'index'])->name('kop-surat.index');
         Route::get('/kop-surat/create', [KopSuratController::class, 'create'])->name('kop-surat.create');
@@ -101,13 +104,16 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/log-aktivitas', [LogAktivitasController::class, 'index'])->name('log-aktivitas.index');
 
+    Route::get('/evaluasi-retensi', [EvaluasiRetensiController::class, 'index'])->name('evaluasi-retensi.index');
+        Route::post('/evaluasi-retensi/{surat}/usulkan', [EvaluasiRetensiController::class, 'usulkan'])->name('evaluasi-retensi.usulkan');
+        Route::post('/evaluasi-retensi/{surat}/nilai', [EvaluasiRetensiController::class, 'simpanPenilaian'])->name('retensi.simpan-penilaian'); // <-- DIPINDAHKAN KE SINI
+
     Route::middleware('permission:retensi.manage')->group(function () {
         Route::get('/retensi-kriteria', [RetensiKriteriaController::class, 'index'])->name('retensi-kriteria.index');
         Route::put('/retensi-kriteria/{retensiKriterion}', [RetensiKriteriaController::class, 'update'])->name('retensi-kriteria.update');
 
-        Route::get('/evaluasi-retensi', [EvaluasiRetensiController::class, 'index'])->name('evaluasi-retensi.index');
-        Route::post('/evaluasi-retensi/{surat}/nilai', [EvaluasiRetensiController::class, 'simpanPenilaian'])->name('retensi.simpan-penilaian');
         Route::post('/evaluasi-retensi/jalankan', [EvaluasiRetensiController::class, 'jalankanEvaluasi'])->name('retensi.jalankan');
+        Route::post('/evaluasi-retensi/{surat}/approve', [EvaluasiRetensiController::class, 'approve'])->name('retensi.approve');
     });
 
 });

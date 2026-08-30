@@ -50,10 +50,6 @@
             <div class="surat-paper__divider"></div>
         @endif
 
-        <div class="surat-paper__meta-top">
-            Bandung, {{ \Carbon\Carbon::parse($surat->tanggal_surat)->translatedFormat('d F Y') }}
-        </div>
-
         @php
             $romawiBulan = ['', 'I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII'];
             $bulanNum = (int) \Carbon\Carbon::parse($surat->tanggal_surat)->format('n');
@@ -67,16 +63,20 @@
             $nomorSuratFormatted = "{$nomorUrut}/{$kodeTemplate}/{$namaPtSingkat}/{$bulanRomawi}/{$tahunDuaDigit}";
         @endphp
 
-        <table class="surat-paper__meta-table">
+        <table class="surat-paper__meta-table" style="width: 100%; margin-bottom: 20px; border-collapse: collapse;">
             <tr>
-                <td style="width: 90px;">Nomor</td>
-                <td style="width: 15px;">:</td>
-                <td>{{ $surat->nomor_surat ?? $nomorSuratFormatted }}</td>
+                <td style="width: 90px; vertical-align: top;">Nomor</td>
+                <td style="width: 15px; vertical-align: top;">:</td>
+                <td style="vertical-align: top;">{{ $surat->nomor_surat ?? $nomorSuratFormatted }}</td>
+                <td style="text-align: right; vertical-align: top;">
+                    Bandung, {{ \Carbon\Carbon::parse($surat->tanggal_surat)->locale('id')->translatedFormat('d F Y') }}
+                </td>
             </tr>
             <tr>
-                <td>Lampiran</td>
-                <td>:</td>
-                <td>{{ $surat->lampiran ?? '-' }}</td>
+                <td style="vertical-align: top;">Lampiran</td>
+                <td style="vertical-align: top;">:</td>
+                <td style="vertical-align: top;">{{ $surat->lampiran ?? '-' }}</td>
+                <td></td>
             </tr>
         </table>
 
@@ -85,7 +85,7 @@
         </div>
 
         <div class="surat-paper__body">
-            {{ $isiSuratRendered }}
+            {!! $isiSuratRendered !!}
         </div>
 
         @php
