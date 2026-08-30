@@ -25,6 +25,27 @@ class SuratController extends Controller
         return view('surat.pilih-template', compact('templates'));
     }
 
+    public function riwayat(Request $request)
+    {
+        $query = Surat::with(['template', 'kopSurat'])
+            ->where('user_id', Auth::id())
+            ->latest('tanggal_surat');
+
+        if ($request->filled('q')) {
+            $search = $request->input('q');
+            $query->where(function ($q) use ($search) {
+                $q->where('nomor_surat', 'like', "%{$search}%")
+                ->orWhereHas('template', function ($qt) use ($search) {
+                    $qt->where('nama_template', 'like', "%{$search}%");
+                });
+            });
+        }
+
+        $suratList = $query->paginate(10)->withQueryString();
+
+        return view('surat.riwayat', compact('suratList'));
+    }
+
     public function form(TemplateSurat $template)
     {
         $fields = PlaceholderParser::toFormFields($template->isi_template);

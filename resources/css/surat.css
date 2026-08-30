@@ -992,4 +992,84 @@ h2,
   box-shadow: 0 3px 10px rgba(159, 18, 57, 0.25);
 }
 
+.surat-tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 20px;
+  border-bottom: 1px solid var(--color-border);
+  padding-bottom: 0;
+}
 
+.surat-tabs__link {
+  padding: 10px 18px;
+  font-weight: 600;
+  font-size: 13.5px;
+  color: var(--color-ink-soft);
+  border-bottom: 3px solid transparent;
+  transition: all 0.15s ease;
+}
+
+.surat-tabs__link:hover {
+  color: var(--color-primary-dark);
+}
+
+.surat-tabs__link.is-active {
+  color: var(--color-primary-dark);
+  border-bottom-color: var(--color-primary);
+}
+
+.arsip-folder-tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.arsip-folder-tabs__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 9px 18px;
+  border-radius: var(--radius-pill);
+  font-weight: 700;
+  font-size: 13px;
+  background-color: #f1f5f9;
+  color: var(--color-ink-soft);
+  border: 1px solid transparent;
+  transition: all 0.15s ease;
+}
+
+.arsip-folder-tabs__link.is-active {
+  background-color: var(--color-bg-tint);
+  color: var(--color-primary-darker);
+  border-color: var(--color-primary);
+}
+
+.badge-status {
+  display: inline-flex;
+  padding: 4px 10px;
+  border-radius: var(--radius-pill);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.badge-status--approved {
+  background-color: var(--color-success-bg);
+  color: var(--color-success);
+}
+
+.badge-status--pending {
+  background-color: var(--color-warning-bg);
+  color: var(--color-warning);
+}
+
+.btn-modern-upload-masuk[disabled] {
+  opacity: 0.55;
+  cursor: not-allowed;
+  background: #94a3b8;
+  box-shadow: none;
+}
+
+.btn-modern-upload-masuk[disabled]:hover {
+  transform: none;
+  box-shadow: none;
+}

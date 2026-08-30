@@ -14,7 +14,15 @@ class ArsipController extends Controller
         /** @var \App\Models\User $user */
         $user = Auth::user();
 
+        $folder = $request->input('folder', 'keluar');
+        if (!in_array($folder, ['masuk', 'keluar'])) {
+            $folder = 'keluar';
+        }
+
+        $jenis = $folder === 'masuk' ? 'Masuk' : 'Keluar';
+
         $query = Surat::with(['template', 'user', 'kopSurat'])
+            ->where('jenis', $jenis)
             ->latest('tanggal_surat');
 
         if (!$user->hasAnyRole(['Super Admin', 'Admin'])) {
@@ -38,10 +46,6 @@ class ArsipController extends Controller
             });
         }
 
-        if ($request->filled('jenis')) {
-            $query->where('jenis', $request->input('jenis'));
-        }
-
         if ($request->filled('tanggal_mulai')) {
             $query->whereDate('tanggal_surat', '>=', $request->input('tanggal_mulai'));
         }
@@ -62,5 +66,6 @@ class ArsipController extends Controller
 
         $pejabatList = User::orderBy('name')->get();
 
-        return view('surat.arsip', compact('suratList', 'pejabatList'));    }
+        return view('surat.arsip', compact('suratList', 'pejabatList', 'folder'));
+    }
 }

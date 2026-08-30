@@ -78,6 +78,7 @@ Route::middleware('auth')->group(function () {
 
     Route::middleware('permission:surat.create')->group(function () {
         Route::get('/surat/create', [SuratController::class, 'create'])->name('surat.create');
+        Route::get('/surat/riwayat', [SuratController::class, 'riwayat'])->name('surat.riwayat');
         Route::get('/surat/create/{template}', [SuratController::class, 'form'])->name('surat.form');
         Route::post('/surat/create/{template}', [SuratController::class, 'store'])->name('surat.store');
     });

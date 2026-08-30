@@ -8,6 +8,11 @@
 
 @section('content')
 
+    <div class="surat-tabs">
+        <a href="{{ route('surat.create') }}" class="surat-tabs__link is-active">+ Buat Surat Baru</a>
+        <a href="{{ route('surat.riwayat') }}" class="surat-tabs__link">Riwayat Surat Saya</a>
+    </div>
+
     <div class="surat-search">
         <div class="surat-search__field">
             <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
