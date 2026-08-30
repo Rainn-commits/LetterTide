@@ -31,7 +31,7 @@ class SuratController extends Controller
             ->where('user_id', Auth::id())
             ->where('jenis', 'Keluar')
             ->latest('tanggal_surat');
-            
+
         if ($request->filled('q')) {
             $search = $request->input('q');
             $query->where(function ($q) use ($search) {
@@ -40,6 +40,14 @@ class SuratController extends Controller
                     $qt->where('nama_template', 'like', "%{$search}%");
                 });
             });
+        }
+
+        if ($request->filled('tanggal_mulai')) {
+            $query->whereDate('tanggal_surat', '>=', $request->input('tanggal_mulai'));
+        }
+
+        if ($request->filled('tanggal_selesai')) {
+            $query->whereDate('tanggal_surat', '<=', $request->input('tanggal_selesai'));
         }
 
         $suratList = $query->paginate(10)->withQueryString();
