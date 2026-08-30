@@ -29,8 +29,9 @@ class SuratController extends Controller
     {
         $query = Surat::with(['template', 'kopSurat'])
             ->where('user_id', Auth::id())
+            ->where('jenis', 'Keluar')
             ->latest('tanggal_surat');
-
+            
         if ($request->filled('q')) {
             $search = $request->input('q');
             $query->where(function ($q) use ($search) {

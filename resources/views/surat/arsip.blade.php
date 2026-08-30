@@ -13,21 +13,93 @@
 
     <div class="arsip-header-wrapper">
         <h2 class="arsip-header-title">Arsip Surat</h2>
-        <form action="#" method="POST" enctype="multipart/form-data" id="formUploadSuratMasuk">
-            @csrf
-            <input type="file" name="file_surat_masuk" accept=".pdf,.doc,.docx" id="inputSuratMasuk" class="hide-file-input" onchange="alert('File terpilih: ' + this.files[0].name)">
-            <button type="button" class="btn-modern-upload-masuk" onclick="document.getElementById('inputSuratMasuk').click()">
+
+        @if ($folder === 'masuk')
+            <button type="button" class="btn-modern-upload-masuk"
+                onclick="document.getElementById('formSuratMasukPanel').style.display = document.getElementById('formSuratMasukPanel').style.display === 'none' ? 'block' : 'none';">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
                     <polyline points="17 8 12 3 7 8"/>
                     <line x1="12" y1="3" x2="12" y2="15"/>
                 </svg>
-                Upload Surat Masuk
+                Tambah Surat Masuk
             </button>
-        </form>
+        @endif
     </div>
 
+    <div class="arsip-folder-tabs">
+        <a href="{{ route('arsip.index', array_merge(request()->except(['page', 'folder']), ['folder' => 'keluar'])) }}"
+            class="arsip-folder-tabs__link {{ $folder === 'keluar' ? 'is-active' : '' }}">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg>
+                Surat Keluar
+        </a>
+        <a href="{{ route('arsip.index', array_merge(request()->except(['page', 'folder']), ['folder' => 'masuk'])) }}"
+            class="arsip-folder-tabs__link {{ $folder === 'masuk' ? 'is-active' : '' }}">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 16 12 14 15 10 15 8 12 2 12"/><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11Z"/></svg>
+                Surat Masuk
+        </a>
+    </div>
+
+    @if ($folder === 'masuk')
+        <div class="card filter-card {{ $errors->any() ? 'is-visible' : '' }}" id="formSuratMasukPanel">
+            <h3 style="margin: 0 0 14px 0; font-size: 15px; color: var(--color-ink);">Tambah Surat Masuk</h3>
+
+            <form action="{{ route('arsip.surat-masuk.store') }}" method="POST" enctype="multipart/form-data">
+                @csrf
+                <div class="filter-grid">
+                    <div class="form-group-center">
+                        <label>Nomor Surat (dari Pengirim)</label>
+                        <input type="text" name="nomor_surat" value="{{ old('nomor_surat') }}" class="form-control" required>
+                        @error('nomor_surat')
+                            <p style="color: var(--color-danger); font-size: 12px; margin: 4px 0 0;">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <div class="form-group-center">
+                        <label>Pengirim / Instansi Asal</label>
+                        <input type="text" name="pengirim" value="{{ old('pengirim') }}" class="form-control" required>
+                        @error('pengirim')
+                            <p style="color: var(--color-danger); font-size: 12px; margin: 4px 0 0;">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <div class="form-group-center">
+                        <label>Perihal</label>
+                        <input type="text" name="perihal" value="{{ old('perihal') }}" class="form-control" required>
+                        @error('perihal')
+                            <p style="color: var(--color-danger); font-size: 12px; margin: 4px 0 0;">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <div class="form-group-center">
+                        <label>Tanggal Surat</label>
+                        <input type="date" name="tanggal_surat" value="{{ old('tanggal_surat') }}" class="form-control" required>
+                        @error('tanggal_surat')
+                            <p style="color: var(--color-danger); font-size: 12px; margin: 4px 0 0;">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <div class="form-group-center">
+                        <label>File Surat (PDF/DOC, maks 5MB)</label>
+                        <input type="file" name="file_arsip" accept=".pdf,.doc,.docx" class="form-control" required>
+                        @error('file_arsip')
+                            <p style="color: var(--color-danger); font-size: 12px; margin: 4px 0 0;">{{ $message }}</p>
+                        @enderror
+                    </div>
+                </div>
+
+                <div class="filter-actions">
+                    <button type="button" class="btn-ghost"
+                        onclick="document.getElementById('formSuratMasukPanel').style.display='none';">Batal</button>
+                    <button type="submit" class="btn-dark">Simpan Surat Masuk</button>
+                </div>
+            </form>
+        </div>
+    @endif
+
     <form method="GET" action="{{ route('arsip.index') }}" class="card filter-card">
+        <input type="hidden" name="folder" value="{{ $folder }}">
+
         <div class="filter-grid">
             @if (Auth::user()->hasAnyRole(['Super Admin', 'Admin']))
                 <div class="form-group-center">
@@ -42,15 +114,6 @@
             <div class="form-group-center">
                 <label>Pencarian</label>
                 <input type="text" name="q" value="{{ request('q') }}" placeholder="Nomor/Template/Pembuat..." class="form-control">
-            </div>
-
-            <div class="form-group-center">
-                <label>Jenis Surat</label>
-                <select name="jenis" class="form-control">
-                    <option value="">-- Semua Jenis --</option>
-                    <option value="Keluar" {{ request('jenis') === 'Keluar' ? 'selected' : '' }}>Keluar</option>
-                    <option value="Masuk" {{ request('jenis') === 'Masuk' ? 'selected' : '' }}>Masuk</option>
-                </select>
             </div>
 
             <div class="form-group-center">
@@ -74,7 +137,7 @@
         </div>
 
         <div class="filter-actions">
-            <a href="{{ route('arsip.index') }}" class="btn-ghost">Reset Filter</a>
+            <a href="{{ route('arsip.index', ['folder' => $folder]) }}" class="btn-ghost">Reset Filter</a>
             <button type="submit" class="btn-dark">Cari & Filter</button>
         </div>
     </form>
@@ -84,8 +147,8 @@
             <thead>
                 <tr>
                     <th style="width: 16%;">Nomor Surat</th>
-                    <th style="width: 20%;">Template</th>
-                    <th style="width: 12%;">Pembuat</th>
+                    <th style="width: 20%;">{{ $folder === 'masuk' ? 'Perihal' : 'Template' }}</th>
+                    <th style="width: 12%;">{{ $folder === 'masuk' ? 'Diarsipkan Oleh' : 'Pembuat' }}</th>
                     <th style="width: 10%;">Tanggal</th>
                     <th style="width: 10%;">File Arsip</th>
                     <th style="width: 32%; text-align: center;">Aksi</th>
@@ -96,9 +159,18 @@
                     <tr>
                         <td class="col-nomor">
                             <strong>{{ $surat->nomor_surat }}</strong>
+                            @if ($surat->jenis === 'Masuk' && $surat->pengirim)
+                                <div style="font-size: 11px; color: var(--color-ink-soft); margin-top: 2px;">
+                                    Dari: {{ $surat->pengirim }}
+                                </div>
+                            @endif
                         </td>
                         <td class="col-template">
-                            {{ $surat->template->nama_template ?? 'Template Dihapus' }}
+                            @if ($surat->jenis === 'Keluar')
+                                {{ $surat->template->nama_template ?? 'Template Dihapus' }}
+                            @else
+                                {{ $surat->perihal ?? '-' }}
+                            @endif
                         </td>
                         <td>
                             @php
@@ -124,25 +196,32 @@
                         <td>{{ $surat->tanggal_surat->format('d/m/Y') }}</td>
                         <td>
                             @if ($surat->file_arsip)
-                                <a href="{{ asset('storage/' . $surat->file_arsip) }}" target="_blank" class="file-badge-link">
-                                    📄 Lihat File
-                                </a>
+                            <a href="{{ asset('storage/' . $surat->file_arsip) }}" target="_blank" class="file-badge-link">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><line x1="10" y1="9" x2="8" y2="9"/></svg>
+                                Lihat File
+                            </a>
                             @else
                                 <span class="badge-empty">Belum ada</span>
                             @endif
                         </td>
                         <td>
                             <div class="action-buttons-group-expanded">
-                                <a href="{{ route('surat.show', $surat) }}" class="btn-modern btn-modern--detail">Detail</a>
-                                <a href="{{ route('surat.cetak', $surat) }}" target="_blank" class="btn-modern btn-modern--cetak">Cetak</a>
+                                @if ($surat->jenis === 'Keluar')
+                                    <a href="{{ route('surat.show', $surat) }}" class="btn-modern btn-modern--detail">Detail</a>
+                                    <a href="{{ route('surat.cetak', $surat) }}" target="_blank" class="btn-modern btn-modern--cetak">Cetak</a>
 
-                                @if (strtolower($surat->status ?? '') === 'disetujui' || $surat->file_arsip)
-                                    <span class="btn-modern--approved">✓ Sudah TTD</span>
+                                    @if (strtolower($surat->status ?? '') === 'disetujui')
+                                        <span class="btn-modern--approved">✓ Sudah TTD</span>
+                                    @else
+                                        <form action="{{ route('surat.ttd-digital', $surat) }}" method="POST" style="display: inline-block;" onsubmit="return confirm('Apakah Anda yakin ingin menyetujui dan menandatangani surat ini secara digital?')">
+                                            @csrf
+                                            <button type="submit" class="btn-modern btn-modern--ttd">ACC & TTD</button>
+                                        </form>
+                                    @endif
                                 @else
-                                    <form action="{{ route('surat.ttd-digital', $surat) }}" method="POST" style="display: inline-block;" onsubmit="return confirm('Apakah Anda yakin ingin menyetujui dan menandatangani surat ini secara digital?')">
-                                        @csrf
-                                        <button type="submit" class="btn-modern btn-modern--ttd">ACC & TTD</button>
-                                    </form>
+                                    @if ($surat->file_arsip)
+                                        <a href="{{ asset('storage/' . $surat->file_arsip) }}" target="_blank" class="btn-modern btn-modern--detail">Lihat File</a>
+                                    @endif
                                 @endif
 
                                 <form action="{{ route('surat.upload-arsip', $surat) }}" method="POST" enctype="multipart/form-data" class="upload-inline-form">
@@ -164,7 +243,11 @@
                 @empty
                     <tr>
                         <td colspan="6" class="table-empty-state">
-                            Tidak ada data arsip surat yang ditemukan.
+                            @if ($folder === 'masuk')
+                                Belum ada Surat Masuk. Klik "Tambah Surat Masuk" di atas untuk mengarsipkan surat dari pihak luar.
+                            @else
+                                Tidak ada data arsip surat yang ditemukan.
+                            @endif
                         </td>
                     </tr>
                 @endforelse

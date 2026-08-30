@@ -16,6 +16,8 @@ class Surat extends Model
         'nomor_surat',
         'lampiran',
         'jenis',
+        'pengirim',
+        'perihal',
         'tanggal_surat',
         'file_arsip',
         'jumlah_akses',

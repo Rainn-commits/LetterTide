@@ -1062,14 +1062,10 @@ h2,
   color: var(--color-warning);
 }
 
-.btn-modern-upload-masuk[disabled] {
-  opacity: 0.55;
-  cursor: not-allowed;
-  background: #94a3b8;
-  box-shadow: none;
+#formSuratMasukPanel {
+  display: none;
 }
 
-.btn-modern-upload-masuk[disabled]:hover {
-  transform: none;
-  box-shadow: none;
+#formSuratMasukPanel.is-visible {
+  display: block;
 }
