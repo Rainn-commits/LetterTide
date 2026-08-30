@@ -8,14 +8,6 @@
 
 @section('content')
     <div class="dash-top-row">
-        <div class="quick-cta">
-            <div>
-                <p class="quick-cta__title">Butuh bikin surat baru?</p>
-                <p class="quick-cta__subtitle">Pilih template, isi datanya dan langsung jadi.</p>
-            </div>
-            <a href="{{ route('surat.create') }}" class="quick-cta__btn">Buat Surat Baru</a>
-        </div>
-
         <div class="stat-grid-pro stat-grid-pro--cols-1">
             <a href="{{ Route::has('surat.riwayat') ? route('surat.riwayat') : '#' }}" class="glass-card stat-card-pro stat-card-pro--teal">
                 <div class="stat-card-pro__top">
@@ -26,6 +18,14 @@
                 </div>
                 <div class="stat-card-pro__value">{{ number_format($stats['surat_saya'] ?? 0) }}</div>
             </a>
+        </div>
+
+        <div class="quick-cta">
+            <div>
+                <p class="quick-cta__title">Butuh bikin surat baru?</p>
+                <p class="quick-cta__subtitle">Pilih template, isi datanya dan langsung jadi.</p>
+            </div>
+            <a href="{{ route('surat.create') }}" class="quick-cta__btn">Buat Surat Baru</a>
         </div>
     </div>
 

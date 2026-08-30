@@ -30,7 +30,9 @@
         <nav class="navbar__links" id="navbarLinks">
             <a href="#">Buat Surat</a>
             <a href="#">Template Surat</a>
+            <a href="#">Pengaturan Kop surat</a>
             <a href="#">Arsip Digital</a>
+            <a href="#">Evaluasi Retensi Arsip</a>
         </nav>
 
         <div class="navbar__actions">
