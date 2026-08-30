@@ -7,13 +7,25 @@
     @vite('resources/css/surat-preview.css')
     <style>
         .kop-grid-layout {
-            display: grid;
-            grid-template-columns: 480px 1fr;
-            gap: 24px;
-            align-items: start;
+            display: grid !important;
+            grid-template-columns: 460px 1fr !important;
+            gap: 24px !important;
+            align-items: start !important;
+            width: 100% !important;
         }
+
+        .kop-grid-layout form[action*="kop-surat"] {
+            max-width: 100% !important;
+            box-shadow: none !important;
+            border: none !important;
+            padding: 0 !important;
+            background: transparent !important;
+        }
+
         @media (max-width: 1024px) {
-            .kop-grid-layout { grid-template-columns: 1fr; }
+            .kop-grid-layout { 
+                grid-template-columns: 1fr !important; 
+            }
         }
     </style>
 @endsection
@@ -21,9 +33,9 @@
 @section('content')
 <div class="kop-grid-layout">
 
-    <div class="card" style="padding: 24px; background: #ffffff; border-radius: 16px; box-shadow: 0 20px 50px -20px rgba(16,24,32,0.25);">
-        <h2 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 20px; color: #0f172a;">
-            {{ $kopSuratAktif ? 'Simpan sebagai Versi Baru' : 'Atur Kop Surat' }}
+    <div class="card" style="padding: 24px; background: #ffffff; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.05);">
+        <h2 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 20px; color: #0f172a; border-bottom: none; padding-bottom: 0;">
+            Atur Kop Surat Baru
         </h2>
 
         <form method="POST" action="{{ route('kop-surat.store') }}" enctype="multipart/form-data">
@@ -31,11 +43,11 @@
 
             <div style="margin-bottom: 16px;">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-                    <label for="logo" style="font-weight: 600; color: #0f172a; margin: 0;">Logo Perusahaan</label>
+                    <label for="logo" style="font-weight: 600; color: #0f172a; margin: 0; text-transform: none;">Logo Perusahaan</label>
                     <span style="font-size: 0.8rem; color: #64748b;">PNG, JPG, JPEG (Max 10MB)</span>
                 </div>
 
-                <label for="logo" style="display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; padding: 10px; background: linear-gradient(135deg, #00C3D0 0%, #0090A0 100%); color: #ffffff; font-weight: 600; border-radius: 8px; cursor: pointer; text-align: center; border: none; transition: transform 0.15s ease, box-shadow 0.15s ease; box-shadow: 0 4px 12px rgba(0,195,208,0.3);" onmouseover="this.style.transform='translateY(-1px)'" onmouseout="this.style.transform='translateY(0)'">
+                <label for="logo" style="display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; padding: 10px; background: linear-gradient(135deg, #00C3D0 0%, #0090A0 100%); color: #ffffff; font-weight: 600; border-radius: 8px; cursor: pointer; text-align: center; border: none; box-shadow: 0 4px 12px rgba(0,195,208,0.3); margin-top: 0;">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
                         <polyline points="17 8 12 3 7 8"></polyline>
@@ -49,36 +61,35 @@
             </div>
 
             <div style="margin-bottom: 16px;">
-                <label style="display: block; font-weight: 600; margin-bottom: 6px; color: #0f172a;">Nama Perusahaan</label>
-                <input type="text" id="input_nama_pt" name="nama_pt" value="{{ old('nama_pt', $kopSuratAktif->nama_pt ?? '') }}" style="width: 100%; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 8px; box-sizing: border-box;" required>
+                <label style="display: block; font-weight: 600; margin-bottom: 6px; color: #0f172a; text-transform: none;">Nama Perusahaan</label>
+                <input type="text" id="input_nama_pt" name="nama_pt" value="{{ old('nama_pt') }}" placeholder="Masukkan Nama Perusahaan" style="width: 100%; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 8px; box-sizing: border-box;" required>
             </div>
 
             <div style="margin-bottom: 16px;">
-                <label style="display: block; font-weight: 600; margin-bottom: 6px; color: #0f172a;">Alamat</label>
-                <textarea id="input_alamat" name="alamat_pt" rows="3" style="width: 100%; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 8px; box-sizing: border-box;" required>{{ old('alamat_pt', $kopSuratAktif->alamat_pt ?? '') }}</textarea>
+                <label style="display: block; font-weight: 600; margin-bottom: 6px; color: #0f172a; text-transform: none;">Alamat</label>
+                <textarea id="input_alamat" name="alamat_pt" rows="3" placeholder="Masukkan Alamat Lengkap" style="width: 100%; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 8px; box-sizing: border-box;" required>{{ old('alamat_pt') }}</textarea>
             </div>
 
             <div style="margin-bottom: 16px;">
-                <label for="telepon_input" style="display: block; font-weight: 600; margin-bottom: 6px; color: #0f172a;">No Telepon / WhatsApp</label>
+                <label for="telepon_input" style="display: block; font-weight: 600; margin-bottom: 6px; color: #0f172a; text-transform: none;">No Telepon / WhatsApp</label>
                 <div style="display: flex; align-items: center; border: 1px solid #cbd5e1; border-radius: 8px; overflow: hidden; background-color: #ffffff;">
                     <span style="padding: 10px 12px; background-color: #f1f5f9; color: #475569; font-weight: 600; font-size: 0.9rem; border-right: 1px solid #cbd5e1; user-select: none;">+62</span>
                     <input type="text" id="telepon_input" placeholder="812-3456-7890" style="width: 100%; padding: 10px 12px; border: none; outline: none; font-size: 0.95rem;" oninput="formatNoHP(this)" required>
-                    <input type="hidden" name="telepon" id="telepon_hidden" value="{{ old('telepon', $kopSuratAktif->telepon ?? '') }}">
+                    <input type="hidden" name="telepon" id="telepon_hidden" value="{{ old('telepon') }}">
                 </div>
             </div>
 
             <div style="margin-bottom: 16px;">
-                <label style="display: block; font-weight: 600; margin-bottom: 6px; color: #0f172a;">Email</label>
-                <input type="email" id="input_email" name="email" value="{{ old('email', $kopSuratAktif->email ?? '') }}" style="width: 100%; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 8px; box-sizing: border-box;" required>
+                <label style="display: block; font-weight: 600; margin-bottom: 6px; color: #0f172a; text-transform: none;">Email</label>
+                <input type="email" id="input_email" name="email" value="{{ old('email') }}" placeholder="contoh@domain.com" style="width: 100%; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 8px; box-sizing: border-box;" required>
             </div>
 
             <div style="margin-bottom: 24px;">
-                <label style="display: block; font-weight: 600; margin-bottom: 6px; color: #0f172a;">Website</label>
-                <input type="text" id="input_website" name="website" value="{{ old('website', $kopSuratAktif->website ?? '') }}" style="width: 100%; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 8px; box-sizing: border-box;">
+                <label style="display: block; font-weight: 600; margin-bottom: 6px; color: #0f172a; text-transform: none;">Website</label>
+                <input type="text" id="input_website" name="website" value="{{ old('website') }}" placeholder="www.domain.com" style="width: 100%; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 8px; box-sizing: border-box;">
             </div>
 
-        <div>
-            <button type="submit" style="width: 100%; padding: 13px; background: linear-gradient(135deg, #00C3D0 0%, #0090A0 100%); color: #ffffff; font-weight: 700; border: none; border-radius: 8px; cursor: pointer; font-size: 0.95rem; box-shadow: 0 6px 16px -4px rgba(0,195,208,0.45); transition: transform 0.15s ease, box-shadow 0.15s ease;" onmouseover="this.style.transform='translateY(-1px)'" onmouseout="this.style.transform='translateY(0)'">
+            <button type="submit" style="width: 100%; padding: 13px; background: linear-gradient(135deg, #00C3D0 0%, #0090A0 100%); color: #ffffff; font-weight: 700; border: none; border-radius: 8px; cursor: pointer; font-size: 0.95rem; box-shadow: 0 6px 16px -4px rgba(0,195,208,0.45); margin-top: 0;">
                 Simpan sebagai versi baru
             </button>
         </form>
@@ -89,16 +100,16 @@
         <div class="surat-paper" style="width: 100%; min-height: auto; padding: 25px; box-shadow: 0 10px 30px -8px rgba(0,195,208,0.25); background: #fff; border-radius: 12px; border: 1px solid rgba(0,195,208,0.15);">
             <div class="surat-paper__header" style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
                 <div class="surat-paper__logo-left" style="width: 25%;">
-                    <img id="prev_logo" src="{{ ($kopSuratAktif && $kopSuratAktif->logo) ? Storage::url($kopSuratAktif->logo) : '' }}" class="surat-paper__logo" style="max-height: 75px; width: auto; {{ (!$kopSuratAktif || !$kopSuratAktif->logo) ? 'display: none;' : '' }}">
+                    <img id="prev_logo" src="" class="surat-paper__logo" style="max-height: 75px; width: auto; display: none;">
                 </div>
                 <div class="surat-paper__company-right" style="width: 75%; text-align: right;">
-                    <h2 id="prev_nama" style="font-size: 14pt; font-weight: bold; margin: 0; text-transform: uppercase;">{{ $kopSuratAktif->nama_pt ?? 'NAMA PERUSAHAAN' }}</h2>
-                    <p id="prev_alamat" style="font-size: 9pt; margin: 2px 0;">{{ $kopSuratAktif->alamat_pt ?? 'Alamat Perusahaan...' }}</p>
+                    <h2 id="prev_nama" style="font-size: 14pt; font-weight: bold; margin: 0; text-transform: uppercase; border-bottom: none; padding-bottom: 0;">NAMA PERUSAHAAN</h2>
+                    <p id="prev_alamat" style="font-size: 9pt; margin: 2px 0;">Alamat Perusahaan...</p>
                     <p style="font-size: 9pt; margin: 1px 0;">
-                        <span id="prev_telepon">WhatsApp. +62 {{ $kopSuratAktif->telepon ?? '8123456789' }}</span> &middot; 
-                        <span id="prev_website">Website. {{ $kopSuratAktif->website ?? 'www.website.com' }}</span>
+                        <span id="prev_telepon">WhatsApp. +62 8123456789</span> &middot; 
+                        <span id="prev_website">Website. www.website.com</span>
                     </p>
-                    <p id="prev_email" style="font-size: 9pt; margin: 1px 0;">Email: {{ $kopSuratAktif->email ?? 'email@domain.com' }}</p>
+                    <p id="prev_email" style="font-size: 9pt; margin: 1px 0;">Email: email@domain.com</p>
                 </div>
             </div>
             <div style="border-top: 2px solid #000; margin-top: 8px; margin-bottom: 20px;"></div>
@@ -131,19 +142,19 @@
     }
 
     document.addEventListener("DOMContentLoaded", function() {
-        const bindText = (inputId, prevId, prefix = '') => {
+        const bindText = (inputId, prevId, defaultText, prefix = '') => {
             const el = document.getElementById(inputId);
             if(el) {
                 el.addEventListener('input', function() {
-                    document.getElementById(prevId).textContent = prefix + this.value;
+                    document.getElementById(prevId).textContent = this.value ? prefix + this.value : defaultText;
                 });
             }
         };
 
-        bindText('input_nama_pt', 'prev_nama');
-        bindText('input_alamat', 'prev_alamat');
-        bindText('input_email', 'prev_email', 'Email: ');
-        bindText('input_website', 'prev_website', 'Website. ');
+        bindText('input_nama_pt', 'prev_nama', 'NAMA PERUSAHAAN');
+        bindText('input_alamat', 'prev_alamat', 'Alamat Perusahaan...');
+        bindText('input_email', 'prev_email', 'Email: email@domain.com', 'Email: ');
+        bindText('input_website', 'prev_website', 'Website. www.website.com', 'Website. ');
 
         document.getElementById('logo').addEventListener('change', function() {
             const file = this.files[0];
