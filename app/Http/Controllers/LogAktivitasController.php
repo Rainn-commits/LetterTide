@@ -18,10 +18,17 @@ class LogAktivitasController extends Controller
             abort(403, 'Anda tidak memiliki akses ke halaman ini.');
         }
 
-        $logs = LogAktivitas::with('user')
-            ->latest('created_at')
-            ->paginate(20);
+        $query = LogAktivitas::with('user')->latest('created_at');
+
+        $roleName = $user->role?->nama_role ?? '';
+
+        if ($roleName !== 'Super Admin') {
+            $query->where('modul', '!=', 'Role');
+        }
+
+        $logs = $query->paginate(20);
 
         return view('log-aktivitas.index', compact('logs'));
     }
 }
+
