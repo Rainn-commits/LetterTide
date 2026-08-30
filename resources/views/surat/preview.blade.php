@@ -24,15 +24,21 @@
         @if ($surat->kopSurat)
             <div class="surat-paper__header">
                 <div class="surat-paper__logo-left">
-                    @if ($surat->kopSurat->logo_path)
-                        <img src="{{ asset('storage/' . str_replace('storage/', '', $surat->kopSurat->logo_path)) }}" alt="Logo" class="surat-paper__logo">
+                    @php
+                        $logoPath = $surat->kopSurat->logo_path ?? $surat->kopSurat->logo ?? null;
+                    @endphp
+                    @if ($logoPath)
+                        <img src="{{ asset('storage/' . str_replace('storage/', '', $logoPath)) }}" alt="Logo" class="surat-paper__logo">
                     @endif
                 </div>
 
                 <div class="surat-paper__company-right">
                     <h2>{{ $surat->kopSurat->nama_pt }}</h2>
-                    @if($surat->kopSurat->alamat)
-                        <p>{{ $surat->kopSurat->alamat }}</p>
+                    @php
+                        $alamatPt = $surat->kopSurat->alamat_pt ?? $surat->kopSurat->alamat ?? null;
+                    @endphp
+                    @if($alamatPt)
+                        <p>{{ $alamatPt }}</p>
                     @endif
                     <p>
                         @if($surat->kopSurat->telepon)
@@ -125,7 +131,6 @@
                 </div>
 
                 <div class="signature-name">{{ $namaPenandatangan }}</div>
-                <div class="signature-sub">{{ $surat->kopSurat?->website ?? 'www.inovindo.co.id' }}</div>
             </div>
         </div>
     </div>

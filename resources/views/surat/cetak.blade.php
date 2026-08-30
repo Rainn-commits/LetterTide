@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cetak Surat - {{ $surat->nomor_surat }}</title>
-    @vite('resources/css/surat-cetak.css')
+    @vite('resources/css/surat.css')
     @vite('resources/css/surat-preview.css')
     <style>
         @media print {
@@ -27,40 +27,80 @@
 <body onload="window.print()">
 
     <div class="no-print" style="padding: 15px; text-align: center; background: #f3f4f6;">
-        <button onclick="window.print()" style="padding: 8px 16px; cursor: pointer;">Cetak Dokumen</button>
+        <button onclick="window.print()" style="padding: 8px 16px; cursor: pointer; font-weight: bold;">Cetak Dokumen</button>
         <button onclick="window.close()" style="padding: 8px 16px; cursor: pointer;">Tutup</button>
     </div>
 
     <div class="surat-paper">
 
         @if ($surat->kopSurat)
-            <div class="surat-paper__header" style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
-                <div class="surat-paper__logo-left" style="width: 25%;">
-                    @if ($surat->kopSurat->logo)
-                        <img src="{{ asset('storage/' . $surat->kopSurat->logo) }}" alt="Logo" style="max-height: 80px; width: auto;">
-                    @endif
-                </div>
-
-                <div class="surat-paper__company-right" style="width: 75%; text-align: right;">
-                    <h2 style="font-size: 15pt; font-weight: bold; margin: 0; text-transform: uppercase;">{{ $surat->kopSurat->nama_pt }}</h2>
-                    <p style="font-size: 9.5pt; margin: 2px 0;">{{ $surat->kopSurat->alamat_pt }}</p>
-                    <p style="font-size: 9.5pt; margin: 1px 0;">
-                        @if($surat->kopSurat->telepon) WhatsApp. {{ $surat->kopSurat->telepon }} @endif
-                        @if($surat->kopSurat->website) &middot; Website. {{ $surat->kopSurat->website }} @endif
-                    </p>
-                    @if($surat->kopSurat->email)
-                        <p style="font-size: 9.5pt; margin: 1px 0;">Email: {{ $surat->kopSurat->email }}</p>
-                    @endif
-                </div>
+        <div class="surat-paper__header" style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+            <div class="surat-paper__logo-left" style="width: 25%;">
+                @php
+                    $logoPath = $surat->kopSurat->logo_path ?? $surat->kopSurat->logo ?? null;
+                @endphp
+                @if ($logoPath)
+                    <img src="{{ asset('storage/' . str_replace('storage/', '', $logoPath)) }}" 
+                        alt="Logo" 
+                        class="surat-paper__logo"
+                        style="max-height: 80px !important; width: auto !important; display: block !important;">
+                @endif
             </div>
-            <div style="border-top: 2px solid #000; margin-top: 6px; margin-bottom: 20px;"></div>
-        @endif
+
+            <div class="surat-paper__company-right" style="width: 75%; text-align: right;">
+                <h2 style="font-size: 15pt; font-weight: bold; margin: 0; text-transform: uppercase;">{{ $surat->kopSurat->nama_pt }}</h2>
+                @php
+                    $alamatPt = $surat->kopSurat->alamat_pt ?? $surat->kopSurat->alamat ?? null;
+                @endphp
+                @if($alamatPt)
+                    <p style="font-size: 9.5pt; margin: 2px 0;">{{ $alamatPt }}</p>
+                @endif
+                <p style="font-size: 9.5pt; margin: 1px 0;">
+                    @if($surat->kopSurat->telepon) WhatsApp. +62 {{ ltrim($surat->kopSurat->telepon, '+62') }} @endif
+                    @if($surat->kopSurat->website) &middot; Website. {{ $surat->kopSurat->website }} @endif
+                </p>
+                @if($surat->kopSurat->email)
+                    <p style="font-size: 9.5pt; margin: 1px 0;">Email: {{ $surat->kopSurat->email }}</p>
+                @endif
+            </div>
+        </div>
+
+        <div style="border-top: 2px solid #000; margin-top: 6px; margin-bottom: 20px;"></div>
+    @endif
+        @php
+            $romawiBulan = ['', 'I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII'];
+            $bulanNum = (int) \Carbon\Carbon::parse($surat->tanggal_surat)->format('n');
+            $bulanRomawi = $romawiBulan[$bulanNum] ?? 'I';
+            $tahunDuaDigit = \Carbon\Carbon::parse($surat->tanggal_surat)->format('y');
+            
+            $nomorUrut = sprintf('%03d', $surat->id ?? 1);
+            $kodeTemplate = $surat->template?->kode_template ?? 'SPSP';
+            $namaPtSingkat = 'INOVINDO';
+
+            $nomorSuratFormatted = "{$nomorUrut}/{$kodeTemplate}/{$namaPtSingkat}/{$bulanRomawi}/{$tahunDuaDigit}";
+
+            $values = $surat->isiSurat->pluck('nilai_field', 'nama_field')->toArray();
+
+            $namaPenandatangan = $values['nama_penandatangan'] 
+                              ?? $values['Nama Penandatangan'] 
+                              ?? $values['penandatangan'] 
+                              ?? null;
+
+            $jabatanPenandatangan = $values['jabatan_penandatangan'] 
+                                 ?? $values['Jabatan Penandatangan'] 
+                                 ?? $values['jabatan'] 
+                                 ?? 'Direktur PT. Inovindo Digital Media';
+
+            if (empty($namaPenandatangan)) {
+                $namaPenandatangan = $surat->user?->name ?? 'Novi Setia Nurviat';
+            }
+        @endphp
 
         <table style="width: 100%; margin-bottom: 20px; border-collapse: collapse;">
             <tr>
-                <td style="width: 80px; vertical-align: top;">Nomor</td>
+                <td style="width: 90px; vertical-align: top;">Nomor</td>
                 <td style="width: 15px; vertical-align: top;">:</td>
-                <td style="vertical-align: top;">{{ $surat->nomor_surat }}</td>
+                <td style="vertical-align: top;">{{ $surat->nomor_surat ?? $nomorSuratFormatted }}</td>
                 <td style="text-align: right; vertical-align: top;">
                     Bandung, {{ \Carbon\Carbon::parse($surat->tanggal_surat)->locale('id')->translatedFormat('d F Y') }}
                 </td>
@@ -84,7 +124,7 @@
         <div class="signature-wrapper">
             <div class="signature-box">
                 <div>Hormat Kami,</div>
-                <div>{{ $jabatanPenandatangan ?? 'Direktur PT. Inovindo Digital Media' }}</div>
+                <div>{{ $jabatanPenandatangan }}</div>
 
                 <div style="height: 90px; display: flex; flex-direction: column; align-items: center; justify-content: center; margin: 5px 0;">
                     @if (strtolower($surat->status ?? '') === 'disetujui')
@@ -100,10 +140,7 @@
                 </div>
 
                 <div style="font-weight: bold; text-decoration: underline;">
-                    {{ $namaPenandatangan ?? $surat->user->name }}
-                </div>
-                <div style="font-size: 10pt; color: #333;">
-                    {{ $surat->kopSurat?->website ?? 'www.inovindo.co.id' }}
+                    {{ $namaPenandatangan }}
                 </div>
             </div>
         </div>
