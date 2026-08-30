@@ -1,8 +1,9 @@
 @import url('variables.css');
 
 h2 {
-    color: #008793;
-    font-size: 1.5rem;
+    font-family: var(--font-display);
+    color: #000000;
+    font-size: 1.4rem;
     font-weight: 700;
     margin-top: 0;
     margin-bottom: 24px;
@@ -12,7 +13,8 @@ h2 {
 }
 
 h3 {
-    color: #00737d;
+    font-family: var(--font-display);
+    color: #000000;
     font-size: 1.2rem;
     font-weight: 600;
     margin-top: 32px;
@@ -26,6 +28,7 @@ form[action*="kop-surat"] {
     padding: 28px;
     box-shadow: 0 4px 20px -2px rgba(0, 195, 208, 0.08);
     max-width: 680px;
+    animation: fadeSlideUp 0.4s var(--ease, ease);
 }
 
 form[action*="kop-surat"] label {
@@ -131,8 +134,8 @@ a[href*="kop-surat/create"]:hover {
     transform: translateY(-1px);
 }
 
-p:has(+ img), 
-p:has(+ table), 
+p:has(+ img),
+p:has(+ table),
 p:has(+ a) {
     background-color: rgba(0, 195, 208, 0.12);
     border-left: 4px solid #00C3D0;
@@ -186,12 +189,10 @@ table[border="1"] td:first-child {
     background-color: rgba(0, 195, 208, 0.06);
 }
 
-form[action*="kop-surat"] {
-    animation: fadeSlideUp 0.4s var(--ease, ease);
-}
-
 @media (max-width: 640px) {
-    h2 { font-size: 1.25rem; }
+    h2 {
+        font-size: 1.4rem;
+    }
 
     form[action*="kop-surat"] {
         padding: 20px;

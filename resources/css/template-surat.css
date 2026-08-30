@@ -84,11 +84,11 @@
 }
 
 .template-table thead th.col-versi,
-.template-table tbody td:nth-child(3),
+.template-table tbody td:nth-child(2),
 .template-table thead th.col-status,
-.template-table tbody td:nth-child(4),
+.template-table tbody td:nth-child(3),
 .template-table thead th.col-actions,
-.template-table tbody td:nth-child(5) {
+.template-table tbody td:nth-child(4) {
   text-align: center;
 }
 
@@ -168,8 +168,9 @@
 }
 
 .icon-btn {
-  width: 32px;
-  height: 32px;
+  width: 34px;
+  height: 34px;
+  padding: 8px;
   border-radius: 8px;
   background: var(--color-primary);
   border: none;
@@ -177,16 +178,22 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  transition: background 0.15s ease;
+  transition: background 0.15s ease, transform 0.15s ease;
 }
 
 .icon-btn:hover {
   background: var(--color-primary-dark);
+  transform: translateY(-2px);
 }
 
 .icon-btn svg {
-  width: 16px;
-  height: 16px;
+  width: 15px;
+  height: 15px;
+}
+
+.icon-btn--lg svg {
+  width: 23px;
+  height: 23px;
 }
 
 .icon-btn--ghost {

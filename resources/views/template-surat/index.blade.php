@@ -28,9 +28,6 @@
         <table class="template-table">
             <thead>
                 <tr>
-                    <th class="col-checkbox">
-                        <input type="checkbox" id="selectAll" aria-label="Pilih semua template">
-                    </th>
                     <th class="is-sortable">Nama Template <span class="sort-icon">&#8645;</span></th>
                     <th class="col-versi is-sortable">Versi <span class="sort-icon">&#8645;</span></th>
                     <th class="col-status is-sortable">Status <span class="sort-icon">&#8645;</span></th>
@@ -40,12 +37,9 @@
             <tbody>
                 @forelse ($templates as $template)
                     <tr>
-                        <td>
-                            <input type="checkbox" name="selected[]" value="{{ $template->id }}" aria-label="Pilih {{ $template->nama_template }}">
-                        </td>
                         <td class="template-name">{{ $template->nama_template }}</td>
-                        <td>v{{ $template->versi }}</td>
-                        <td>
+                        <td class="col-versi">v{{ $template->versi }}</td>
+                        <td class="col-status">
                             @if (($template->status ?? 'Aktif') === 'Aktif')
                                 <span class="status-pill status-pill--active">Aktif</span>
                             @else
@@ -56,7 +50,8 @@
                             <div class="row-actions">
                                 <a href="{{ route('template-surat.edit', $template->id) }}" class="icon-btn" title="Edit template" aria-label="Edit template">
                                     <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M4 20L4.6 16.2C4.7 15.5 5 14.9 5.5 14.4L15.4 4.5C16.2 3.7 17.5 3.7 18.3 4.5L19.5 5.7C20.3 6.5 20.3 7.8 19.5 8.6L9.6 18.5C9.1 19 8.5 19.3 7.8 19.4L4 20Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
+                                        <path d="m18 2 4 4-14 14H4v-4L18 2z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                                        <path d="m14.5 5.5 4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
                                     </svg>
                                 </a>
 
@@ -73,7 +68,7 @@
                                 <form method="POST" action="{{ route('template-surat.destroy', $template->id) }}" style="display:inline">
                                     @csrf 
                                     @method('DELETE')
-                                    <button type="submit" class="icon-btn icon-btn--ghost" title="Nonaktifkan template" aria-label="Nonaktifkan template" onclick="return confirm('Nonaktifkan template ini?')" style="border:none; background:transparent; cursor:pointer;">
+                                    <button type="submit" class="icon-btn icon-btn--ghost icon-btn--lg" title="Nonaktifkan template" aria-label="Nonaktifkan template" onclick="return confirm('Nonaktifkan template ini?')" style="border:none; background:transparent; cursor:pointer;">
                                         <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                             <path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
                                         </svg>
@@ -84,7 +79,7 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="5" class="table-empty">
+                        <td colspan="4" class="table-empty">
                             Belum ada template surat. Klik "Tambah Template Baru" untuk membuat yang pertama.
                         </td>
                     </tr>
