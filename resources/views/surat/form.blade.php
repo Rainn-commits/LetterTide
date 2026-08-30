@@ -33,6 +33,21 @@
             </div>
 
             <div class="form-field">
+                <label for="ttd_by_user_id">Pilih Penandatangan (Approval Sistem):</label>
+                <select name="ttd_by_user_id" id="ttd_by_user_id" class="form-control" required>
+                    <option value="">-- Pilih User Penandatangan --</option>
+                    @foreach ($users as $u)
+                        <option value="{{ $u->id }}" {{ old('ttd_by_user_id') == $u->id ? 'selected' : '' }}>
+                            {{ $u->name }}
+                        </option>
+                    @endforeach
+                </select>
+                @error('ttd_by_user_id')
+                    <p class="form-field__hint" style="color: var(--color-danger);">{{ $message }}</p>
+                @enderror
+            </div>
+
+            <div class="form-field">
                 <label for="lampiran">Lampiran Surat:</label>
                 <input type="text" id="lampiran" name="lampiran" value="{{ old('lampiran', '-') }}" placeholder="Contoh: 1 Lembar / -">
             </div>

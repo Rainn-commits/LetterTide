@@ -9,6 +9,7 @@ use App\Models\Surat;
 use App\Models\TemplateSurat;
 use App\Models\User;
 use App\Services\PlaceholderParser;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -65,6 +66,8 @@ class SuratController extends Controller
             ]);
         }
 
+        $this->generatePdfArsip($surat);
+
         LogAktivitas::catat(
             'Membuat',
             'Surat',
@@ -72,53 +75,19 @@ class SuratController extends Controller
         );
 
         return redirect()->route('surat.show', $surat)
-            ->with('success', "Surat berhasil dibuat dengan nomor {$nomorSurat}.");
+            ->with('success', "Surat berhasil dibuat dengan nomor {$nomorSurat} dan tersimpan ke Arsip.");
     }
 
     public function show(Surat $surat)
     {
         $surat->increment('jumlah_akses');
-        $surat->load(['template', 'kopSurat', 'isiSurat', 'user']);
 
-        $values = $surat->isiSurat->pluck('nilai_field', 'nama_field')->toArray();
-        $isiSuratRendered = PlaceholderParser::render($surat->template->isi_template, $values);
-
-        $namaPenandatangan = $values['nama_penandatangan'] 
-                        ?? $values['Nama Penandatangan'] 
-                        ?? $values['penandatangan'] 
-                        ?? $surat->user?->name;
-
-        $jabatanPenandatangan = $values['jabatan_penandatangan'] 
-                            ?? $values['Jabatan Penandatangan'] 
-                            ?? $values['jabatan'] 
-                            ?? 'Direktur PT. Inovindo Digital Media';
-
-        return view('surat.preview', compact(
-            'surat', 
-            'isiSuratRendered', 
-            'namaPenandatangan', 
-            'jabatanPenandatangan'
-        ));
+        return view('surat.preview', $this->buildCetakData($surat));
     }
 
     public function cetak(Surat $surat)
     {
-        $surat->load(['template', 'kopSurat', 'isiSurat', 'user']);
-
-        $values = $surat->isiSurat->pluck('nilai_field', 'nama_field')->toArray();
-        $isiSuratRendered = PlaceholderParser::render($surat->template->isi_template, $values);
-
-        $namaPenandatangan = $values['nama_penandatangan'] 
-                        ?? $values['Nama Penandatangan'] 
-                        ?? $values['penandatangan'] 
-                        ?? $surat->user?->name;
-
-        $jabatanPenandatangan = $values['jabatan_penandatangan'] 
-                            ?? $values['Jabatan Penandatangan'] 
-                            ?? $values['jabatan'] 
-                            ?? 'Direktur PT. Inovindo Digital Media';
-
-        return view('surat.cetak', compact('surat', 'isiSuratRendered', 'namaPenandatangan', 'jabatanPenandatangan'));
+        return view('surat.cetak', $this->buildCetakData($surat));
     }
 
     public function uploadArsip(Request $request, Surat $surat)
@@ -167,10 +136,12 @@ class SuratController extends Controller
             );
         }
 
+        $this->generatePdfArsip($surat);
+
         LogAktivitas::catat('Mengubah', 'Surat', "Mengedit isi surat \"{$surat->nomor_surat}\"");
 
         return redirect()->route('surat.show', $surat)
-            ->with('success', 'Isi surat berhasil diperbarui.');
+            ->with('success', 'Isi surat berhasil diperbarui dan arsip PDF telah diperbarui.');
     }
 
     public function ttdDigital(Surat $surat)
@@ -194,6 +165,8 @@ class SuratController extends Controller
 
         $surat->status = 'Disetujui';
         $surat->save();
+
+        $this->generatePdfArsip($surat);
 
         LogAktivitas::catat(
             'ACC',
@@ -233,6 +206,41 @@ class SuratController extends Controller
         return redirect()->back()->with('success', 'Surat berhasil dihapus!');
     }
 
+    private function buildCetakData(Surat $surat): array
+    {
+        $surat->load(['template', 'kopSurat', 'isiSurat', 'user', 'penandatangan']);
+
+        $values = $surat->isiSurat->pluck('nilai_field', 'nama_field')->toArray();
+        $isiSuratRendered = PlaceholderParser::render($surat->template->isi_template, $values);
+
+        $namaPenandatangan = $values['nama_penandatangan']
+                        ?? $values['Nama Penandatangan']
+                        ?? $values['penandatangan']
+                        ?? $surat->user?->name;
+
+        $jabatanPenandatangan = $values['jabatan_penandatangan']
+                            ?? $values['Jabatan Penandatangan']
+                            ?? $values['jabatan']
+                            ?? 'Direktur PT. Inovindo Digital Media';
+
+        return compact('surat', 'isiSuratRendered', 'namaPenandatangan', 'jabatanPenandatangan');
+    }
+
+    private function generatePdfArsip(Surat $surat): void
+    {
+        $pdf = Pdf::loadView('surat.cetak', $this->buildCetakData($surat));
+
+        $namaFile = 'arsip_surat/' . str_replace('/', '_', $surat->nomor_surat) . '.pdf';
+
+        if ($surat->file_arsip && Storage::disk('public')->exists($surat->file_arsip)) {
+            Storage::disk('public')->delete($surat->file_arsip);
+        }
+
+        Storage::disk('public')->put($namaFile, $pdf->output());
+
+        $surat->update(['file_arsip' => $namaFile]);
+    }
+
     private function generateNomorSurat(TemplateSurat $template): string
     {
         $tahunPenuh = now()->year;
@@ -264,4 +272,3 @@ class SuratController extends Controller
         return $romawi[$bulan - 1];
     }
 }
-

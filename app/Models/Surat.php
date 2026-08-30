@@ -14,17 +14,19 @@ class Surat extends Model
         'ttd_by_user_id',
         'kop_surat_id',
         'nomor_surat',
+        'lampiran',
         'jenis',
         'tanggal_surat',
         'file_arsip',
         'jumlah_akses',
+        'status',
     ];
 
-        public function evaluasiRetensi()
+    public function evaluasiRetensi()
     {
         return $this->hasOne(EvaluasiRetensi::class);
     }
-    
+
     protected $casts = [
         'tanggal_surat' => 'date',
     ];
@@ -47,5 +49,10 @@ class Surat extends Model
     public function isiSurat()
     {
         return $this->hasMany(IsiSurat::class);
+    }
+
+    public function penandatangan()
+    {
+        return $this->belongsTo(User::class, 'ttd_by_user_id');
     }
 }
