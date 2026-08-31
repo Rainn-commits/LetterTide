@@ -870,13 +870,15 @@ h2,
 }
 
 .template-table-modern {
-  width: 100%;
-  border-collapse: separate;
+  width: auto;                  
+  max-width: 100%;            
+  margin: 0 auto;              
+  border-collapse: separate;*
   border-spacing: 0 6px;
 }
 
 .template-table-modern th {
-  padding: 14px 16px;
+  padding: 10px 14px;         
   color: #64748b;
   font-size: 12px;
   font-weight: 700;
@@ -886,7 +888,7 @@ h2,
 }
 
 .template-table-modern td {
-  padding: 14px 16px;
+  padding: 10px 14px;          
   background-color: #ffffff;
   font-size: 13.5px;
   color: #334155;
