@@ -10,10 +10,16 @@ class RoleSeeder extends Seeder
 {
     public function run(): void
     {
-        DB::table('roles')->insert([
-            ['nama_role' => 'Super Admin', 'created_at' => now(), 'updated_at' => now()],
-            ['nama_role' => 'Admin', 'created_at' => now(), 'updated_at' => now()],
-            ['nama_role' => 'User', 'created_at' => now(), 'updated_at' => now()],
-        ]);
+        $roles = ['Super Admin', 'Admin', 'User'];
+
+        foreach ($roles as $namaRole) {
+            if (!DB::table('roles')->where('nama_role', $namaRole)->exists()) {
+                DB::table('roles')->insert([
+                    'nama_role'  => $namaRole,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
+            }
+        }
     }
 }
