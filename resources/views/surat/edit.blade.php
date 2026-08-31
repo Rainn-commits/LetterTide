@@ -55,9 +55,9 @@
                 <p class="form-field__hint">Tidak ada bidang isi surat yang dapat diubah.</p>
             @endforelse
 
-            <div style="display: flex; gap: 10px; margin-top: 20px;">
-                <button type="submit" class="btn-block-wide" style="flex: 1;">Simpan Perubahan</button>
-                <a href="{{ route('surat.show', $surat->id) }}" class="btn-ghost" style="text-decoration: none; text-align: center; line-height: 2.5;">Batal</a>
+            <div class="form-actions-row">
+                <button type="submit" class="btn-block-wide">Simpan Perubahan</button>
+                <a href="{{ route('surat.show', $surat->id) }}" class="btn-ghost-pill">Batal</a>
             </div>
         </form>
     </div>

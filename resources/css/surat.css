@@ -1129,3 +1129,38 @@ h2,
   height: 44px;
   border-radius: 50%;
 }
+
+.form-actions-row {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.form-actions-row .btn-block-wide {
+  margin-top: 0;
+}
+
+.btn-ghost-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 340px;
+  padding: 15px 24px;
+  background: transparent;
+  color: var(--color-ink);
+  border: 1.5px solid var(--color-ink);
+  font-weight: 700;
+  font-size: 15.5px;
+  border-radius: var(--radius-pill);
+  text-decoration: none;
+  box-sizing: border-box;
+  transition: background 0.15s ease, transform 0.15s ease;
+}
+
+.btn-ghost-pill:hover {
+  background: var(--color-bg-tint);
+  transform: translateY(-1px);
+}
