@@ -102,8 +102,10 @@ Route::middleware('auth')->group(function () {
         Route::delete('/role/{role}', [RoleController::class, 'destroy'])->name('role.destroy');
     });
 
-    Route::get('/log-aktivitas', [LogAktivitasController::class, 'index'])->name('log-aktivitas.index');
-
+    Route::middleware('permission:log.view')->group(function () {
+        Route::get('/log-aktivitas', [LogAktivitasController::class, 'index'])->name('log-aktivitas.index');
+    });
+    
     Route::get('/evaluasi-retensi', [EvaluasiRetensiController::class, 'index'])->name('evaluasi-retensi.index');
         Route::post('/evaluasi-retensi/{surat}/usulkan', [EvaluasiRetensiController::class, 'usulkan'])->name('evaluasi-retensi.usulkan');
         Route::post('/evaluasi-retensi/{surat}/nilai', [EvaluasiRetensiController::class, 'simpanPenilaian'])->name('retensi.simpan-penilaian'); // <-- DIPINDAHKAN KE SINI
