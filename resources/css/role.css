@@ -349,6 +349,7 @@
   color: #ffffff;
   border: none;
   padding: 10px 24px;
+  min-width: 160px;
   border-radius: 20px;
   font-weight: 700;
   font-size: 14px;

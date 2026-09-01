@@ -132,10 +132,10 @@
 }
 
 .select-futuristic {
-  min-width: 130px;
-  max-width: 150px;
+  width: auto;
   height: 38px;
-  padding: 0 28px 0 11px;
+  padding: 0 32px 0 11px;
+  text-align: center;
   border: 1.5px solid var(--color-border);
   border-radius: var(--radius-sm);
   background-color: #f1f5f9;
