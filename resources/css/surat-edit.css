@@ -1,13 +1,13 @@
 @import url('variables.css');
 
 .card {
-  background: var(--color-white);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-card);
-  padding: 32px;
-  animation: fadeSlideUp 0.4s var(--ease);
-  max-width: 680px;
-  margin: 0 auto;
+    background: var(--color-white);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-card);
+    padding: 38px 32px;
+    animation: fadeSlideUp 0.4s var(--ease);
+    max-width: 520px;
+    margin: 0 auto;
 }
 
 .wizard-step {
@@ -25,7 +25,9 @@
 }
 
 .surat-form {
-  max-width: 640px;
+    max-width: 420px;
+    margin: 0 auto;
+    text-align: center;
 }
 
 .form-field {
@@ -67,24 +69,56 @@ form label,
 }
 
 .btn-block-wide {
-  display: block;
-  width: 100%;
-  max-width: 340px;
-  text-align: center;
-  background: var(--color-primary);
-  color: var(--color-white);
-  border: none;
-  font-weight: 700;
-  font-size: 15.5px;
-  padding: 15px 24px;
-  border-radius: var(--radius-pill);
-  margin-top: 8px;
-  transition: background 0.15s ease, transform 0.15s ease;
+    display: block;
+    width: 320px;
+    max-width: 80%;
+    margin: 30px auto 0;
+    text-align: center;
+    background: var(--color-primary);
+    color: var(--color-white);
+    border: none;
+    font-weight: 700;
+    font-size: 14px;
+    padding: 11px 20px;
+    border-radius: var(--radius-pill);
+    transition: background 0.15s ease, transform 0.15s ease;
+    box-shadow: 0 4px 12px rgba(0, 195, 208, 0.25);
 }
 
 .btn-block-wide:hover {
-  background: var(--color-primary-dark);
-  transform: translateY(-1px);
+    background: var(--color-primary-dark);
+    transform: translateY(-1px);
+}
+
+.surat-form .btn-ghost,
+.surat-form a.btn,
+.surat-form button:nth-child(2) {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 140px;
+    min-width: 140px;
+    height: 40px;
+    box-sizing: border-box;
+    padding: 0 20px;
+    margin: 12px 4px 0;
+    border-radius: 999px;
+    background: #ffffff;
+    color: #334155;
+    border: 1.5px solid #cbd5e1;
+    font-weight: 700;
+    font-size: 14px;
+    text-decoration: none;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    transition: all 0.2s ease;
+}
+
+.surat-form .btn-ghost:hover,
+.surat-form a.btn:hover,
+.surat-form button:nth-child(2):hover {
+    background: #f8fafc;
+    border-color: #94a3b8;
+    transform: translateY(-1px);
 }
 
 .form-actions-row {
@@ -97,29 +131,6 @@ form label,
 
 .form-actions-row .btn-block-wide {
   margin-top: 0;
-}
-
-.btn-ghost-pill {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  max-width: 340px;
-  padding: 15px 24px;
-  background: transparent;
-  color: var(--color-ink);
-  border: 1.5px solid var(--color-ink);
-  font-weight: 700;
-  font-size: 15.5px;
-  border-radius: var(--radius-pill);
-  text-decoration: none;
-  box-sizing: border-box;
-  transition: background 0.15s ease, transform 0.15s ease;
-}
-
-.btn-ghost-pill:hover {
-  background: var(--color-bg-tint);
-  transform: translateY(-1px);
 }
 
 @media (max-width: 780px) {

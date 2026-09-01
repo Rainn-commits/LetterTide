@@ -198,6 +198,8 @@
   border-radius: var(--radius-pill);
   font-size: 12px;
   font-weight: 700;
+  white-space: nowrap;
+  align-items: center;
 }
 
 .badge-status--approved {
@@ -223,12 +225,19 @@
   font-weight: 700;
   text-decoration: none;
   transition: all 0.15s ease;
+  white-space: nowrap;
 }
 
 .file-badge-link:hover {
   background-color: var(--color-success);
   color: var(--color-white);
   box-shadow: var(--shadow-soft);
+}
+
+.file-badge-link svg {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
 }
 
 .badge-empty {
