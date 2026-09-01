@@ -155,7 +155,7 @@
 
 .font-bold {
   font-weight: 700;
-  font-family: 'Plus Jakarta Sans', 'Inter', sans-serif;
+  font-family: var(--font-body);
 }
 
 .role-table .col-count {

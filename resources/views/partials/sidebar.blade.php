@@ -64,7 +64,7 @@
         [
             'label' => 'Kelola Role dan Hak Akses',
             'route' => 'role.index',
-            'active' => request()->routeIs('role-akses.*'),
+            'active' => request()->routeIs('role.*'),
             'roles' => ['Super Admin'],
             'icon' => 'shield',
         ],
