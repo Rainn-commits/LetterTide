@@ -181,18 +181,19 @@
     color: var(--color-ink-soft);
     text-transform: uppercase;
     letter-spacing: 0.03em;
-    font-size: 12.5px;
+    font-size: 13px;
     font-weight: 700;
-    padding: 0.8rem 1rem;
+    padding: 14px 18px;
     border-bottom: 1px solid var(--color-border);
     white-space: nowrap;
     text-align: left;
 }
 
 .table-pengguna td {
-    padding: 0.8rem 1rem;
+    padding: 14px 18px;
     border-bottom: 1px solid var(--color-border);
     color: var(--color-ink);
+    font-size: 13.5px;
     vertical-align: middle;
     text-align: left;
 }

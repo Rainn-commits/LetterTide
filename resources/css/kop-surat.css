@@ -34,7 +34,7 @@ form[action*="kop-surat"] {
 form[action*="kop-surat"] label {
     display: inline-block;
     font-weight: 600;
-    font-size: 0.875rem;
+    font-size: 13px;
     color: #334155;
     margin-top: 14px;
     margin-bottom: 6px;
@@ -52,7 +52,7 @@ form[action*="kop-surat"] input[type="file"] {
     border: 1.5px solid #e2e8f0;
     border-radius: 8px;
     box-sizing: border-box;
-    font-size: 0.95rem;
+    font-size: 14px;
     color: #0f172a;
     background-color: #fafafa;
     transition: all 0.2s ease-in-out;

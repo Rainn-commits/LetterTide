@@ -138,7 +138,7 @@
 .auth-field label {
   display: block;
   font-weight: 700;
-  font-size: 14px;
+  font-size: 13px;
   margin-bottom: 8px;
   color: var(--color-ink);
 }
@@ -153,7 +153,7 @@
   border: 1px solid transparent;
   border-radius: var(--radius-sm);
   padding: 13px 14px;
-  font-size: 15px;
+  font-size: 14px;
   color: var(--color-ink);
   transition: border-color 0.15s ease, background 0.15s ease;
 }
