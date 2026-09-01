@@ -60,7 +60,7 @@
                 <div class="card-pro__header">
                     <div>
                         <h3 class="card-pro__title">Traffic Surat</h3>
-                        <p class="card-pro__subtitle">Statistik jumlah pembuatan surat 6 bulan terakhir</p>
+                        <p class="card-pro__subtitle">Statistik jumlah pembuatan surat selama 6 bulan terakhir</p>
                     </div>
                     <span class="glass-pill glass-pill--accent">Realtime Data</span>
                 </div>
