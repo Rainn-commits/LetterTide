@@ -52,9 +52,11 @@
                     </td>
                     <td class="aksi-cell">
                         <div class="aksi-wrapper">
-                            <a href="{{ route('pengguna.edit', $p) }}"
-                               class="btn-pengguna btn-secondary-pengguna">
-                                Edit
+                            <a href="{{ route('pengguna.edit', $p) }}" class="icon-btn" title="Edit Pengguna">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M12 20h9"></path>
+                                    <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
+                                </svg>
                             </a>
 
                             @if($p->id !== auth()->id())
@@ -63,11 +65,11 @@
                                       class="form-nonaktif">
                                     @csrf
                                     @method('DELETE')
-
-                                    <button type="submit"
-                                            class="btn-pengguna btn-danger-pengguna"
-                                            onclick="return confirm('Nonaktifkan pengguna ini?')">
-                                        Nonaktifkan
+                                    <button type="submit" class="icon-btn-danger" title="Nonaktifkan Pengguna" aria-label="Nonaktifkan Pengguna" onclick="return confirm('Nonaktifkan pengguna ini?')">
+                                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M12 2v10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                                            <path d="M6.34 5.34a9 9 0 1 0 11.32 0" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                                        </svg>
                                     </button>
                                 </form>
                             @endif

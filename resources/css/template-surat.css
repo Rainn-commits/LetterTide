@@ -58,12 +58,31 @@
   overflow: hidden;
 }
 
-.icon-btn {
-  transition: background var(--transition-fast), transform var(--transition-fast);
+.btn-teal {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--color-primary, #00c3d0);
+  color: #ffffff;
+  border: none;
+  font-weight: 700;
+  font-size: 14px;
+  padding: 10px 22px;
+  border-radius: 20px;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 12px rgba(0, 195, 208, 0.35);
+  text-decoration: none;
 }
 
-.icon-btn:hover {
-  transform: translateY(-2px);
+.btn-teal:hover {
+  background: var(--color-primary-dark, #00a3af);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(0, 195, 208, 0.45);
+}
+
+.btn-teal svg {
+  width: 16px;
+  height: 16px;
 }
 
 .template-table {
@@ -298,34 +317,41 @@
   margin-top: 32px;
 }
 
-.btn-dark {
-  background: var(--color-ink);
-  color: var(--color-white);
+.btn-dark, .btn-teal {
+  background: var(--color-primary, #00c3d0); 
+  color: #ffffff;
   border: none;
+  padding: 10px 24px;
+  border-radius: 20px;
   font-weight: 700;
-  font-size: 15px;
-  padding: 14px 32px;
-  border-radius: var(--radius-pill);
-  transition: background 0.15s ease, transform 0.15s ease;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 12px rgba(0, 195, 208, 0.35);
+  text-decoration: none;
 }
-
-.btn-dark:hover {
-  background: #000;
-  transform: translateY(-1px);
+s
+.btn-dark:hover, .btn-teal:hover {
+  background: var(--color-primary-dark, #00a3af);
+  box-shadow: 0 6px 16px rgba(0, 195, 208, 0.45);
 }
 
 .btn-ghost {
   background: transparent;
-  color: var(--color-ink);
-  border: 1.5px solid var(--color-ink);
+  color: #64748b;
+  border: 1.5px solid #cbd5e1;
+  padding: 9px 22px;
+  border-radius: 20px;
   font-weight: 700;
-  font-size: 15px;
-  padding: 12px 30px;
-  border-radius: var(--radius-pill);
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-decoration: none;
 }
 
 .btn-ghost:hover {
-  background: var(--color-bg-tint);
+  background: #f1f5f9;
+  color: #334155;
 }
 
 @media (max-width: 720px) {

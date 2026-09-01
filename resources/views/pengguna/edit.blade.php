@@ -6,7 +6,7 @@
 
 @section('content')
 <div class="pengguna-container">
-    <h2>Edit Pengguna</h2><br>
+    <h2>Edit Pengguna</h2>
 
     @if($errors->any())
         <div class="alert-message alert-danger">{{ $errors->first() }}</div>
@@ -38,7 +38,9 @@
                 </select>
             </div>
 
-            <button type="submit" class="btn-pengguna btn-primary-pengguna">Simpan Perubahan</button>
+            <div class="form-actions">
+                <button type="submit" class="btn-pengguna btn-primary-pengguna">Simpan Perubahan</button>
+            </div>
         </form>
     </div>
 </div>
