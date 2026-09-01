@@ -54,7 +54,7 @@
                 
                 <p class="form-field__hint">
                     Gunakan format <code>@{{nama_variabel}}</code> untuk menandai bagian yang akan diisi otomatis.<br>
-                    <em>Catatan: Menyimpan perubahan akan tersimpan sebagai <strong>versi baru</strong> (versi lama tetap tersimpan di riwayat).</em>
+                    <em><strong>Catatan:</strong> Menyimpan perubahan akan tersimpan sebagai <strong>versi baru</strong>.</em>
                 </p>
                 
                 @error('isi_template')

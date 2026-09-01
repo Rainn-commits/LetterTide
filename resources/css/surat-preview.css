@@ -23,18 +23,18 @@
 .surat-paper__logo-left {
     display: flex;
     align-items: center;
-    width: 25%;
+    width: 35% !important;
 }
 
 .surat-paper__logo {
-    max-height: 85px;
+    max-height: 400px !important;
+    max-width: 100% !important;  
     width: auto;
-    max-width: 160px;
     object-fit: contain;
 }
 
 .surat-paper__company-right {
-    width: 75%;
+    width: 65% !important; 
     text-align: right !important;
     color: #000000;
 }
@@ -66,6 +66,7 @@
 .surat-paper__meta-table {
     margin-bottom: 20px;
     border-collapse: collapse;
+    width: 100%;
 }
 
 .surat-paper__meta-table td {
@@ -131,56 +132,6 @@
     gap: 8px;
 }
 
-@media screen and (max-width: 900px) {
-    .surat-paper {
-        width: 100%;
-        max-width: 210mm;
-        min-height: 0;
-        padding: 8mm 8mm 8mm 10mm;
-    }
-}
-
-@media screen and (max-width: 640px) {
-    .page-toolbar-preview {
-        width: 100%;
-        flex-direction: column-reverse;
-        align-items: stretch;
-        gap: 12px;
-    }
-
-    .page-toolbar-preview__actions {
-        justify-content: stretch;
-    }
-
-    .page-toolbar-preview__actions a {
-        flex: 1;
-        text-align: center;
-    }
-
-    .surat-paper {
-        padding: 6mm;
-        font-size: 10.5pt;
-    }
-
-    .surat-paper__company-right h2 {
-        font-size: 13pt;
-    }
-
-    .signature-box {
-        width: 100%;
-    }
-}
-
-@media print {
-    .surat-paper {
-        width: 215mm;
-        min-height: 330mm;
-        padding: 20mm 20mm 20mm 25mm;
-        font-size: 12pt;
-    }
-}
-
-
 .btn-ghost {
   display: inline-flex;
   align-items: center;
@@ -195,6 +146,7 @@
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(15, 23, 42, 0.08);
   transition: all 0.2s ease;
+  text-decoration: none;
 }
 
 .btn-ghost:hover {
@@ -219,51 +171,130 @@
 .btn-warning {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 8px;
   background: linear-gradient(145deg, #f59e0b, #d97706);
-  color: var(--color-white);
+  color: var(--color-white, #fff);
   border: 1px solid rgba(255, 255, 255, 0.4);
   font-weight: 700;
-  font-size: 14.5px;
-  padding: 12px 24px;
+  font-size: 14px;
+  padding: 10px 20px;
   border-radius: 12px;
   box-shadow: 0 6px 16px rgba(217, 119, 6, 0.3);
   transition: all 0.2s ease;
+  text-decoration: none;
 }
 
 .btn-warning:hover {
   background: #d97706;
-  transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(217, 119, 6, 0.4);
-}
-
-.btn-warning svg {
-  width: 17px;
-  height: 17px;
 }
 
 .btn-dark {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 8px;
   background: linear-gradient(145deg, #00c3d0, #009aa5);
-  color: var(--color-white);
+  color: var(--color-white, #fff);
   border: 1px solid rgba(255, 255, 255, 0.4);
   font-weight: 700;
-  font-size: 14.5px;
-  padding: 12px 24px;
+  font-size: 14px;
+  padding: 10px 20px;
   border-radius: 12px;
   box-shadow: 0 6px 16px rgba(0, 195, 208, 0.3);
   transition: all 0.2s ease;
+  text-decoration: none;
 }
 
 .btn-dark:hover {
   background: #009aa5;
-  transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(0, 195, 208, 0.4);
 }
 
-.btn-dark svg {
-  width: 17px;
-  height: 17px;
+@media screen and (max-width: 900px) {
+    .surat-paper {
+        width: 100%;
+        max-width: 210mm;
+        min-height: 0;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .page-toolbar-preview {
+        width: 100% !important;
+        display: flex !important;
+        flex-direction: row !important; 
+        align-items: center !important;
+        justify-content: space-between !important;
+        gap: 10px !important;
+        margin-bottom: 20px !important;
+    }
+
+    .page-toolbar-preview > .btn-ghost {
+        align-self: center !important;
+        margin: 0 !important;
+        flex-shrink: 0 !important; 
+    }
+
+    .page-toolbar-preview__actions {
+        display: flex !important;
+        flex-direction: row !important;
+        align-items: center !important;
+        justify-content: flex-end !important;
+        gap: 8px !important;
+        flex: 1 !important;
+    }
+
+    .page-toolbar-preview__actions a {
+        flex: 1;
+        max-width: 130px; 
+        padding: 9px 12px !important;
+        font-size: 13px !important;
+        text-align: center;
+        white-space: nowrap;
+    }
+
+    .surat-paper-wrapper {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        overflow: hidden;
+    }
+
+    .surat-paper {
+        width: 210mm !important;
+        min-height: auto !important;
+        padding: 15mm 15mm !important;
+        font-size: 11pt !important;
+        line-height: 1.4 !important;
+        position: relative !important;
+        left: 50% !important;
+        transform: translateX(-50%) scale(0.46) !important;
+        transform-origin: top center !important;
+        margin: 0 0 -65% 0 !important;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15) !important;
+    }
+
+    .surat-paper__logo {
+        max-height: 70px !important;
+    }
+
+    .surat-paper__meta-table td:nth-child(1) {
+        width: 140px !important;
+        white-space: nowrap;
+    }
+
+    .surat-paper__meta-table td:nth-child(2) {
+        width: 15px !important;
+        text-align: center;
+    }
+}
+
+@media print {
+    .surat-paper {
+        width: 215mm;
+        min-height: 330mm;
+        padding: 20mm 20mm 20mm 25mm;
+        font-size: 12pt;
+    }
 }

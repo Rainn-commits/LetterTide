@@ -566,3 +566,13 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08) !important;
   color: #0f172a !important;
 }
+
+@media (max-width: 400px) {
+    .profile-identity {
+        align-items: center;
+    }
+
+    .profile-page__badge {
+        align-self: flex-end;
+    }
+}

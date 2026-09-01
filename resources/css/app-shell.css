@@ -467,7 +467,7 @@
 .notification-menu {
   position: absolute;
   top: calc(100% + 12px);
-  right: 0;
+  right: -25px;
   width: 320px;
   background: #ffffff;
   border-radius: 12px;

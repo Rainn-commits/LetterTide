@@ -371,3 +371,14 @@ s
   .btn-ghost { width: 100%; justify-content: center; text-align: center; }
   .form-actions { flex-direction: column-reverse; align-items: stretch; }
 }
+
+@media (max-width: 780px) {
+  .form-actions,
+  .form-actions-row,
+  .template-actions {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    gap: 12px !important;
+  }
+}

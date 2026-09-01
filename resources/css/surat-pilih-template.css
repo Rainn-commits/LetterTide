@@ -12,6 +12,10 @@
 }
 
 .surat-tabs__link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
   padding: 10px 20px;
   font-weight: 700;
   font-size: 13.5px;
@@ -147,3 +151,4 @@
 @media (max-width: 520px) {
   .template-grid { grid-template-columns: 1fr; }
 }
+
