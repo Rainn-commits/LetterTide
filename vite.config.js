@@ -26,6 +26,7 @@ export default defineConfig({
                 'resources/css/surat-pilih-template.css',
                 'resources/css/surat-cetak.css',
                 'resources/css/surat-riwayat.css',
+                'resources/css/surat-edit.css',
             ],
             refresh: true,
             fonts: [
