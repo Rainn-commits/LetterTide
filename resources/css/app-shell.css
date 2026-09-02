@@ -601,3 +601,10 @@
     box-sizing: border-box;
   }
 }
+
+@media (min-width: 992px) {
+    #sidebarToggle {
+        display: none !important;
+    }
+}
+
