@@ -40,8 +40,8 @@
                     $logoPath = $surat->kopSurat->logo_path ?? $surat->kopSurat->logo ?? null;
                 @endphp
                 @if ($logoPath)
-                    <img src="{{ asset('storage/' . str_replace('storage/', '', $logoPath)) }}" 
-                        alt="Logo" 
+                    <img src="{{ asset('storage/' . str_replace('storage/', '', $logoPath)) }}"
+                        alt="Logo"
                         class="surat-paper__logo"
                         style="max-height: 80px !important; width: auto !important; display: block !important;">
                 @endif
@@ -66,34 +66,19 @@
         </div>
 
         <div style="border-top: 2px solid #000; margin-top: 6px; margin-bottom: 20px;"></div>
-    @endif
+        @endif
+
         @php
             $romawiBulan = ['', 'I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII'];
             $bulanNum = (int) \Carbon\Carbon::parse($surat->tanggal_surat)->format('n');
             $bulanRomawi = $romawiBulan[$bulanNum] ?? 'I';
             $tahunDuaDigit = \Carbon\Carbon::parse($surat->tanggal_surat)->format('y');
-            
+
             $nomorUrut = sprintf('%03d', $surat->id ?? 1);
             $kodeTemplate = $surat->template?->kode_template ?? 'SPSP';
             $namaPtSingkat = 'INOVINDO';
 
             $nomorSuratFormatted = "{$nomorUrut}/{$kodeTemplate}/{$namaPtSingkat}/{$bulanRomawi}/{$tahunDuaDigit}";
-
-            $values = $surat->isiSurat->pluck('nilai_field', 'nama_field')->toArray();
-
-            $namaPenandatangan = $values['nama_penandatangan'] 
-                            ?? $values['Nama Penandatangan'] 
-                            ?? $values['penandatangan'] 
-                            ?? null;
-
-            $jabatanPenandatangan = $values['jabatan_penandatangan'] 
-                                ?? $values['Jabatan Penandatangan'] 
-                                ?? $values['jabatan'] 
-                                ?? 'Direktur PT. Inovindo Digital Media';
-
-            if (empty($namaPenandatangan)) {
-                $namaPenandatangan = $surat->penandatangan?->name ?? 'Novi Setia Nurviat';
-            }
         @endphp
 
         <table style="width: 100%; margin-bottom: 20px; border-collapse: collapse;">
@@ -118,7 +103,7 @@
         </div>
 
         <div style="font-size: 12pt; line-height: 1.5; text-align: justify; margin-bottom: 30px;">
-            {!! $isiSuratRendered !!}
+            {!! $isiUtama !!}
         </div>
 
         <div class="signature-wrapper">
@@ -144,6 +129,14 @@
                 </div>
             </div>
         </div>
+
+        @if ($isiLampiran !== null)
+            <div style="page-break-before: always;"></div>
+
+            <div style="font-size: 12pt; line-height: 1.5; text-align: justify;">
+                {!! $isiLampiran !!}
+            </div>
+        @endif
 
     </div>
 

@@ -252,10 +252,33 @@ class SuratController extends Controller
         $jabatanPenandatangan = $values['jabatan_penandatangan']
                             ?? $values['Jabatan Penandatangan']
                             ?? $values['jabatan']
-                            ?? $surat->penandatangan?->jabatan 
+                            ?? $surat->penandatangan?->jabatan
                             ?? 'Direktur PT. Inovindo Digital Media';
 
-        return compact('surat', 'isiSuratRendered', 'namaPenandatangan', 'jabatanPenandatangan');
+        $isiUtama = $isiSuratRendered;
+        $isiLampiran = null;
+
+        if (stripos($isiSuratRendered, 'page-break-before: always') !== false) {
+            $parts = preg_split(
+                '/<div[^>]*style=["\'][^"\']*page-break-before:\s*always[^"\']*["\'][^>]*><\/div>/i',
+                $isiSuratRendered,
+                2
+            );
+
+            if (count($parts) === 2) {
+                $isiUtama = $parts[0];
+                $isiLampiran = $parts[1];
+            }
+        }
+
+        return compact(
+            'surat',
+            'isiSuratRendered',
+            'isiUtama',
+            'isiLampiran',
+            'namaPenandatangan',
+            'jabatanPenandatangan'
+        );
     }
 
     private function generatePdfArsip(Surat $surat): void
