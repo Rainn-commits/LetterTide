@@ -34,7 +34,7 @@
 
             <div class="form-field">
                 <label for="ttd_by_user_id">Pilih Penandatangan (Approval Sistem):</label>
-                <select name="ttd_by_user_id" id="ttd_by_user_id" class="form-control" required>
+                <select name="ttd_by_user_id" id="ttd_by_user_id" class="form-control" autocomplete="off" required>
                     <option value="">-- Pilih User Penandatangan --</option>
                     @foreach ($users as $u)
                         <option value="{{ $u->id }}" {{ old('ttd_by_user_id') == $u->id ? 'selected' : '' }}>

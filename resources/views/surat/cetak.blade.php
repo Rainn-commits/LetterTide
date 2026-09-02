@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cetak Surat - {{ $surat->nomor_surat }}</title>
-    @vite('resources/css/surat.css')
+    @vite('resources/css/surat-edit.css')
     @vite('resources/css/surat-preview.css')
     <style>
         @media print {
@@ -92,7 +92,7 @@
                                 ?? 'Direktur PT. Inovindo Digital Media';
 
             if (empty($namaPenandatangan)) {
-                $namaPenandatangan = $surat->user?->name ?? 'Novi Setia Nurviat';
+                $namaPenandatangan = $surat->penandatangan?->name ?? 'Novi Setia Nurviat';
             }
         @endphp
 

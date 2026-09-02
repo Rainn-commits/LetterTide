@@ -99,14 +99,14 @@
             $values = $surat->isiSurat->pluck('nilai_field', 'nama_field')->toArray();
 
             $namaPenandatangan = $values['nama_penandatangan'] 
-                              ?? $values['Nama Penandatangan'] 
-                              ?? $values['penandatangan'] 
-                              ?? null;
+                            ?? $values['Nama Penandatangan'] 
+                            ?? $values['penandatangan'] 
+                            ?? null;
 
             $jabatanPenandatangan = $values['jabatan_penandatangan'] 
-                                 ?? $values['Jabatan Penandatangan'] 
-                                 ?? $values['jabatan'] 
-                                 ?? 'Direktur PT. Inovindo Digital Media';
+                                ?? $values['Jabatan Penandatangan'] 
+                                ?? $values['jabatan'] 
+                                ?? 'Direktur PT. Inovindo Digital Media';
 
             if (empty($namaPenandatangan)) {
                 $namaPenandatangan = $surat->user?->name ?? 'Novi Setia Nurviat';
