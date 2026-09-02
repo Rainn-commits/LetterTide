@@ -390,3 +390,30 @@
 .pagination-wrapper {
   margin-top: 20px;
 }
+
+input[type="file"] {
+  background-color: #f1f5f9;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  padding: 4px 8px;
+  font-size: 0.85rem;
+  color: #475569;
+  cursor: pointer;
+}
+
+input[type="file"]::file-selector-button {
+  background-color: #00b4b6;
+  color: #ffffff;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 0.8rem;
+  margin-right: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+input[type="file"]::file-selector-button:hover {
+  background-color: #008e90;
+}
