@@ -243,7 +243,7 @@ class SuratController extends Controller
         $values = $surat->isiSurat->pluck('nilai_field', 'nama_field')->toArray();
         $isiSuratRendered = PlaceholderParser::render($surat->template->isi_template, $values);
 
-        $namaPenandatangan = $surat->penandatangan?->name 
+        $namaPenandatangan = $surat->penandatangan?->name
                         ?? $values['nama_penandatangan']
                         ?? $values['Nama Penandatangan']
                         ?? $values['penandatangan']
@@ -252,7 +252,7 @@ class SuratController extends Controller
         $jabatanPenandatangan = $values['jabatan_penandatangan']
                             ?? $values['Jabatan Penandatangan']
                             ?? $values['jabatan']
-                            ?? $surat->penandatangan?->jabatan // (Jika ada kolom jabatan di tabel user)
+                            ?? $surat->penandatangan?->jabatan 
                             ?? 'Direktur PT. Inovindo Digital Media';
 
         return compact('surat', 'isiSuratRendered', 'namaPenandatangan', 'jabatanPenandatangan');
