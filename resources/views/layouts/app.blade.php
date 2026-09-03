@@ -10,11 +10,10 @@
     @vite([
         'resources/css/app.css', 
         'resources/css/app-shell.css',
-        'resources/js/app.js'
         'resources/js/app.js',
         'resources/js/confirm-modal.js'
     ])
-
+    
     @yield('page-css')
     @stack('styles')
 </head>
