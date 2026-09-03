@@ -61,10 +61,10 @@
                                     </a>
 
                                     @if(!in_array($role->nama_role, ['Super Admin', 'Admin', 'User']))
-                                        <form method="POST" action="{{ route('role.destroy', $role) }}">
+                                        <form method="POST" action="{{ route('role.destroy', $role) }}" data-confirm="Hapus role ini?" data-confirm-variant="danger" data-confirm-label="Ya, Hapus">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" class="icon-btn icon-btn--danger" title="Hapus role" onclick="return confirm('Hapus role ini?')">
+                                            <button type="submit" class="icon-btn icon-btn--danger" title="Hapus role">
                                                 <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                     <path d="M4 7H20M9 7V5a1 1 0 011-1h4a1 1 0 011 1v2M6 7l1 13a2 2 0 002 2h6a2 2 0 002-2l1-13" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
                                                 </svg>

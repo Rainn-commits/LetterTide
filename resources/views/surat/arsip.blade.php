@@ -213,7 +213,7 @@
                                             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
                                         </span>
                                     @else
-                                        <form action="{{ route('surat.ttd-digital', $surat) }}" method="POST" style="display: inline-block;" onsubmit="return confirm('Apakah Anda yakin ingin menyetujui dan menandatangani surat ini secara digital?')">
+                                        <form action="{{ route('surat.ttd-digital', $surat) }}" method="POST" style="display: inline-block;" data-confirm="Apakah Anda yakin ingin menyetujui dan menandatangani surat ini secara digital?" data-confirm-label="Ya, Tanda Tangani">
                                             @csrf
                                             <button type="submit" class="btn-modern btn-modern--ttd btn-modern--icon-only" title="ACC & Tanda Tangan Digital">
                                                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
@@ -236,7 +236,7 @@
                                     </button>
                                 </form>
 
-                                <form action="{{ route('surat.destroy', $surat) }}" method="POST" style="display: inline-block;" onsubmit="return confirm('Apakah Anda yakin ingin menghapus surat ini? Data yang dihapus tidak bisa dikembalikan.')">
+                                <form action="{{ route('surat.destroy', $surat) }}" method="POST" style="display: inline-block;" data-confirm="Apakah Anda yakin ingin menghapus surat ini? Data yang dihapus tidak bisa dikembalikan." data-confirm-variant="danger" data-confirm-label="Ya, Hapus">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="btn-modern btn-modern--delete btn-modern--icon-only" title="Hapus Surat">
