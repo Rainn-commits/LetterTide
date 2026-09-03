@@ -281,9 +281,33 @@ class SuratController extends Controller
         );
     }
 
+    private function buildLogoDataUri(?string $logoPath): ?string
+    {
+        if (!$logoPath) {
+            return null;
+        }
+
+        $cleanPath = str_replace('storage/', '', $logoPath);
+        $fullPath = storage_path('app/public/' . $cleanPath);
+
+        if (!file_exists($fullPath)) {
+            return null;
+        }
+
+        $mime = mime_content_type($fullPath) ?: 'image/png';
+        $data = base64_encode(file_get_contents($fullPath));
+
+        return "data:{$mime};base64,{$data}";
+    }
+
     private function generatePdfArsip(Surat $surat): void
     {
-        $pdf = Pdf::loadView('surat.cetak', $this->buildCetakData($surat));
+        $data = $this->buildCetakData($surat);
+
+        $logoPath = $surat->kopSurat->logo_path ?? $surat->kopSurat->logo ?? null;
+        $data['logoDataUri'] = $this->buildLogoDataUri($logoPath);
+
+        $pdf = Pdf::loadView('surat.pdf', $data)->setPaper('a4', 'portrait');
 
         $namaFile = 'arsip_surat/' . str_replace('/', '_', $surat->nomor_surat) . '.pdf';
 
