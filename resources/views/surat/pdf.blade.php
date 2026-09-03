@@ -151,7 +151,7 @@
         </div>
 
         <div class="surat-paper__body">
-            {!! $isiSuratRendered !!}
+            {!! $isiUtama !!}
         </div>
 
         <div class="signature-wrapper">
@@ -163,7 +163,7 @@
                     @if (strtolower($surat->status ?? '') === 'disetujui')
                         <img src="https://api.qrserver.com/v1/create-qr-code/?size=100x100&data={{ urlencode(route('surat.show', $surat)) }}" alt="QR TTD Digital" style="width: 70px; height: 70px;">
                         <p style="font-size: 7.5pt; color: #15803d; font-weight: bold; margin-top: 2px;">
-                            Signed Digital by {{ $namaPenandatangan }}
+                            Signed Digital by {{ $surat->penandatangan->name ?? $namaPenandatangan }}
                         </p>
                     @else
                         <p style="color: #ef4444; font-size: 9pt; font-style: italic;">
@@ -177,6 +177,14 @@
                 </div>
             </div>
         </div>
+
+        @if ($isiLampiran !== null)
+            <div style="page-break-before: always;"></div>
+
+            <div class="surat-paper__body">
+                {!! $isiLampiran !!}
+            </div>
+        @endif
 
     </div>
 
