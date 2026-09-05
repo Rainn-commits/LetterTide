@@ -50,9 +50,15 @@ class SuratController extends Controller
             $query->whereDate('tanggal_surat', '<=', $request->input('tanggal_selesai'));
         }
 
+        if ($request->filled('template_id')) {
+            $query->where('template_id', $request->input('template_id'));
+        }
+
         $suratList = $query->paginate(10)->withQueryString();
 
-        return view('surat.riwayat', compact('suratList'));
+        $templates = TemplateSurat::orderBy('nama_template')->get();
+
+        return view('surat.riwayat', compact('suratList', 'templates'));
     }
 
     public function form(TemplateSurat $template)

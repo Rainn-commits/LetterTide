@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Models\Surat;
+use App\Models\TemplateSurat;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -54,6 +55,10 @@ class ArsipController extends Controller
             $query->whereDate('tanggal_surat', '<=', $request->input('tanggal_selesai'));
         }
 
+        if ($request->filled('template_id')) {
+            $query->where('template_id', $request->input('template_id'));
+        }
+
         if ($request->filled('status_arsip')) {
             if ($request->input('status_arsip') === 'uploaded') {
                 $query->whereNotNull('file_arsip');
@@ -65,7 +70,8 @@ class ArsipController extends Controller
         $suratList = $query->paginate(10)->withQueryString();
 
         $pejabatList = User::orderBy('name')->get();
+        $templates = TemplateSurat::orderBy('nama_template')->get();
 
-        return view('surat.arsip', compact('suratList', 'pejabatList', 'folder'));
+        return view('surat.arsip', compact('suratList', 'pejabatList', 'folder', 'templates'));
     }
 }
