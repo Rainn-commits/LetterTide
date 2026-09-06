@@ -117,6 +117,18 @@
             </div>
 
             <div class="form-group-center">
+            <label>Pilih Template Surat</label>
+            <select name="template_id" class="form-control">
+                <option value="">-- Semua Template --</option>
+                @foreach ($templates as $t)
+                    <option value="{{ $t->id }}" {{ (string) request('template_id') === (string) $t->id ? 'selected' : '' }}>
+                        {{ $t->nama_template }}
+                    </option>
+                @endforeach
+            </select>
+        </div>
+
+            <div class="form-group-center">
                 <label>Tanggal Mulai</label>
                 <input type="date" name="tanggal_mulai" value="{{ request('tanggal_mulai') }}" class="form-control">
             </div>
