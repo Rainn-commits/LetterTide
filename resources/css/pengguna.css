@@ -479,6 +479,11 @@
     align-items: center;
 }
 
+.form-card form > .btn-primary-pengguna {
+    display: flex;
+    margin: 0 auto;
+}
+
 .km-tabs {
   display: flex;
   gap: 4px;

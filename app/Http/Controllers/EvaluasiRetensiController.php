@@ -17,15 +17,17 @@ class EvaluasiRetensiController extends Controller
         /** @var User $user */
         $user = Auth::user();
 
-        if ($user->role === 'user') {
-            $arsip = Surat::with('evaluasiRetensi', 'template')
+        $namaRole = strtolower($user->role->nama_role ?? $user->role);
+
+        if ($namaRole === 'user') {
+            $arsip = Surat::with('evaluasiRetensi', 'template', 'user')
                     ->where('user_id', $user->id) 
                     ->orderByDesc('tanggal_surat')
-                    ->get();
+                    ->paginate(20);
         } else {
-            $arsip = Surat::with('evaluasiRetensi', 'template')
+            $arsip = Surat::with('evaluasiRetensi', 'template', 'user')
                     ->orderByDesc('tanggal_surat')
-                    ->get();
+                    ->paginate(20);
         }
 
         return view('evaluasi-retensi.index', compact('arsip'));

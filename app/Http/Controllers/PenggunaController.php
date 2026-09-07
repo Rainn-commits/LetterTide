@@ -63,7 +63,7 @@ class PenggunaController extends Controller
     {
         $this->cegahEditSuperAdminOlehAdmin($pengguna);
 
-        $roles = $this->rolesYangBolehDiassign();
+        $roles = $this->rolesUntukTambahPengguna();
 
         return view('pengguna.edit', compact('pengguna', 'roles'));
     }

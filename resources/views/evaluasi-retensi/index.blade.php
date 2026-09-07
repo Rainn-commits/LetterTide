@@ -32,14 +32,19 @@
     </div>
 
     <div class="retensi-card-expanded">
-        <table class="retensi-table-modern">
+        <table class="retensi-table-modern" style="width: 100%; table-layout: fixed;">
             <thead>
                 <tr>
-                    <th style="width: 18%;">Nomor Surat</th>
-                    <th style="width: 14%;">Tanggal</th>
-                    <th style="width: 10%; text-align: center;">Akses</th>
-                    <th style="width: 38%;">Penilaian Nilai Guna & Kerahasiaan</th>
-                    <th style="width: 8%; text-align: center;">Skor</th>
+                    <th style="width: 20%;">Nomor Surat</th>
+
+                    @if (auth()->user()->role->nama_role !== 'User')
+                        <th style="width: 12%;">Pembuat</th>
+                    @endif
+
+                    <th style="width: 11%;">Tanggal</th>
+                    <th style="width: 6%; text-align: center;">Akses</th>
+                    <th style="width: 33%;">Nilai Guna & Kerahasiaan</th>
+                    <th style="width: 6%; text-align: center;">Skor</th>
                     <th style="width: 12%; text-align: center;">Status</th>
                 </tr>
             </thead>
@@ -56,16 +61,22 @@
                     @endphp
                     <tr>
                         <td class="col-nomor">
-                            <span class="text-nomor">{{ $item->nomor_surat }}</span>
+                            <span class="text-nomor" style="word-break: break-all;">{{ $item->nomor_surat }}</span>
                         </td>
-                        <td class="col-tanggal">{{ $item->tanggal_surat->format('d M Y') }}</td>
+
+                        @if (auth()->user()->role->nama_role !== 'User')
+                            <td style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                                {{ $item->user->name ?? $item->pembuat->name ?? '-' }}
+                            </td>
+                        @endif
+
+                        <td class="col-tanggal" style="white-space: nowrap;">{{ $item->tanggal_surat->format('d M Y') }}</td>
                         <td style="text-align: center;">
                             <span class="badge-akses-count">{{ $item->jumlah_akses ?? 0 }}x</span>
                         </td>
                         <td>
-                            <form action="{{ route('retensi.simpan-penilaian', $item->id) }}" method="POST" class="form-penilaian-inline">
-                                @csrf
-                                <select name="nilai_guna" class="select-futuristic" required>
+                            <form action="{{ route('retensi.simpan-penilaian', $item->id) }}" method="POST" class="form-penilaian-inline" style="display: flex; gap: 4px;">
+                                <select name="nilai_guna" class="select-futuristic" style="padding: 4px 6px; font-size: 12px; width: 42%;" required>
                                     <option value="" disabled {{ !$eval?->nilai_guna ? 'selected' : '' }}>-- Nilai Guna --</option>
                                     <option value="Hukum" {{ $eval?->nilai_guna === 'Hukum' ? 'selected' : '' }}>Hukum</option>
                                     <option value="Keuangan" {{ $eval?->nilai_guna === 'Keuangan' ? 'selected' : '' }}>Keuangan</option>
@@ -73,14 +84,14 @@
                                     <option value="Pemberitahuan" {{ $eval?->nilai_guna === 'Pemberitahuan' ? 'selected' : '' }}>Pemberitahuan</option>
                                 </select>
 
-                                <select name="kerahasiaan" class="select-futuristic" required>
+                                <select name="kerahasiaan" class="select-futuristic" style="padding: 4px 6px; font-size: 12px; width: 42%;" required>
                                     <option value="" disabled {{ !$eval?->kerahasiaan ? 'selected' : '' }}>-- Kerahasiaan --</option>
                                     <option value="Sangat Rahasia" {{ $eval?->kerahasiaan === 'Sangat Rahasia' ? 'selected' : '' }}>Sangat Rahasia</option>
                                     <option value="Rahasia" {{ $eval?->kerahasiaan === 'Rahasia' ? 'selected' : '' }}>Rahasia</option>
                                     <option value="Biasa/Terbuka" {{ $eval?->kerahasiaan === 'Biasa/Terbuka' ? 'selected' : '' }}>Biasa / Terbuka</option>
                                 </select>
 
-                                <button type="submit" class="btn-futuristic-save">Simpan</button>
+                                <button type="submit" class="btn-futuristic-save" style="padding: 4px 8px; font-size: 12px;">✓</button>
                             </form>
                         </td>
                         <td style="text-align: center;">
@@ -89,14 +100,14 @@
                             </span>
                         </td>
                         <td style="text-align: center;">
-                            <span class="badge-retensi {{ $statusClass }}">
+                            <span class="badge-retensi {{ $statusClass }}" style="white-space: nowrap;">
                                 {{ $eval?->status_rekomendasi ?? 'Belum Dievaluasi' }}
                             </span>
                         </td>
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="6" class="table-empty-state">
+                        <td colspan="{{ auth()->user()->role->nama_role !== 'User' ? 7 : 6 }}" class="table-empty-state">
                             Belum ada arsip surat untuk dievaluasi.
                         </td>
                     </tr>

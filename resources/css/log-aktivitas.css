@@ -84,11 +84,22 @@
     border: 1px solid #86efac;
 }
 
-.log-badge--update,
-.log-badge--delete { 
-    background: #fee2e2; 
-    color: #b91c1c; 
+.log-badge--update {
+    background: #ffedd5;
+    color: #c2410c;
+    border: 1px solid #fdba74;
+}
+
+.log-badge--delete {
+    background: #fee2e2;
+    color: #b91c1c;
     border: 1px solid #fca5a5;
+}
+
+.log-badge--activate {
+    background: #dbeafe;
+    color: #1d4ed8;
+    border: 1px solid #93c5fd;
 }
 
 .log-badge--create { 

@@ -28,13 +28,14 @@
                     @foreach($logs as $log)
                         @php
                             $badgeClass = match($log->aksi) {
-                                'ACC', 'Acc', 'acc' => 'log-badge--acc',
-                                'Mengubah'          => 'log-badge--update',
-                                'Membuat'           => 'log-badge--create',
-                                'Menghapus',
-                                'Menonaktifkan'     => 'log-badge--delete',
-                                default             => 'log-badge--default',
-                            };
+                            'ACC', 'Acc', 'acc' => 'log-badge--acc',
+                            'Mengubah'          => 'log-badge--update',
+                            'Membuat'           => 'log-badge--create',
+                            'Menghapus',
+                            'Menonaktifkan'     => 'log-badge--delete',
+                            'Mengaktifkan'      => 'log-badge--activate',
+                            default             => 'log-badge--default',
+                        };
                         @endphp
                         <tr>
                             <td class="text-left font-medium">{{ $log->created_at->format('d M Y, H:i') }}</td>
