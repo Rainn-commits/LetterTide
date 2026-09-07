@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Role;
 use App\Models\User;
 use App\Models\LogAktivitas;
+use App\Models\Surat;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -15,7 +16,15 @@ class PenggunaController extends Controller
     {
         $pengguna = User::with('role')->orderBy('name')->get();
 
-        return view('pengguna.index', compact('pengguna'));
+        $idPenggunaPunyaSurat = Surat::whereIn('user_id', $pengguna->pluck('id'))
+            ->orWhereIn('ttd_by_user_id', $pengguna->pluck('id'))
+            ->get(['user_id', 'ttd_by_user_id'])
+            ->flatMap(fn ($s) => [$s->user_id, $s->ttd_by_user_id])
+            ->filter()
+            ->unique()
+            ->values();
+
+        return view('pengguna.index', compact('pengguna', 'idPenggunaPunyaSurat'));
     }
 
     public function create()
@@ -30,7 +39,7 @@ class PenggunaController extends Controller
         $validated = $request->validate([
             'name'     => ['required', 'string', 'max:100'],
             'email'    => ['required', 'email', 'max:100', 'unique:users,email'],
-            'password' => ['required', 'string', 'min:8'],
+            'password' => ['required', 'string', 'min:8', 'confirmed'],
             'role_id'  => ['required', 'exists:roles,id'],
         ]);
 
@@ -106,6 +115,43 @@ class PenggunaController extends Controller
         LogAktivitas::catat('Menonaktifkan', 'Pengguna', "Menonaktifkan pengguna \"{$pengguna->name}\"");
 
         return back()->with('success', "Pengguna {$pengguna->name} berhasil dinonaktifkan.");
+    }
+
+    public function aktifkan(User $pengguna)
+    {
+        $this->cegahEditSuperAdminOlehAdmin($pengguna);
+
+        $pengguna->update(['is_aktif' => true]);
+
+        LogAktivitas::catat('Mengaktifkan', 'Pengguna', "Mengaktifkan kembali pengguna \"{$pengguna->name}\"");
+
+        return back()->with('success', "Pengguna {$pengguna->name} berhasil diaktifkan kembali.");
+    }
+    
+    public function hapusPermanen(User $pengguna)
+    {
+        $this->cegahEditSuperAdminOlehAdmin($pengguna);
+
+        if ($pengguna->id === Auth::id()) {
+            return back()->withErrors(['pengguna' => 'Anda tidak dapat menghapus akun Anda sendiri.']);
+        }
+
+        $punyaSurat = Surat::where('user_id', $pengguna->id)
+            ->orWhere('ttd_by_user_id', $pengguna->id)
+            ->exists();
+
+        if ($punyaSurat) {
+            return back()->withErrors([
+                'pengguna' => "Pengguna \"{$pengguna->name}\" tidak dapat dihapus permanen karena masih tercatat sebagai pembuat/penandatangan surat. Gunakan \"Nonaktifkan\" saja."
+            ]);
+        }
+
+        $nama = $pengguna->name;
+        $pengguna->delete();
+
+        LogAktivitas::catat('Menghapus', 'Pengguna', "Menghapus permanen pengguna \"{$nama}\"");
+
+        return back()->with('success', "Pengguna {$nama} berhasil dihapus permanen.");
     }
 
     private function cegahPenugasanSuperAdminTanpaIzin(int $roleId): void

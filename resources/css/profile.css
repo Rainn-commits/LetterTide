@@ -92,6 +92,13 @@
     width: 100%;
 }
 
+.profile-col-right {
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+    width: 100%;
+}
+
 .profile-card {
     position: relative;
     overflow: hidden;
@@ -132,6 +139,7 @@
     justify-content: center;
     text-align: center;
     margin: 0 auto;
+    align-self: start;
 }
 
 .profile-identity {

@@ -68,6 +68,8 @@ Route::middleware('auth')->group(function () {
         Route::get('/pengguna/{pengguna}/edit', [PenggunaController::class, 'edit'])->name('pengguna.edit');
         Route::put('/pengguna/{pengguna}', [PenggunaController::class, 'update'])->name('pengguna.update');
         Route::delete('/pengguna/{pengguna}', [PenggunaController::class, 'destroy'])->name('pengguna.destroy');
+        Route::patch('/pengguna/{pengguna}/aktifkan', [PenggunaController::class, 'aktifkan'])->name('pengguna.aktifkan');
+        Route::delete('/pengguna/{pengguna}/hapus-permanen', [PenggunaController::class, 'hapusPermanen'])->name('pengguna.hapus-permanen');
     });
 
     Route::middleware('permission:template.manage')->group(function () {
