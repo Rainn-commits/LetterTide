@@ -38,6 +38,21 @@
                 </select>
             </div>
 
+            <hr style="margin: 24px 0; border: none; border-top: 1px solid #e2e8f0;">
+
+            <div class="form-group">
+                <label>Reset Password (opsional)</label>
+                <input type="password" name="password" class="form-control-pengguna" placeholder="Kosongkan jika tidak ingin mengubah password">
+                @error('password')
+                    <p style="color: #dc2626; font-size: 12.5px; margin-top: 6px;">{{ $message }}</p>
+                @enderror
+            </div>
+
+            <div class="form-group">
+                <label>Konfirmasi Password Baru</label>
+                <input type="password" name="password_confirmation" class="form-control-pengguna" placeholder="Ulangi password baru">
+            </div>
+
             <div class="form-actions">
                 <button type="submit" class="btn-pengguna btn-primary-pengguna">Simpan Perubahan</button>
             </div>

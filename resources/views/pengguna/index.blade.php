@@ -6,6 +6,12 @@
 
 @section('content')
 <div class="pengguna-container">
+    @if ((auth()->user()->role->nama_role ?? '') === 'Super Admin')
+        <div class="km-tabs">
+            <a href="{{ route('pengguna.index') }}" class="km-tabs__link is-active">Pengguna</a>
+            <a href="{{ route('role.index') }}" class="km-tabs__link">Role dan Hak Akses</a>
+        </div>
+    @endif
     <div class="pengguna-header">
         <h2>Kelola Pengguna</h2>
         <a href="{{ route('pengguna.create') }}" class="btn-pengguna btn-primary-pengguna">

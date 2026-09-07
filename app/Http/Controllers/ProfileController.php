@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
 
 class ProfileController extends Controller
@@ -51,5 +52,32 @@ class ProfileController extends Controller
         $user->save();
 
         return back()->with('success', 'Profil berhasil diperbarui.');
+    }
+
+    public function updatePassword(Request $request)
+    {
+        /** @var User $user */
+        $user = Auth::user();
+
+        $userRole = $user->role->nama_role ?? '';
+        $isAdminOrSuperAdmin = in_array($userRole, ['Super Admin', 'Admin']);
+
+        if (!$isAdminOrSuperAdmin) {
+            abort(403, 'Anda tidak memiliki akses untuk mengubah password di sini.');
+        }
+
+        $validated = $request->validate([
+            'current_password' => ['required', 'string'],
+            'password'         => ['required', 'string', 'min:8', 'confirmed'],
+        ]);
+
+        if (!Hash::check($validated['current_password'], $user->password)) {
+            return back()->withErrors(['current_password' => 'Password saat ini salah.'])->withInput();
+        }
+
+        $user->password = Hash::make($validated['password']);
+        $user->save();
+
+        return back()->with('success', 'Password berhasil diperbarui.');
     }
 }

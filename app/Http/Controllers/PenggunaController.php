@@ -20,7 +20,7 @@ class PenggunaController extends Controller
 
     public function create()
     {
-        $roles = $this->rolesYangBolehDiassign();
+        $roles = $this->rolesUntukTambahPengguna();
 
         return view('pengguna.create', compact('roles'));
     }
@@ -64,23 +64,33 @@ class PenggunaController extends Controller
         $this->cegahEditSuperAdminOlehAdmin($pengguna);
 
         $validated = $request->validate([
-            'name'    => ['required', 'string', 'max:100'],
-            'email'   => ['required', 'email', 'max:100', 'unique:users,email,' . $pengguna->id],
-            'role_id' => ['required', 'exists:roles,id'],
+            'name'     => ['required', 'string', 'max:100'],
+            'email'    => ['required', 'email', 'max:100', 'unique:users,email,' . $pengguna->id],
+            'role_id'  => ['required', 'exists:roles,id'],
+            'password' => ['nullable', 'string', 'min:8', 'confirmed'],
         ]);
 
         $this->cegahPenugasanSuperAdminTanpaIzin($validated['role_id']);
 
-        $pengguna->update([
+        $dataUpdate = [
             'name'    => $validated['name'],
             'email'   => $validated['email'],
             'role_id' => $validated['role_id'],
-        ]);
+        ];
 
-        LogAktivitas::catat('Mengubah', 'Pengguna', "Mengubah data pengguna \"{$pengguna->name}\"");
+        $passwordDiubah = !empty($validated['password']);
+
+        if ($passwordDiubah) {
+            $dataUpdate['password'] = Hash::make($validated['password']);
+        }
+
+        $pengguna->update($dataUpdate);
+
+        $keterangan = "Mengubah data pengguna \"{$pengguna->name}\"" . ($passwordDiubah ? ' (termasuk reset password)' : '');
+        LogAktivitas::catat('Mengubah', 'Pengguna', $keterangan);
 
         return redirect()->route('pengguna.index')
-            ->with('success', 'Data pengguna berhasil diperbarui.');
+            ->with('success', 'Data pengguna berhasil diperbarui.' . ($passwordDiubah ? ' Password baru sudah aktif.' : ''));
     }
 
     public function destroy(User $pengguna)
@@ -128,6 +138,11 @@ class PenggunaController extends Controller
             return Role::orderBy('nama_role')->get();
         }
 
+        return Role::where('nama_role', '!=', 'Super Admin')->orderBy('nama_role')->get();
+    }
+
+    private function rolesUntukTambahPengguna()
+    {
         return Role::where('nama_role', '!=', 'Super Admin')->orderBy('nama_role')->get();
     }
 }

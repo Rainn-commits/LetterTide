@@ -381,3 +381,34 @@
   background: #f1f5f9;
   color: #334155;
 }
+
+.km-tabs {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 20px;
+  background-color: #ffffff;
+  border-radius: 999px;
+  padding: 6px;
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.06);
+  width: fit-content;
+}
+
+.km-tabs__link {
+  padding: 10px 20px;
+  font-weight: 700;
+  font-size: 13.5px;
+  color: #64748b;
+  border-radius: 999px;
+  transition: all 0.15s ease;
+}
+
+.km-tabs__link:hover {
+  color: #00838a;
+  background-color: #e6fbfc;
+}
+
+.km-tabs__link.is-active {
+  color: #ffffff;
+  background-color: #00c3d0;
+  box-shadow: 0 3px 10px rgba(0, 135, 147, 0.35);
+}

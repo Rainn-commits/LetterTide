@@ -55,18 +55,11 @@
             'icon' => 'settings',
         ],
         [
-            'label' => 'Kelola Pengguna',
+            'label' => str_contains($roleName, 'Super Admin') ? 'Kelola Pengguna & Role' : 'Kelola Pengguna',
             'route' => 'pengguna.index',
-            'active' => request()->routeIs('pengguna.*'),
+            'active' => request()->routeIs('pengguna.*') || request()->routeIs('role.*'),
             'roles' => ['Super Admin', 'Admin'],
             'icon' => 'users',
-        ],
-        [
-            'label' => 'Kelola Role dan Hak Akses',
-            'route' => 'role.index',
-            'active' => request()->routeIs('role.*'),
-            'roles' => ['Super Admin'],
-            'icon' => 'shield',
         ],
         [
             'label' => 'Log Aktivitas Sistem',

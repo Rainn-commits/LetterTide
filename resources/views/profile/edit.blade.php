@@ -135,6 +135,51 @@
                     </div>
                 </form>
             </section>
+
+            @if ($isAdminOrSuperAdmin)
+                <section class="profile-card profile-card--form">
+                    <div class="profile-card__heading">
+                        <div>
+                            <span class="profile-card__eyebrow">KEAMANAN</span>
+                            <h3>Ganti Password</h3>
+                        </div>
+                    </div>
+                    <form method="POST" action="{{ route('profile.password.update') }}" novalidate>
+                        @csrf
+                        @method('PUT')
+                        <div class="profile-field">
+                            <label for="current_password">Password Saat Ini</label>
+                            <div class="profile-field__control">
+                                <input type="password" id="current_password" name="current_password" required>
+                            </div>
+                            @error('current_password')
+                                <span class="profile-field__error">{{ $message }}</span>
+                            @enderror
+                        </div>
+                        <div class="profile-field">
+                            <label for="password">Password Baru</label>
+                            <div class="profile-field__control">
+                                <input type="password" id="password" name="password" required>
+                            </div>
+                            @error('password')
+                                <span class="profile-field__error">{{ $message }}</span>
+                            @enderror
+                        </div>
+                        <div class="profile-field">
+                            <label for="password_confirmation">Konfirmasi Password Baru</label>
+                            <div class="profile-field__control">
+                                <input type="password" id="password_confirmation" name="password_confirmation" required>
+                            </div>
+                        </div>
+                        <div class="profile-form__footer">
+                            <button type="submit" class="btn-profile-save">
+                                <span>Ubah Password</span>
+                            </button>
+                        </div>
+                    </form>
+                </section>
+            @endif
         </div>
     </div>
 @endsection
+
