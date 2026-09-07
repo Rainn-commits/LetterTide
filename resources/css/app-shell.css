@@ -426,6 +426,11 @@
   padding: 6px 12px 6px 45px !important;
 }
 
+.sidebar__link span {
+  font-family: Arial, sans-serif !important;
+  font-style: normal !important;
+}
+
 .notification-wrapper {
   position: relative;
   display: flex;
