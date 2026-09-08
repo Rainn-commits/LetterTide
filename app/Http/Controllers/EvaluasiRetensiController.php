@@ -17,11 +17,11 @@ class EvaluasiRetensiController extends Controller
         /** @var User $user */
         $user = Auth::user();
 
-        $namaRole = strtolower($user->role->nama_role ?? $user->role);
+        $namaRole = $user->role->nama_role ?? '';
 
-        if ($namaRole === 'user') {
+        if (strtolower($namaRole) === 'user') {
             $arsip = Surat::with('evaluasiRetensi', 'template', 'user')
-                    ->where('user_id', $user->id) 
+                    ->where('user_id', $user->id)
                     ->orderByDesc('tanggal_surat')
                     ->paginate(20);
         } else {
@@ -33,17 +33,18 @@ class EvaluasiRetensiController extends Controller
         return view('evaluasi-retensi.index', compact('arsip'));
     }
 
-    public function simpanPenilaian(Request $request, Surat $surat)
+    public function simpanPenilaian(Request $request, Surat $surat, RetensiScoringService $service)
     {
         $user = Auth::user();
+        $namaRole = $user->role->nama_role ?? '';
 
-        if ($user->role === 'user' && $surat->user_id !== $user->id) { // sesuaikan nama kolom pemilik (user_id / created_by)
+        if (strtolower($namaRole) === 'user' && $surat->user_id !== $user->id) {
             abort(403, 'Anda tidak berhak menilai surat milik pengguna lain.');
         }
 
         $validated = $request->validate([
-            'nilai_guna'   => ['required', 'in:Hukum,Keuangan,Operasional,Pemberitahuan'],
-            'kerahasiaan'  => ['required', 'in:Sangat Rahasia,Rahasia,Biasa/Terbuka'],
+            'nilai_guna'  => ['required', 'in:Hukum,Keuangan,Operasional,Pemberitahuan'],
+            'kerahasiaan' => ['required', 'in:Sangat Rahasia,Rahasia,Biasa/Terbuka'],
         ]);
 
         EvaluasiRetensi::updateOrCreate(
@@ -51,55 +52,33 @@ class EvaluasiRetensiController extends Controller
             $validated
         );
 
-        return back()->with('success', "Penilaian untuk surat \"{$surat->nomor_surat}\" tersimpan.");
+        $service->evaluasiMassal();
+
+        return back()->with('success', "Penilaian untuk surat \"{$surat->nomor_surat}\" tersimpan dan skor retensi diperbarui.");
     }
 
-    public function jalankanEvaluasi(RetensiScoringService $service)
+    public function validasi(Surat $surat)
     {
-        $jumlahDievaluasi = $service->evaluasiMassal();
+        /** @var User $user */
+        $user = Auth::user();
+        $namaRole = $user->role->nama_role ?? '';
 
-        if ($jumlahDievaluasi === 0) {
-            return back()->withErrors(['evaluasi' => 'Belum ada surat yang diberi penilaian nilai guna & kerahasiaan.']);
+        if (!in_array($namaRole, ['Super Admin', 'Admin'])) {
+            abort(403, 'Hanya Admin/Super Admin yang dapat memvalidasi status retensi.');
         }
 
-        return back()->with('success', "Evaluasi retensi berhasil dijalankan untuk {$jumlahDievaluasi} surat.");
-    }
+        $eval = $surat->evaluasiRetensi;
 
-    public function usulkan(Request $request, Surat $surat)
-    {
-        $validated = $request->validate([
-            'usulan_user' => ['required', 'in:Musnahkan,Permanen,Diperpanjang'],
-            'catatan_user' => ['nullable', 'string', 'max:255'],
+        if (!$eval || !$eval->status_rekomendasi) {
+            return back()->withErrors(['evaluasi' => 'Surat ini belum memiliki skor retensi untuk divalidasi.']);
+        }
+
+        $eval->update([
+            'status_persetujuan' => 'Disetujui',
+            'divalidasi_oleh'    => $user->id,
+            'divalidasi_pada'    => now(),
         ]);
 
-        EvaluasiRetensi::updateOrCreate(
-            ['surat_id' => $surat->id],
-            [
-                'usulan_user' => $validated['usulan_user'],
-                'catatan_user' => $validated['catatan_user'] ?? null,
-                'status_persetujuan' => 'Pending', // Menunggu eksekusi admin
-            ]
-        );
-
-        return back()->with('success', "Usulan retensi untuk surat \"{$surat->nomor_surat}\" berhasil dikirim ke Admin.");
-    }
-
-    public function approve(Request $request, Surat $surat)
-    {
-        $validated = $request->validate([
-            'status_persetujuan' => ['required', 'in:Disetujui,Ditolak'],
-            'tindakan_akhir' => ['required', 'in:Musnahkan,Inaktif,Permanen'],
-        ]);
-
-        EvaluasiRetensi::updateOrCreate(
-            ['surat_id' => $surat->id],
-            [
-                'status_persetujuan' => $validated['status_persetujuan'],
-                'tindakan_akhir' => $validated['tindakan_akhir'],
-                'eksekutor_id' => auth::id(),
-            ]
-        );
-
-        return back()->with('success', "Status retensi surat \"{$surat->nomor_surat}\" berhasil diperbarui.");
+        return back()->with('success', "Status retensi surat \"{$surat->nomor_surat}\" telah divalidasi.");
     }
 }

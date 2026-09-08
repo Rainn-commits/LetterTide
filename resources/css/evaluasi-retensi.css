@@ -256,3 +256,37 @@
   .retensi-table-modern th,
   .retensi-table-modern td { padding: 12px 14px; }
 }
+
+.badge-persetujuan {
+  display: inline-block;
+  font-size: 10.5px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 999px;
+}
+
+.badge-persetujuan--menunggu {
+  background: rgba(245, 158, 11, 0.12);
+  color: #b45309;
+}
+
+.badge-persetujuan--disetujui {
+  background: rgba(16, 185, 129, 0.12);
+  color: #047857;
+}
+
+.btn-validasi-retensi {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: none;
+  background: #00c3d0;
+  color: #ffffff;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.btn-validasi-retensi:hover {
+  background: #009aa5;
+}

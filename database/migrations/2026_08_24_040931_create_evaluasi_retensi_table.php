@@ -14,10 +14,10 @@ return new class extends Migration
         Schema::create('evaluasi_retensi', function (Blueprint $table) {
                 $table->id();
                 $table->foreignId('surat_id')->constrained('surat')->onDelete('cascade');
-                $table->string('nilai_guna', 30)->nullable();     // Hukum/Keuangan/Operasional/Pemberitahuan
-                $table->string('kerahasiaan', 30)->nullable();    // Sangat Rahasia/Rahasia/Biasa
+                $table->string('nilai_guna', 30)->nullable();
+                $table->string('kerahasiaan', 30)->nullable();    
                 $table->float('skor_total')->nullable();
-                $table->string('status_rekomendasi', 20)->nullable(); // Musnah/Simpan Lokal/Permanen
+                $table->string('status_rekomendasi', 20)->nullable(); 
                 $table->foreignId('dievaluasi_oleh')->nullable()->constrained('users');
                 $table->timestamp('dievaluasi_pada')->nullable();
                 $table->timestamps();

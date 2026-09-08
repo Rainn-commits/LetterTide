@@ -75,6 +75,7 @@ class RetensiScoringService
             $item->update([
                 'skor_total'         => round($skorTotal, 4),
                 'status_rekomendasi' => $this->klasifikasikan($skorTotal),
+                'status_persetujuan' => 'Menunggu Validasi',
                 'dievaluasi_pada'    => now(),
                 'dievaluasi_oleh'    => Auth::id(),
             ]);
