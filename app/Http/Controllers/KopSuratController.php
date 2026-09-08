@@ -10,6 +10,9 @@ use Illuminate\Support\Facades\Storage;
 
 class KopSuratController extends Controller
 {
+    private const LOGO_LEBAR  = 400;
+    private const LOGO_TINGGI = 150;
+
     public function index()
     {
         $kopSuratAktif = PengaturanKopSurat::where('is_aktif', true)->first();
@@ -31,6 +34,11 @@ class KopSuratController extends Controller
         return view('kop-surat.create', compact('kopSuratAktif'));
     }
 
+    public function preview(PengaturanKopSurat $pengaturanKopSurat)
+    {
+        return view('kop-surat.preview', ['kopSurat' => $pengaturanKopSurat]);
+    }
+
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -46,7 +54,7 @@ class KopSuratController extends Controller
         $versiBaru = $kopSuratLama ? $kopSuratLama->versi + 1 : 1;
 
         if ($request->hasFile('logo')) {
-            $logoPath = $request->file('logo')->store('kop-surat', 'public');
+            $logoPath = $this->prosesLogo($request->file('logo'));
         } else {
             $logoPath = $kopSuratLama->logo ?? null;
         }
@@ -68,8 +76,55 @@ class KopSuratController extends Controller
         ]);
 
         LogAktivitas::catat('Mengubah', 'Kop Surat', "Menyimpan kop surat sebagai versi {$versiBaru}");
-        
+
         return redirect()->route('kop-surat.index')
             ->with('success', "Kop surat berhasil disimpan sebagai versi {$versiBaru}.");
+    }
+
+    private function prosesLogo($file): string
+    {
+        $ekstensi = strtolower($file->getClientOriginalExtension());
+
+        $sumber = match ($ekstensi) {
+            'png'  => @imagecreatefrompng($file->getRealPath()),
+            'jpg', 'jpeg' => @imagecreatefromjpeg($file->getRealPath()),
+            'gif'  => @imagecreatefromgif($file->getRealPath()),
+            'webp' => @imagecreatefromwebp($file->getRealPath()),
+            default => null,
+        };
+
+        if (!$sumber) {
+            return $file->store('kop-surat', 'public');
+        }
+
+        $lebarAsli  = imagesx($sumber);
+        $tinggiAsli = imagesy($sumber);
+
+        $rasio = min(self::LOGO_LEBAR / $lebarAsli, self::LOGO_TINGGI / $tinggiAsli);
+        $lebarBaru  = (int) round($lebarAsli * $rasio);
+        $tinggiBaru = (int) round($tinggiAsli * $rasio);
+
+        $kanvas = imagecreatetruecolor(self::LOGO_LEBAR, self::LOGO_TINGGI);
+        $putih  = imagecolorallocate($kanvas, 255, 255, 255);
+        imagefill($kanvas, 0, 0, $putih);
+
+        $offsetX = (int) round((self::LOGO_LEBAR - $lebarBaru) / 2);
+        $offsetY = (int) round((self::LOGO_TINGGI - $tinggiBaru) / 2);
+
+        imagecopyresampled($kanvas, $sumber, $offsetX, $offsetY, 0, 0, $lebarBaru, $tinggiBaru, $lebarAsli, $tinggiAsli);
+
+        $namaFile = 'kop-surat/logo_' . uniqid() . '.png';
+        $pathFisik = storage_path('app/public/' . $namaFile);
+
+        if (!is_dir(dirname($pathFisik))) {
+            mkdir(dirname($pathFisik), 0755, true);
+        }
+
+        imagepng($kanvas, $pathFisik);
+
+        imagedestroy($sumber);
+        imagedestroy($kanvas);
+
+        return $namaFile;
     }
 }

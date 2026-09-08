@@ -4,6 +4,16 @@
     <meta charset="UTF-8">
     <title>{{ $surat->nomor_surat }}</title>
     <style>
+        
+        .surat-paper {
+        width: 215mm;
+        min-height: 330mm;
+        padding: 20mm 20mm 20mm 25mm;
+        margin: 0;
+        background: #ffffff;
+        box-sizing: border-box;
+        }
+
         body {
             font-family: "Times New Roman", Times, serif;
             font-size: 12pt;
