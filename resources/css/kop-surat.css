@@ -21,7 +21,7 @@ h3 {
     margin-bottom: 16px;
 }
 
-form[action*="kop-surat"] {
+form.form-kop-surat {
     background: #ffffff;
     border: 1px solid rgba(0, 195, 208, 0.25);
     border-radius: 12px;
@@ -31,7 +31,7 @@ form[action*="kop-surat"] {
     animation: fadeSlideUp 0.4s var(--ease, ease);
 }
 
-form[action*="kop-surat"] label {
+form.form-kop-surat label {
     display: inline-block;
     font-weight: 600;
     font-size: 13px;
@@ -42,9 +42,9 @@ form[action*="kop-surat"] label {
     letter-spacing: 0.025em;
 }
 
-form[action*="kop-surat"] input[type="text"],
-form[action*="kop-surat"] input[type="email"],
-form[action*="kop-surat"] input[type="file"] {
+form.form-kop-surat input[type="text"],
+form.form-kop-surat input[type="email"],
+form.form-kop-surat input[type="file"] {
     width: 100%;
     max-width: 100%;
     padding: 10px 14px;
@@ -58,26 +58,26 @@ form[action*="kop-surat"] input[type="file"] {
     transition: all 0.2s ease-in-out;
 }
 
-form[action*="kop-surat"] input[type="text"]:focus,
-form[action*="kop-surat"] input[type="email"]:focus {
+form.form-kop-surat input[type="text"]:focus,
+form.form-kop-surat input[type="email"]:focus {
     outline: none;
     border-color: #00C3D0;
     background-color: #ffffff;
     box-shadow: 0 0 0 4px rgba(0, 195, 208, 0.18);
 }
 
-form[action*="kop-surat"] input[type="file"] {
+form.form-kop-surat input[type="file"] {
     padding: 8px;
     background-color: rgba(0, 195, 208, 0.04);
     border: 1.5px dashed rgba(0, 195, 208, 0.4);
     cursor: pointer;
 }
 
-form[action*="kop-surat"] input[type="file"]:hover {
+form.form-kop-surat input[type="file"]:hover {
     background-color: rgba(0, 195, 208, 0.08);
 }
 
-form[action*="kop-surat"] img {
+form.form-kop-surat img {
     border-radius: 8px;
     border: 1px solid rgba(0, 195, 208, 0.3);
     padding: 6px;
@@ -86,13 +86,13 @@ form[action*="kop-surat"] img {
     vertical-align: middle;
 }
 
-form[action*="kop-surat"] small {
+form.form-kop-surat small {
     color: #64748b;
     font-size: 0.825rem;
     margin-left: 6px;
 }
 
-form[action*="kop-surat"] button[type="submit"] {
+form.form-kop-surat button[type="submit"] {
     background: linear-gradient(135deg, #00C3D0 0%, #009ea8 100%);
     color: #ffffff;
     font-weight: 600;
@@ -106,7 +106,7 @@ form[action*="kop-surat"] button[type="submit"] {
     transition: all 0.2s ease-in-out;
 }
 
-form[action*="kop-surat"] button[type="submit"]:hover {
+form.form-kop-surat button[type="submit"]:hover {
     background: linear-gradient(135deg, #00d5e3 0%, #008b94 100%);
     box-shadow: 0 6px 16px rgba(0, 195, 208, 0.4);
     transform: translateY(-1px);
@@ -134,133 +134,98 @@ a[href*="kop-surat/create"]:hover {
     transform: translateY(-1px);
 }
 
-p:has(+ img),
-p:has(+ table),
-p:has(+ a) {
-    background-color: rgba(0, 195, 208, 0.12);
-    border-left: 4px solid #00C3D0;
-    color: #005b63;
-    padding: 12px 16px;
-    border-radius: 6px;
-    font-weight: 500;
-    margin-bottom: 20px;
+.row-actions {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
 }
 
-table[border="1"] {
-    width: 100%;
-    max-width: 680px;
-    border-collapse: separate;
-    border-spacing: 0;
-    margin-top: 12px;
-    border-radius: 10px;
-    overflow: hidden;
-    border: 1px solid rgba(0, 195, 208, 0.25) !important;
-    box-shadow: 0 2px 12px rgba(0, 195, 208, 0.06);
-}
-
-table[border="1"] td {
-    padding: 12px 18px;
+.icon-btn {
+    width: 34px;
+    height: 34px;
+    padding: 0;
+    border-radius: 8px;
+    background: var(--color-primary, #00C3D0);
     border: none;
-    border-bottom: 1px solid rgba(0, 195, 208, 0.12);
-    font-size: 0.925rem;
-    color: #334155;
+    color: #ffffff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.15s ease, transform 0.15s ease;
+    cursor: pointer;
+    text-decoration: none;
 }
 
-table[border="1"] tr:last-child td {
-    border-bottom: none;
+.icon-btn:hover {
+    background: var(--color-primary-dark, #00a3af);
+    transform: translateY(-2px);
 }
 
-table[border="1"] tr:nth-child(even) {
-    background-color: rgba(0, 195, 208, 0.03);
+.icon-btn svg {
+    width: 15px;
+    height: 15px;
 }
 
-table[border="1"] tr:nth-child(odd) {
-    background-color: #ffffff;
+.icon-btn--ghost {
+    background: #E6FBFC;
+    color: #0090A0;
 }
 
-table[border="1"] tr:hover {
-    background-color: rgba(0, 195, 208, 0.09);
+.icon-btn--ghost:hover {
+    background: #d0f7fa;
+    color: #007a87;
 }
 
-table[border="1"] td:first-child {
-    font-weight: 700;
-    color: #008793;
-    width: 130px;
-    background-color: rgba(0, 195, 208, 0.06);
-}
-
-@media (max-width: 640px) {
-    h2 {
-        font-size: 1.4rem;
-    }
-
-    form[action*="kop-surat"] {
-        padding: 20px;
-    }
-
-    table[border="1"] {
-        display: block;
-        overflow-x: auto;
-        white-space: nowrap;
-        -webkit-overflow-scrolling: touch;
-    }
-
-    table[border="1"] td:first-child {
-        width: auto;
-    }
+.form-delete-inline {
+    display: inline-flex !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    max-width: none !important;
 }
 
 @media (max-width: 768px) {
-  .container,
-  .content-container,
-  .kop-surat-container {
-    width: 100% !important;
-    padding-left: 16px !important;
-    padding-right: 16px !important;
-  }
-
-  .card,
-  .kop-surat-card,
-  .panel {
+  .card {
     width: 100% !important;
     max-width: 100% !important;
-    margin-left: 0 !important;
-    margin-right: 0 !important;
     padding: 20px 16px !important;
   }
+}
 
-  .table-responsive,
-  .card table {
-    width: 100% !important;
-    display: block;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-  }
+button[type="submit"],
+.card form button,
+.card form a,
+label[for="logo"] {
+    transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease, background-color 0.2s ease !important;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
+}
 
-  .surat-paper__company-right {
-    width: 75% !important;
-    text-align: left !important;
-    padding-left: 8px !important;
-  }
+button[type="submit"]:hover,
+.card form button:hover,
+label[for="logo"]:hover {
+    transform: translateY(-2px);
+    filter: brightness(1.06);
+    box-shadow: 0 8px 18px -4px rgba(0, 195, 208, 0.45) !important;
+}
 
-  .surat-paper__company-right h2,
-  .surat-paper__company-right p {
-    text-align: left !important;
-  }
+.card form a:hover {
+    transform: translateY(-2px);
+    background-color: #cbd5e1 !important;
+    color: #1e293b !important;
+    box-shadow: 0 4px 12px rgba(148, 163, 184, 0.25) !important;
+}
 
-  .surat-paper__body {
-    text-align: left !important;
-    padding-left: 2px !important;
-    padding-right: 2px !important;
-  }
-
-  .surat-paper__meta-table {
-    margin-left: 0 !important;
-    width: 100% !important;
-  }
-
-  .surat-paper__meta-table td:first-child {
-    text-align: left !important;
-    padding-left: 0 !important;
-  }
+button[type="submit"]:active,
+.card form button:active,
+.card form a:active,
+label[for="logo"]:active {
+    transform: translateY(1px) scale(0.97) !important;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15) !important;
+    filter: brightness(0.95);
 }

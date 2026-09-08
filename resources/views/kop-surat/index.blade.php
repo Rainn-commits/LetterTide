@@ -49,20 +49,41 @@
             <table style="width: 100%; border-collapse: collapse; text-align: left;">
                 <thead>
                     <tr style="background: #E6FBFC; color: #0090A0; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.03em;">
-                        <th style="padding: 8px 14px; width: 140px; white-space: nowrap;">Versi</th>
+                        <th style="padding: 8px 14px; width: 140px; white-space: nowrap; text-align: center;">Versi</th>
                         <th style="padding: 9px 14px 9px 40px; white-space: nowrap;">Nama Perusahaan</th>
-                        <th style="padding: 8px 14px; width: 100px; text-align: center; white-space: nowrap;">Aksi</th>
+                        <th style="padding: 8px 14px; width: 140px; text-align: center; white-space: nowrap;">Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
                     @forelse(($riwayat ?? []) as $r)
                     <tr style="border-bottom: 1px solid #f1f5f9; font-size: 0.9rem;">
-                        <td style="padding: 8px 14px; font-weight: 700; color: #0f172a; white-space: nowrap;">Versi {{ $r->versi }}</td>
+                        <td style="padding: 8px 14px; font-weight: 700; color: #0f172a; white-space: nowrap; text-align: center;">v{{ $r->versi }}</td>
                         <td style="padding: 9px 14px 9px 40px; color: #334155;">{{ $r->nama_pt }}</td>
                         <td style="padding: 8px 14px; text-align: center;">
-                            <a href="{{ route('kop-surat.preview', $r) }}" title="Lihat Preview" style="display: inline-flex; align-items: center; justify-content: center; width: 30px; height: 30px; border-radius: 8px; background: #E6FBFC; color: #0090A0; text-decoration: none;">
-                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
-                            </a>
+                            <div class="row-actions">
+                                <a href="{{ route('kop-surat.preview', $r) }}" class="icon-btn icon-btn--ghost" title="Lihat Preview">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/>
+                                    </svg>
+                                </a>
+
+                                <a href="{{ route('kop-surat.edit', $r->id) }}" class="icon-btn" title="Edit Kop Surat">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M12 20h9"></path>
+                                        <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
+                                    </svg>
+                                </a>
+
+                                <form method="POST" action="{{ route('kop-surat.destroy', $r->id) }}" class="form-delete-inline" onsubmit="return confirm('Hapus kop surat ini?');">
+                                    @csrf 
+                                    @method('DELETE')
+                                    <button type="submit" class="icon-btn icon-btn--ghost" title="Hapus Kop Surat">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                                        </svg>
+                                    </button>
+                                </form>
+                            </div>
                         </td>
                     </tr>
                     @empty

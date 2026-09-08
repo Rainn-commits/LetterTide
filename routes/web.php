@@ -56,6 +56,9 @@ Route::middleware('auth')->group(function () {
         Route::get('/kop-surat/create', [KopSuratController::class, 'create'])->name('kop-surat.create');
         Route::post('/kop-surat', [KopSuratController::class, 'store'])->name('kop-surat.store');
         Route::get('/kop-surat/{pengaturanKopSurat}/preview', [KopSuratController::class, 'preview'])->name('kop-surat.preview');
+        Route::get('/kop-surat/{pengaturanKopSurat}/edit', [KopSuratController::class, 'edit'])->name('kop-surat.edit');
+        Route::put('/kop-surat/{pengaturanKopSurat}', [KopSuratController::class, 'update'])->name('kop-surat.update');
+        Route::delete('/kop-surat/{pengaturanKopSurat}', [KopSuratController::class, 'destroy'])->name('kop-surat.destroy');
     });
 
     Route::post('/surat/{surat}/ttd-digital', [SuratController::class, 'ttdDigital'])->name('surat.ttd-digital');

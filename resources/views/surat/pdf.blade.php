@@ -170,11 +170,8 @@
                 <div>{{ $jabatanPenandatangan }}</div>
 
                 <div style="height: 90px;">
-                    @if (strtolower($surat->status ?? '') === 'disetujui')
-                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=100x100&data={{ urlencode(route('surat.show', $surat)) }}" alt="QR TTD Digital" style="width: 70px; height: 70px;">
-                        <p style="font-size: 7.5pt; color: #15803d; font-weight: bold; margin-top: 2px;">
-                            Signed Digital by {{ $surat->penandatangan->name ?? $namaPenandatangan }}
-                        </p>
+                    @if (strtolower($surat->status ?? '') === 'disetujui' && $qrDataUri)
+                        <img src="{{ $qrDataUri }}" alt="QR TTD Digital" style="width: 70px; height: 70px;">
                     @else
                         <p style="color: #ef4444; font-size: 9pt; font-style: italic;">
                             (Belum Menyetujui / Ditandatangani)

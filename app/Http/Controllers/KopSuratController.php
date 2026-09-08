@@ -81,6 +81,61 @@ class KopSuratController extends Controller
             ->with('success', "Kop surat berhasil disimpan sebagai versi {$versiBaru}.");
     }
 
+    public function edit($id)
+    {
+        $kopSurat = PengaturanKopSurat::findOrFail($id);
+        return view('kop-surat.edit', compact('kopSurat'));
+    }
+
+    public function update(Request $request, $id)
+    {
+        $kopSurat = PengaturanKopSurat::findOrFail($id);
+
+        $validated = $request->validate([
+            'logo'      => ['nullable', 'image', 'max:10240'],
+            'nama_pt'   => ['required', 'string', 'max:100'],
+            'alamat_pt' => ['required', 'string', 'max:255'],
+            'telepon'   => ['required', 'string', 'max:20'],
+            'email'     => ['required', 'email', 'max:100'],
+            'website'   => ['nullable', 'string', 'max:100'],
+        ]);
+
+        if ($request->hasFile('logo')) {
+            $logoPath = $this->prosesLogo($request->file('logo'));
+            $kopSurat->logo = $logoPath;
+        }
+
+        $kopSurat->update([
+            'nama_pt'   => $validated['nama_pt'],
+            'alamat_pt' => $validated['alamat_pt'],
+            'telepon'   => $validated['telepon'],
+            'email'     => $validated['email'],
+            'website'   => $validated['website'] ?? null,
+        ]);
+
+        LogAktivitas::catat('Mengubah', 'Kop Surat', "Memperbarui kop surat versi {$kopSurat->versi}");
+
+        return redirect()->route('kop-surat.index')
+            ->with('success', "Kop surat versi {$kopSurat->versi} berhasil diperbarui.");
+    }
+
+    public function destroy($id)
+    {
+        $kopSurat = PengaturanKopSurat::findOrFail($id);
+        $versi = $kopSurat->versi;
+
+        if ($kopSurat->logo && Storage::disk('public')->exists($kopSurat->logo)) {
+            Storage::disk('public')->delete($kopSurat->logo);
+        }
+
+        $kopSurat->delete();
+
+        LogAktivitas::catat('Menghapus', 'Kop Surat', "Menghapus kop surat versi {$versi}");
+
+        return redirect()->route('kop-surat.index')
+            ->with('success', "Kop surat versi {$versi} berhasil dihapus.");
+    }
+
     private function prosesLogo($file): string
     {
         $ekstensi = strtolower($file->getClientOriginalExtension());

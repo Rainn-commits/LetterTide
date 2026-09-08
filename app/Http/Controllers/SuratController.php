@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Controller;
 use App\Models\IsiSurat;
 use App\Models\LogAktivitas;
 use App\Models\PengaturanKopSurat;
@@ -13,6 +14,7 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class SuratController extends Controller
 {
@@ -277,33 +279,46 @@ class SuratController extends Controller
             }
         }
 
+        $qrDataUri = null;
+        if (strtolower($surat->status ?? '') === 'disetujui') {
+            $qrDataUri = $this->buildQrDataUri(route('surat.show', $surat));
+        }
+
         return compact(
             'surat',
             'isiSuratRendered',
             'isiUtama',
             'isiLampiran',
             'namaPenandatangan',
-            'jabatanPenandatangan'
+            'jabatanPenandatangan',
+            'qrDataUri'
         );
+    }
+
+    private function buildQrDataUri(string $data): ?string
+    {
+        try {
+            $svg = QrCode::size(100)->generate($data);
+            return 'data:image/svg+xml;base64,' . base64_encode($svg);
+        } catch (\Throwable $e) {
+            return null;
+        }
     }
 
     private function buildLogoDataUri(?string $logoPath): ?string
     {
-        if (!$logoPath) {
+        if (!$logoPath || !Storage::disk('public')->exists($logoPath)) {
             return null;
         }
 
-        $cleanPath = str_replace('storage/', '', $logoPath);
-        $fullPath = storage_path('app/public/' . $cleanPath);
+        try {
+            $fileContent = Storage::disk('public')->get($logoPath);
+            $mimeType = Storage::mimeType('public/' . $logoPath) ?? 'image/png';
 
-        if (!file_exists($fullPath)) {
+            return 'data:' . $mimeType . ';base64,' . base64_encode($fileContent);
+        } catch (\Throwable $e) {
             return null;
         }
-
-        $mime = mime_content_type($fullPath) ?: 'image/png';
-        $data = base64_encode(file_get_contents($fullPath));
-
-        return "data:{$mime};base64,{$data}";
     }
 
     private function generatePdfArsip(Surat $surat): void
