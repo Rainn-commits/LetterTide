@@ -117,9 +117,9 @@
             </div>
 
             <div class="form-group-center">
-            <label>Pilih Template Surat</label>
+            <label>Jenis Surat</label>
             <select name="template_id" class="form-control">
-                <option value="">-- Semua Template --</option>
+                <option value="">-- Semua Surat --</option>
                 @foreach ($templates as $t)
                     <option value="{{ $t->id }}" {{ (string) request('template_id') === (string) $t->id ? 'selected' : '' }}>
                         {{ $t->nama_template }}
