@@ -37,6 +37,7 @@ class EvaluasiRetensiController extends Controller
     {
         $user = Auth::user();
         $namaRole = $user->role->nama_role ?? '';
+        $isAdmin = in_array($namaRole, ['Super Admin', 'Admin']);
 
         if (strtolower($namaRole) === 'user' && $surat->user_id !== $user->id) {
             abort(403, 'Anda tidak berhak menilai surat milik pengguna lain.');
@@ -47,9 +48,15 @@ class EvaluasiRetensiController extends Controller
             'kerahasiaan' => ['required', 'in:Sangat Rahasia,Rahasia,Biasa/Terbuka'],
         ]);
 
+        $dataToSave = array_merge($validated, [
+            'status_persetujuan' => $isAdmin ? 'Disetujui' : 'Menunggu',
+            'divalidasi_oleh'    => $isAdmin ? $user->id : null,
+            'divalidasi_pada'    => $isAdmin ? now() : null,
+        ]);
+
         EvaluasiRetensi::updateOrCreate(
             ['surat_id' => $surat->id],
-            $validated
+            $dataToSave
         );
 
         $service->evaluasiMassal();

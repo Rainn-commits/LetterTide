@@ -290,3 +290,20 @@
 .btn-validasi-retensi:hover {
   background: #009aa5;
 }
+
+.retensi-status-stack {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+}
+
+.retensi-status-stack .badge-retensi,
+.retensi-status-stack .badge-persetujuan {
+  white-space: nowrap;
+  margin: 0;
+}
+
+.btn-validasi-retensi {
+  white-space: nowrap;
+}

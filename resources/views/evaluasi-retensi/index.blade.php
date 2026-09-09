@@ -106,22 +106,24 @@
 
                         <td style="text-align: center;">
                             @if ($isPrivileged)
-                                <span class="badge-retensi {{ $statusClass }}" style="white-space: nowrap;">
-                                    {{ $eval?->status_rekomendasi ?? 'Belum Dievaluasi' }}
-                                </span>
+                                <div class="retensi-status-stack">
+                                    <span class="badge-retensi {{ $statusClass }}">
+                                        {{ $eval?->status_rekomendasi ?? 'Belum Dievaluasi' }}
+                                    </span>
 
-                                @if ($eval?->status_rekomendasi)
-                                    @if ($eval->status_persetujuan === 'Disetujui')
-                                        <div class="badge-persetujuan badge-persetujuan--disetujui" style="margin-top: 4px;">✓ Tervalidasi</div>
-                                    @else
-                                        <div class="badge-persetujuan badge-persetujuan--menunggu" style="margin-top: 4px;">Menunggu Validasi</div>
+                                    @if ($eval?->status_rekomendasi)
+                                        @if ($eval->status_persetujuan === 'Disetujui')
+                                            <div class="badge-persetujuan badge-persetujuan--disetujui">✓ Tervalidasi</div>
+                                        @else
+                                            <div class="badge-persetujuan badge-persetujuan--menunggu">Menunggu Validasi</div>
 
-                                        <form action="{{ route('retensi.validasi', $item->id) }}" method="POST" style="margin-top: 4px;" data-confirm="Validasi status retensi surat ini?" data-confirm-label="Ya, Validasi">
-                                            @csrf
-                                            <button type="submit" class="btn-validasi-retensi">Validasi</button>
-                                        </form>
+                                            <form action="{{ route('retensi.validasi', $item->id) }}" method="POST" data-confirm="Validasi status retensi surat ini?" data-confirm-label="Ya, Validasi">
+                                                @csrf
+                                                <button type="submit" class="btn-validasi-retensi">Validasi</button>
+                                            </form>
+                                        @endif
                                     @endif
-                                @endif
+                                </div>
                             @else
                                 @if (!$eval?->status_rekomendasi)
                                     <span class="badge-retensi badge-retensi--pending" style="white-space: nowrap;">Belum Dievaluasi</span>
