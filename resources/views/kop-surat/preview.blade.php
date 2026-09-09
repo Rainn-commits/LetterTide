@@ -45,20 +45,20 @@
         </div>
         <div class="surat-paper__divider"></div>
 
-        <div class="surat-paper__meta-top">
-            Bandung, {{ now()->locale('id')->translatedFormat('d F Y') }}
-        </div>
-
         <table class="surat-paper__meta-table">
             <tr>
-                <td style="width: 90px;">Nomor</td>
-                <td style="width: 15px;">:</td>
-                <td>000/CONTOH/INOVINDO/IX/2026</td>
+                <td style="width: 90px; vertical-align: top;">Nomor</td>
+                <td style="width: 15px; vertical-align: top;">:</td>
+                <td style="vertical-align: top;">000/CONTOH/INOVINDO/IX/2026</td>
+                <td style="text-align: right; vertical-align: top;">
+                    Bandung, {{ now()->locale('id')->translatedFormat('d F Y') }}
+                </td>
             </tr>
             <tr>
-                <td>Lampiran</td>
-                <td>:</td>
-                <td>-</td>
+                <td style="vertical-align: top;">Lampiran</td>
+                <td style="vertical-align: top;">:</td>
+                <td style="vertical-align: top;">-</td>
+                <td></td>
             </tr>
         </table>
 

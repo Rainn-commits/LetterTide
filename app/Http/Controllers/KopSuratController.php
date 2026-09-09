@@ -100,9 +100,12 @@ class KopSuratController extends Controller
             'website'   => ['nullable', 'string', 'max:100'],
         ]);
 
+        $versiBaru = PengaturanKopSurat::max('versi') + 1;
+
         if ($request->hasFile('logo')) {
             $logoPath = $this->prosesLogo($request->file('logo'));
-            $kopSurat->logo = $logoPath;
+        } else {
+            $logoPath = $kopSurat->logo;
         }
 
         $kopSurat->update([
@@ -111,12 +114,14 @@ class KopSuratController extends Controller
             'telepon'   => $validated['telepon'],
             'email'     => $validated['email'],
             'website'   => $validated['website'] ?? null,
+            'logo'      => $logoPath,
+            'versi'     => $versiBaru, // Nomor versi otomatis naik!
         ]);
 
-        LogAktivitas::catat('Mengubah', 'Kop Surat', "Memperbarui kop surat versi {$kopSurat->versi}");
+        LogAktivitas::catat('Mengubah', 'Kop Surat', "Memperbarui kop surat menjadi versi {$versiBaru}");
 
         return redirect()->route('kop-surat.index')
-            ->with('success', "Kop surat versi {$kopSurat->versi} berhasil diperbarui.");
+            ->with('success', "Kop surat berhasil diperbarui menjadi Versi {$versiBaru}.");
     }
 
     public function destroy($id)

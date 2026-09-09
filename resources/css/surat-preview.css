@@ -27,7 +27,7 @@
 }
 
 .surat-paper__logo {
-    max-height: 400px !important;
+    max-height: 85px !important;
     max-width: 100% !important;  
     width: auto;
     object-fit: contain;
@@ -219,6 +219,10 @@
 }
 
 @media screen and (max-width: 768px) {
+    .surat-paper__logo {
+        max-height: 70px !important;
+    }
+
     .page-toolbar-preview {
         width: 100% !important;
         display: flex !important;
