@@ -67,7 +67,8 @@ class SuratController extends Controller
     {
         $fields = PlaceholderParser::toFormFields($template->isi_template);
         $users = User::orderBy('name')->get();
-        $kopSurats = PengaturanKopSurat::orderBy('created_at', 'desc')->get();
+
+        $kopSurats = PengaturanKopSurat::orderBy('versi', 'desc')->get();
 
         return view('surat.form', compact('template', 'fields', 'users', 'kopSurats'));
     }

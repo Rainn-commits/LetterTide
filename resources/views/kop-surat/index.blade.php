@@ -74,7 +74,7 @@
                                     </svg>
                                 </a>
 
-                                <form method="POST" action="{{ route('kop-surat.destroy', $r->id) }}" class="form-delete-inline" onsubmit="return confirm('Hapus kop surat ini?');">
+                                <form method="POST" action="{{ route('kop-surat.destroy', $r->id) }}" class="form-delete-inline">
                                     @csrf 
                                     @method('DELETE')
                                     <button type="submit" class="icon-btn icon-btn--ghost" title="Hapus Kop Surat">

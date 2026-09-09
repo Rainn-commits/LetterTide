@@ -19,11 +19,11 @@
 
             <div class="form-field">
                 <label for="kop_surat_id">Pilih Kop Surat Perusahaan:</label>
-                <select name="kop_surat_id" id="kop_surat_id" class="form-control" required>
+                <select name="kop_surat_id" id="kop_surat_id" class="form-control">
                     <option value="">-- Pilih Kop Surat --</option>
-                    @foreach ($kopSurats as $k)
-                        <option value="{{ $k->id }}" {{ (isset($k) && $k->is_aktif) ? 'selected' : '' }}>
-                            {{ $k->nama_pt }} ({{ $k->email }})
+                    @foreach($kopSurats as $kop)
+                        <option value="{{ $kop->id }}">
+                            {{ $kop->nama_pt }} (Versi {{ $kop->versi }}) ({{ $kop->email }})
                         </option>
                     @endforeach
                 </select>
