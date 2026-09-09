@@ -8,6 +8,11 @@
 
 @section('content')
 
+    @php
+        $isPrivileged = in_array(auth()->user()->role->nama_role ?? '', ['Super Admin', 'Admin']);
+        $jumlahKolom = $isPrivileged ? 7 : 5;
+    @endphp
+
     @if (session('success'))
         <div class="surat-alert surat-alert--success">{{ session('success') }}</div>
     @endif
@@ -29,14 +34,18 @@
                 <tr>
                     <th style="width: 20%;">Nomor Surat</th>
 
-                    @if (auth()->user()->role->nama_role !== 'User')
+                    @if ($isPrivileged)
                         <th style="width: 12%;">Pembuat</th>
                     @endif
 
                     <th style="width: 11%;">Tanggal</th>
                     <th style="width: 6%; text-align: center;">Akses</th>
                     <th style="width: 33%;">Nilai Guna & Kerahasiaan</th>
-                    <th style="width: 6%; text-align: center;">Skor</th>
+
+                    @if ($isPrivileged)
+                        <th style="width: 6%; text-align: center;">Skor</th>
+                    @endif
+
                     <th style="width: 12%; text-align: center;">Status</th>
                 </tr>
             </thead>
@@ -56,7 +65,7 @@
                             <span class="text-nomor" style="word-break: break-all;">{{ $item->nomor_surat }}</span>
                         </td>
 
-                        @if (auth()->user()->role->nama_role !== 'User')
+                        @if ($isPrivileged)
                             <td style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
                                 {{ $item->user->name ?? $item->pembuat->name ?? '-' }}
                             </td>
@@ -86,35 +95,47 @@
                                 <button type="submit" class="btn-futuristic-save" style="padding: 4px 8px; font-size: 12px;">✓</button>
                             </form>
                         </td>
-                        <td style="text-align: center;">
-                            <span class="skor-retensi-val">
-                                {{ $eval?->skor_total !== null ? number_format($eval->skor_total, 2) : '-' }}
-                            </span>
-                        </td>
-                        <td style="text-align: center;">
-                            <span class="badge-retensi {{ $statusClass }}" style="white-space: nowrap;">
-                                {{ $eval?->status_rekomendasi ?? 'Belum Dievaluasi' }}
-                            </span>
 
-                            @if ($eval?->status_rekomendasi)
-                                @if ($eval->status_persetujuan === 'Disetujui')
-                                    <div class="badge-persetujuan badge-persetujuan--disetujui" style="margin-top: 4px;">✓ Tervalidasi</div>
-                                @else
-                                    <div class="badge-persetujuan badge-persetujuan--menunggu" style="margin-top: 4px;">Menunggu Validasi</div>
+                        @if ($isPrivileged)
+                            <td style="text-align: center;">
+                                <span class="skor-retensi-val">
+                                    {{ $eval?->skor_total !== null ? number_format($eval->skor_total, 2) : '-' }}
+                                </span>
+                            </td>
+                        @endif
 
-                                    @if (in_array(auth()->user()->role->nama_role ?? '', ['Super Admin', 'Admin']))
+                        <td style="text-align: center;">
+                            @if ($isPrivileged)
+                                <span class="badge-retensi {{ $statusClass }}" style="white-space: nowrap;">
+                                    {{ $eval?->status_rekomendasi ?? 'Belum Dievaluasi' }}
+                                </span>
+
+                                @if ($eval?->status_rekomendasi)
+                                    @if ($eval->status_persetujuan === 'Disetujui')
+                                        <div class="badge-persetujuan badge-persetujuan--disetujui" style="margin-top: 4px;">✓ Tervalidasi</div>
+                                    @else
+                                        <div class="badge-persetujuan badge-persetujuan--menunggu" style="margin-top: 4px;">Menunggu Validasi</div>
+
                                         <form action="{{ route('retensi.validasi', $item->id) }}" method="POST" style="margin-top: 4px;" data-confirm="Validasi status retensi surat ini?" data-confirm-label="Ya, Validasi">
                                             @csrf
                                             <button type="submit" class="btn-validasi-retensi">Validasi</button>
                                         </form>
                                     @endif
                                 @endif
+                            @else
+                                @if (!$eval?->status_rekomendasi)
+                                    <span class="badge-retensi badge-retensi--pending" style="white-space: nowrap;">Belum Dievaluasi</span>
+                                @elseif ($eval->status_persetujuan === 'Disetujui')
+                                    <span class="badge-persetujuan badge-persetujuan--disetujui">✓ Tervalidasi</span>
+                                @else
+                                    <span class="badge-persetujuan badge-persetujuan--menunggu">Menunggu Validasi</span>
+                                @endif
                             @endif
                         </td>
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="{{ auth()->user()->role->nama_role !== 'User' ? 7 : 6 }}" class="table-empty-state">
+                        <td colspan="{{ $jumlahKolom }}" class="table-empty-state">
                             Belum ada arsip surat untuk dievaluasi.
                         </td>
                     </tr>

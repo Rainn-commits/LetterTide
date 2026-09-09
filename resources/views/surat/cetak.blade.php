@@ -10,7 +10,8 @@
         @media print {
             body { background: none; margin: 0; padding: 0; }
             .no-print { display: none !important; }
-            .surat-paper { box-shadow: none !important; border: none !important; margin: 0 !important; width: 100% !important; padding: 0 !important; }
+            .surat-paper { box-shadow: none !important; border: none !important; margin: 0 !important; }
+            @page { size: A4; margin: 0; }
         }
         .signature-wrapper {
             display: flex;
@@ -22,7 +23,7 @@
             width: 250px;
             text-align: center;
         }
-    </style>
+</style>
 </head>
 <body onload="window.print()">
 

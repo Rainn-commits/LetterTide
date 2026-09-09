@@ -1,7 +1,7 @@
 .surat-paper {
-    width: 215mm;
-    min-height: 330mm;
-    padding: 20mm 20mm 20mm 25mm;
+    width: 210mm;
+    min-height: 297mm;
+    padding: 30mm;
     margin: 0 auto 30px auto;
     background: #ffffff;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
@@ -292,9 +292,14 @@
 
 @media print {
     .surat-paper {
-        width: 215mm;
-        min-height: 330mm;
-        padding: 20mm 20mm 20mm 25mm;
+        width: 210mm;
+        min-height: 297mm;
+        padding: 30mm;
         font-size: 12pt;
+    }
+
+    @page {
+        size: A4;
+        margin: 0;
     }
 }

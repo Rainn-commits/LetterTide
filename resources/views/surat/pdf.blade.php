@@ -6,12 +6,12 @@
     <style>
         
         .surat-paper {
-        width: 215mm;
-        min-height: 330mm;
-        padding: 20mm 20mm 20mm 25mm;
-        margin: 0;
-        background: #ffffff;
-        box-sizing: border-box;
+            width: 210mm;
+            min-height: 297mm;
+            padding: 30mm;
+            margin: 0;
+            background: #ffffff;
+            box-sizing: border-box;
         }
 
         body {
