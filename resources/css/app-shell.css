@@ -573,7 +573,7 @@
   font-size: 13px;
 }
 
-@media (max-width: 400px) {
+@media (max-width: 991px) {
   .dash {
     position: relative;
     overflow-x: hidden;

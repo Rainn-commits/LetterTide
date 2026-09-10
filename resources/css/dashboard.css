@@ -225,6 +225,11 @@ a.stat-card-pro:hover .skeuo-icon {
   border-radius: 20px;
   -webkit-backdrop-filter: blur(4px);
   backdrop-filter: blur(4px);
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
 }
 
 .glass-pill--active {
@@ -1254,9 +1259,5 @@ a.stat-card-pro:hover .skeuo-icon {
 
   .card-pro__header {
     align-items: center;
-  }
-
-  .glass-pill {
-    text-align: center;
   }
 }
