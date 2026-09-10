@@ -7,12 +7,56 @@
     @vite('resources/css/surat-edit.css')
     @vite('resources/css/surat-preview.css')
     <style>
-        @media print {
-            body { background: none; margin: 0; padding: 0; }
-            .no-print { display: none !important; }
-            .surat-paper { box-shadow: none !important; border: none !important; margin: 0 !important; }
-            @page { size: A4; margin: 0; }
+        .surat-paper {
+            font-family: "Times New Roman", Times, serif;
+            font-size: 12pt;
         }
+
+        @media print {
+            html, body {
+                background: #fff !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                -webkit-print-color-adjust: exact;
+            }
+
+            .no-print { 
+                display: none !important; 
+            }
+
+            .surat-paper { 
+                box-shadow: none !important; 
+                border: none !important; 
+                margin: 0 !important; 
+                padding: 0 !important; 
+                width: 100% !important;
+            }
+
+            @page { 
+                size: A4; 
+                margin: 30mm; 
+            }
+
+            body, 
+            .surat-paper, 
+            .surat-paper *,
+            .surat-paper p, 
+            .surat-paper div, 
+            .surat-paper td, 
+            .surat-paper span,
+            .surat-paper li {
+                font-size: 12pt !important;
+                line-height: 1.5 !important;
+            }
+
+            .surat-paper__company-right h2 { 
+                font-size: 14pt !important; 
+            }
+            .surat-paper__company-right p { 
+                font-size: 9.5pt !important; 
+            }
+        }
+
         .signature-wrapper {
             display: flex;
             justify-content: flex-end;
@@ -23,7 +67,77 @@
             width: 250px;
             text-align: center;
         }
-</style>
+        .signature-box span[style*="color: #ef4444"],
+        .surat-paper .signature-box span {
+            color: #ef4444 !important;
+            font-size: 9pt !important; 
+            font-style: italic !important;
+        }
+    </style>
+    <style>
+        body, 
+        .surat-paper, 
+        .surat-paper *,
+        .surat-paper p, 
+        .surat-paper div, 
+        .surat-paper span,
+        .surat-paper li {
+            font-family: "Times New Roman", Times, serif !important;
+            font-size: 12pt !important;
+            line-height: 1.5 !important;
+            color: #000 !important;
+        }
+
+        .surat-paper table,
+        .surat-paper table tr,
+        .surat-paper table th,
+        .surat-paper table td,
+        .surat-paper table p,
+        .surat-paper table span {
+            font-family: "Times New Roman", Times, serif !important;
+            font-size: 12pt !important;
+            line-height: 1.3 !important;
+        }
+
+        .surat-paper__company-right h2 { font-size: 14pt !important; }
+        .surat-paper__company-right p { font-size: 9.5pt !important; }
+
+        @media print {
+            html, body {
+                background: #fff !important;
+                margin: 0 !important;
+                padding: 0 !important;
+            }
+
+            .no-print { 
+                display: none !important; 
+            }
+
+            .surat-paper { 
+                box-shadow: none !important; 
+                border: none !important; 
+                margin: 0 !important; 
+                padding: 0 !important; 
+                width: 100% !important;
+            }
+
+            @page { 
+                size: A4; 
+                margin: 30mm !important; 
+            }
+        }
+
+        .signature-wrapper {
+            display: flex;
+            justify-content: flex-end;
+            width: 100%;
+            margin-top: 40px;
+        }
+        .signature-box {
+            width: 250px;
+            text-align: center;
+        }
+    </style>
 </head>
 <body onload="window.print()">
 

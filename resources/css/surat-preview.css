@@ -298,12 +298,12 @@
     .surat-paper {
         width: 210mm;
         min-height: 297mm;
-        padding: 30mm;
+        padding: 0;
         font-size: 12pt;
     }
 
     @page {
         size: A4;
-        margin: 0;
+        margin: 30mm;
     }
 }

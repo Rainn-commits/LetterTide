@@ -5,13 +5,13 @@
     <title>{{ $surat->nomor_surat }}</title>
     <style>
         
+        @page {
+            margin: 30mm;
+        }
+
         .surat-paper {
-            width: 210mm;
-            min-height: 297mm;
-            padding: 30mm;
-            margin: 0;
+            width: 100%;
             background: #ffffff;
-            box-sizing: border-box;
         }
 
         body {
