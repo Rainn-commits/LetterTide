@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', function () {
 
     const searchInput = document.getElementById('templateSearch');
-    const cards = document.querySelectorAll('.template-card');
+    const cards = document.querySelectorAll('.template-card-fixed');
 
     if (searchInput && cards.length) {
         searchInput.addEventListener('input', function () {
