@@ -15,14 +15,11 @@ class KopSuratController extends Controller
 
     public function index()
     {
-        $kopSuratAktif = PengaturanKopSurat::where('is_aktif', true)->first();
 
-        $riwayat = PengaturanKopSurat::where('is_aktif', false)
-            ->orderByDesc('versi')
+        $riwayat = PengaturanKopSurat::orderByDesc('versi')
             ->get();
 
         return view('kop-surat.index', [
-            'kopSurat' => $kopSuratAktif,
             'riwayat'  => $riwayat,
         ]);
     }

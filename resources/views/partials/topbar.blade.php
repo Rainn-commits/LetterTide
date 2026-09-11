@@ -45,7 +45,7 @@
                         @forelse($unreadNotifications as $notification)
                            <form action="{{ route('notifications.markAsRead', $notification->id) }}" method="POST"> 
                                 @csrf
-                                <button type="submit" class="notif-item" style="background: none; border: none; padding: 0; width: 100%; text-align: left; cursor: pointer;">
+                                <button type="submit" class="notif-item" style="background: none; border: none; width: 100%; text-align: left; cursor: pointer;">
                                     <div class="notif-icon-box">
                                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                             <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>

@@ -142,9 +142,8 @@ class SuratController extends Controller
 
             $path = $request->file('file_arsip')->store('arsip_surat', 'public');
 
-            $surat->update([
-                'file_arsip' => $path,
-            ]);
+            $surat->file_arsip = $path;
+            $surat->save();
         }
 
         return back()->with('success', 'File arsip surat berhasil diunggah.');
@@ -192,10 +191,7 @@ class SuratController extends Controller
             ['Super Admin', 'Admin']
         );
 
-        if (
-            !$user ||
-            ($user->id != $surat->ttd_by_user_id && !$isAdmin)
-        ) {
+        if (!$user || ($user->id != $surat->ttd_by_user_id && !$isAdmin)) {
             return redirect()->back()->with(
                 'error',
                 'Anda tidak memiliki hak untuk menandatangani surat ini!'
@@ -215,7 +211,7 @@ class SuratController extends Controller
 
         return redirect()->back()->with(
             'success',
-            'Surat berhasil disetujui dan ditandatangani secara digital!'
+            'Surat berhasil disetujui dan file arsip PDF otomatis diperbarui!'
         );
     }
 
@@ -299,7 +295,11 @@ class SuratController extends Controller
     private function buildQrDataUri(string $data): ?string
     {
         try {
-            $svg = QrCode::size(100)->generate($data);
+            $svg = QrCode::size(100)->margin(1)->generate($data);
+            if (empty($svg)) {
+                return null;
+            }
+            
             return 'data:image/svg+xml;base64,' . base64_encode($svg);
         } catch (\Throwable $e) {
             return null;
@@ -314,8 +314,11 @@ class SuratController extends Controller
 
         try {
             $fileContent = Storage::disk('public')->get($logoPath);
-            $mimeType = Storage::mimeType('public/' . $logoPath) ?? 'image/png';
+            if (empty($fileContent)) {
+                return null;
+            }
 
+            $mimeType = Storage::mimeType('public/' . $logoPath) ?? 'image/png';
             return 'data:' . $mimeType . ';base64,' . base64_encode($fileContent);
         } catch (\Throwable $e) {
             return null;
@@ -326,33 +329,43 @@ class SuratController extends Controller
     {
         $data = $this->buildCetakData($surat);
 
-        $logoPath = $surat->kopSurat->logo_path ?? $surat->kopSurat->logo ?? null;
-        $data['logoDataUri'] = $this->buildLogoDataUri($logoPath);
 
-        $pdf = Pdf::loadView('surat.pdf', $data)->setPaper('a4', 'portrait');
+        $logoPath = $surat->kopSurat->logo_path ?? $surat->kopSurat->logo ?? null;
+        $data['logoDataUri'] = $logoPath;
+        
+        //  dd(storage_path('app/public/' . $logoPath));
+
+        // dd($data['logoDataUri']);
+        
+
+        $pdf = Pdf::loadView('surat.pdf', $data)
+            ->setPaper('a4', 'portrait')
+            ->setOption(['isRemoteEnabled' => true, 'isHtml5ParserEnabled' => true]) ;
+
+            // dd($pdf);
 
         $namaFile = 'arsip_surat/' . str_replace('/', '_', $surat->nomor_surat) . '.pdf';
 
-        if ($surat->file_arsip && Storage::disk('public')->exists($surat->file_arsip)) {
-            Storage::disk('public')->delete($surat->file_arsip);
-        }
-
         Storage::disk('public')->put($namaFile, $pdf->output());
 
-        $surat->update(['file_arsip' => $namaFile]);
+        $surat->forceFill([
+            'file_arsip' => $namaFile
+        ])->save();
     }
 
     private function generateNomorSurat(TemplateSurat $template): string
     {
         $tahunPenuh = now()->year;
+        $bulanIni   = now()->month;
 
-        $runningNumber = Surat::whereYear('created_at', $tahunPenuh)
-            ->whereMonth('created_at', now()->month)
+        $runningNumber = Surat::where('template_id', $template->id)
+            ->whereYear('created_at', $tahunPenuh)
+            ->whereMonth('created_at', $bulanIni)
             ->count() + 1;
 
-        $nomorUrut = str_pad($runningNumber, 3, '0', STR_PAD_LEFT);
+        $nomorUrut    = str_pad($runningNumber, 3, '0', STR_PAD_LEFT);
         $kodeTemplate = $this->deriveKodeTemplate($template->nama_template);
-        $bulanRomawi = $this->bulanRomawi(now()->month);
+        $bulanRomawi  = $this->bulanRomawi($bulanIni);
 
         return "{$nomorUrut}/{$kodeTemplate}/INOVINDO/{$bulanRomawi}/{$tahunPenuh}";
     }

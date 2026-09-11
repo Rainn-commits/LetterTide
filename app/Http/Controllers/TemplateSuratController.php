@@ -74,12 +74,18 @@ class TemplateSuratController extends Controller
     public function destroy(TemplateSurat $templateSurat)
     {
         $nama = $templateSurat->nama_template;
-        $templateSurat->update(['is_aktif' => false]);
+        $versi = $templateSurat->versi;
 
-        LogAktivitas::catat('Menghapus', 'Template Surat', "Menonaktifkan template \"{$nama}\" versi {$templateSurat->versi}");
+        $templateSurat->delete();
+
+        LogAktivitas::catat(
+            'Menghapus',
+            'Template Surat',
+            "Menghapus template \"{$nama}\" versi {$versi}"
+        );
 
         return redirect()->route('template-surat.index')
-            ->with('success', 'Template dinonaktifkan.');
+            ->with('success', 'Template berhasil dihapus.');
     }
 
     public function parsePreview(Request $request)

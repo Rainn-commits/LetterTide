@@ -225,7 +225,10 @@
                                             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
                                         </span>
                                     @else
-                                        <form action="{{ route('surat.ttd-digital', $surat) }}" method="POST" style="display: inline-block;" onsubmit="return confirm('Apakah Anda yakin ingin menyetujui dan menandatangani surat ini secara digital?');">
+                                        <form action="{{ route('surat.ttd-digital', $surat) }}" method="POST" style="display: inline-block;"
+                                            data-confirm="Apakah Anda yakin ingin menyetujui dan menandatangani surat ini secara digital?"
+                                            data-confirm-variant="success"
+                                            data-confirm-label="Ya, tanda tangani">
                                             @csrf
                                             <button type="submit" class="btn-modern btn-modern--ttd btn-modern--icon-only" title="ACC & Tanda Tangan Digital">
                                                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">

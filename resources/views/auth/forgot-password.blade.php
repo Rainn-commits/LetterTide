@@ -31,11 +31,25 @@
             </div>
 
             <div class="forgot-card__state {{ session('reset_requested') ? '' : 'is-active' }}" id="state-contact">
-<img src="{{ asset('images/download.svg') }}" alt="Lupa password" class="forgot-card__icon">
+            <img src="{{ asset('images/download.svg') }}" alt="Lupa password" class="forgot-card__icon">
                 <p class="forgot-card__message">Hubungi Admin untuk reset password</p>
 
                 <form method="POST" action="{{ route('password.request.submit') }}">
                     @csrf
+
+                    <input
+                        type="email"
+                        name="email"
+                        class="forgot-card__input"
+                        placeholder="Masukkan email Anda"
+                        value="{{ old('email') }}"
+                        required
+                    >
+
+                    @error('email')
+                        <small class="forgot-card__error">{{ $message }}</small>
+                    @enderror
+
                     <button type="submit" class="btn-contact-admin">Contact Admin</button>
                 </form>
             </div>

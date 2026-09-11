@@ -31,7 +31,7 @@ Route::get('/forgot-password', function () {
 })->name('password.request');
 Route::post('/forgot-password', [ForgotPasswordController::class, 'submitRequest'])->name('password.request.submit');
 
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth', 'active'])->group(function () {
 
     Route::post('/notifications/{notification}/mark-as-read', [NotificationController::class, 'markAsRead'])->name('notifications.markAsRead');
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
@@ -61,7 +61,7 @@ Route::middleware('auth')->group(function () {
         Route::delete('/kop-surat/{pengaturanKopSurat}', [KopSuratController::class, 'destroy'])->name('kop-surat.destroy');
     });
 
-    Route::post('/surat/{surat}/ttd-digital', [SuratController::class, 'ttdDigital'])->name('surat.ttd-digital');
+    Route::match(['get', 'post'], '/surat/{surat}/ttd-digital', [SuratController::class, 'ttdDigital'])->name('surat.ttd-digital');
     Route::delete('/surat/{surat}', [SuratController::class, 'destroy'])->name('surat.destroy');
     Route::get('/surat/{surat}/edit', [SuratController::class, 'edit'])->name('surat.edit');
     Route::put('/surat/{surat}', [SuratController::class, 'update'])->name('surat.update');

@@ -114,7 +114,8 @@
             <div class="surat-paper__header">
                 <div class="surat-paper__logo-left">
                     @if ($logoDataUri)
-                        <img src="{{ $logoDataUri }}" alt="Logo" class="surat-paper__logo">
+                        <!-- <img src="{{ buildLogoDataUri($logoDataUri) }}" alt="Logo" class="surat-paper__logo"> -->
+                        <img src="{{ storage_path('app/public/' . $logoDataUri) }}" alt="Logo" class="surat-paper__logo">
                     @endif
                 </div>
 
