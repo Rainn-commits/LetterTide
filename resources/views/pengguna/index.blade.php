@@ -71,21 +71,26 @@
                             </a>
                             @if($p->id !== auth()->id())
                                 @if ($p->is_aktif)
-                                    <form method="POST"
-                                        action="{{ route('pengguna.destroy', $p) }}"
-                                        class="form-nonaktif"
-                                        data-confirm="Nonaktifkan pengguna ini?"
-                                        data-confirm-variant="danger"
-                                        data-confirm-label="Ya, Nonaktifkan">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="icon-btn-warning" title="Nonaktifkan Pengguna" aria-label="Nonaktifkan Pengguna">
-                                            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                <path d="M12 2v10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
-                                                <path d="M6.34 5.34a9 9 0 1 0 11.32 0" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
-                                            </svg>
-                                        </button>
-                                    </form>
+                                    @if (
+                                        (auth()->user()->role->nama_role ?? '') === 'Super Admin'
+                                        || ($p->role?->nama_role ?? '') !== 'Super Admin'
+                                    )
+                                        <form method="POST"
+                                            action="{{ route('pengguna.destroy', $p) }}"
+                                            class="form-nonaktif"
+                                            data-confirm="Nonaktifkan pengguna ini?"
+                                            data-confirm-variant="danger"
+                                            data-confirm-label="Ya, Nonaktifkan">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="icon-btn-warning" title="Nonaktifkan Pengguna" aria-label="Nonaktifkan Pengguna">
+                                                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <path d="M12 2v10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                                                    <path d="M6.34 5.34a9 9 0 1 0 11.32 0" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                                                </svg>
+                                            </button>
+                                        </form>
+                                    @endif
                                 @else
                                     <form method="POST"
                                         action="{{ route('pengguna.aktifkan', $p) }}"

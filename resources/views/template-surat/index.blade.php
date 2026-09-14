@@ -30,7 +30,6 @@
                 <tr>
                     <th class="is-sortable">Nama Template <span class="sort-icon">&#8645;</span></th>
                     <th class="col-versi is-sortable">Versi <span class="sort-icon">&#8645;</span></th>
-                    <th class="col-status is-sortable">Status <span class="sort-icon">&#8645;</span></th>
                     <th class="col-actions">Aksi</th>
                 </tr>
             </thead>
@@ -39,13 +38,6 @@
                     <tr>
                         <td class="template-name">{{ $template->nama_template }}</td>
                         <td class="col-versi">v{{ $template->versi }}</td>
-                        <td class="col-status">
-                            @if (($template->status ?? 'Aktif') === 'Aktif')
-                                <span class="status-pill status-pill--active">Aktif</span>
-                            @else
-                                <span class="status-pill status-pill--inactive">Nonaktif</span>
-                            @endif
-                        </td>
                         <td>
                             <div class="row-actions">
                                 <a href="{{ route('template-surat.edit', $template->id) }}" class="icon-btn" title="Edit template">
@@ -78,7 +70,7 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="4" class="table-empty">
+                        <td colspan="3" class="table-empty">
                             Belum ada template surat. Klik "Tambah Template Baru" untuk membuat yang pertama.
                         </td>
                     </tr>

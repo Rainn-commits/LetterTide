@@ -10,7 +10,10 @@
 
     <div class="wizard-step">
         <span class="wizard-step__badge">2</span>
-        <h2 class="wizard-step__title">Lengkapi Data Surat</h2>
+        <div>
+            <h2 class="wizard-step__title">Lengkapi Data Surat</h2>
+            <div class="wizard-step__template-name">{{ $template->nama_template }}</div>
+        </div>
     </div>
 
     <div class="card">
