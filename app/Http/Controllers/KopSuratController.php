@@ -15,25 +15,24 @@ class KopSuratController extends Controller
 
     public function index()
     {
-
         $riwayat = PengaturanKopSurat::orderByDesc('versi')
             ->get();
 
         return view('kop-surat.index', [
-            'riwayat'  => $riwayat,
+            'riwayat' => $riwayat,
         ]);
     }
 
     public function create()
     {
-        $kopSuratAktif = PengaturanKopSurat::where('is_aktif', true)->first();
-
-        return view('kop-surat.create', compact('kopSuratAktif'));
+        return view('kop-surat.create');
     }
 
     public function preview(PengaturanKopSurat $pengaturanKopSurat)
     {
-        return view('kop-surat.preview', ['kopSurat' => $pengaturanKopSurat]);
+        return view('kop-surat.preview', [
+            'kopSurat' => $pengaturanKopSurat,
+        ]);
     }
 
     public function store(Request $request)
@@ -47,40 +46,43 @@ class KopSuratController extends Controller
             'website'   => ['nullable', 'string', 'max:100'],
         ]);
 
-        $kopSuratLama = PengaturanKopSurat::where('is_aktif', true)->first();
-        $versiBaru = $kopSuratLama ? $kopSuratLama->versi + 1 : 1;
+        // Setiap kop surat BARU selalu dimulai dari versi 1.
+        $versiBaru = 1;
 
         if ($request->hasFile('logo')) {
             $logoPath = $this->prosesLogo($request->file('logo'));
         } else {
-            $logoPath = $kopSuratLama->logo ?? null;
-        }
-
-        if ($kopSuratLama) {
-            $kopSuratLama->update(['is_aktif' => false]);
+            $logoPath = null;
         }
 
         PengaturanKopSurat::create([
-            'logo'      => $logoPath,
-            'nama_pt'   => $validated['nama_pt'],
-            'alamat_pt' => $validated['alamat_pt'],
-            'telepon'   => $validated['telepon'],
-            'email'     => $validated['email'],
-            'website'   => $validated['website'] ?? null,
-            'versi'     => $versiBaru,
-            'is_aktif'  => true,
+            'logo'       => $logoPath,
+            'nama_pt'    => $validated['nama_pt'],
+            'alamat_pt'  => $validated['alamat_pt'],
+            'telepon'    => $validated['telepon'],
+            'email'      => $validated['email'],
+            'website'    => $validated['website'] ?? null,
+            'versi'      => $versiBaru,
             'created_at' => now(),
         ]);
 
-        LogAktivitas::catat('Mengubah', 'Kop Surat', "Menyimpan kop surat sebagai versi {$versiBaru}");
+        LogAktivitas::catat(
+            'Membuat',
+            'Kop Surat',
+            "Membuat kop surat \"{$validated['nama_pt']}\" versi {$versiBaru}"
+        );
 
         return redirect()->route('kop-surat.index')
-            ->with('success', "Kop surat berhasil disimpan sebagai versi {$versiBaru}.");
+            ->with(
+                'success',
+                "Kop surat berhasil dibuat sebagai versi {$versiBaru}."
+            );
     }
 
     public function edit($id)
     {
         $kopSurat = PengaturanKopSurat::findOrFail($id);
+
         return view('kop-surat.edit', compact('kopSurat'));
     }
 
@@ -99,46 +101,62 @@ class KopSuratController extends Controller
 
         if ($request->hasFile('logo')) {
             $logoPath = $this->prosesLogo($request->file('logo'));
-            $kopSurat->logo = $logoPath;
+        } else {
+            $logoPath = $kopSurat->logo;
         }
 
-        $kopSurat->update([
-            'nama_pt'   => $validated['nama_pt'],
-            'alamat_pt' => $validated['alamat_pt'],
-            'telepon'   => $validated['telepon'],
-            'email'     => $validated['email'],
-            'website'   => $validated['website'] ?? null,
+        // Edit selalu membuat versi baru.
+        $versiBaru = $kopSurat->versi + 1;
+
+        PengaturanKopSurat::create([
+            'logo'       => $logoPath,
+            'nama_pt'    => $validated['nama_pt'],
+            'alamat_pt'  => $validated['alamat_pt'],
+            'telepon'    => $validated['telepon'],
+            'email'      => $validated['email'],
+            'website'    => $validated['website'] ?? null,
+            'versi'      => $versiBaru,
+            'created_at' => now(),
         ]);
 
-        LogAktivitas::catat('Mengubah', 'Kop Surat', "Memperbarui kop surat versi {$kopSurat->versi}");
+        LogAktivitas::catat(
+            'Mengubah',
+            'Kop Surat',
+            "Memperbarui kop surat \"{$validated['nama_pt']}\" ke versi {$versiBaru}"
+        );
 
         return redirect()->route('kop-surat.index')
-            ->with('success', "Kop surat versi {$kopSurat->versi} berhasil diperbarui.");
+            ->with(
+                'success',
+                "Kop surat berhasil disimpan sebagai versi {$versiBaru}."
+            );
     }
 
     public function destroy($id)
     {
         $kopSurat = PengaturanKopSurat::findOrFail($id);
+
         $versi = $kopSurat->versi;
-        $wasAktif = $kopSurat->is_aktif;
+        $nama  = $kopSurat->nama_pt;
 
         if ($kopSurat->logo && Storage::disk('public')->exists($kopSurat->logo)) {
             Storage::disk('public')->delete($kopSurat->logo);
         }
 
+        // Hard delete.
         $kopSurat->delete();
 
-        if ($wasAktif) {
-            $kopTerbaru = PengaturanKopSurat::orderBy('versi', 'desc')->first();
-            if ($kopTerbaru) {
-                $kopTerbaru->update(['is_aktif' => true]);
-            }
-        }
-
-        LogAktivitas::catat('Menghapus', 'Kop Surat', "Menghapus kop surat versi {$versi}");
+        LogAktivitas::catat(
+            'Menghapus',
+            'Kop Surat',
+            "Menghapus kop surat \"{$nama}\" versi {$versi}"
+        );
 
         return redirect()->route('kop-surat.index')
-            ->with('success', "Kop surat versi {$versi} berhasil dihapus.");
+            ->with(
+                'success',
+                "Kop surat versi {$versi} berhasil dihapus."
+            );
     }
 
     private function prosesLogo($file): string
@@ -146,9 +164,9 @@ class KopSuratController extends Controller
         $ekstensi = strtolower($file->getClientOriginalExtension());
 
         $sumber = match ($ekstensi) {
-            'png'  => @imagecreatefrompng($file->getRealPath()),
+            'png' => @imagecreatefrompng($file->getRealPath()),
             'jpg', 'jpeg' => @imagecreatefromjpeg($file->getRealPath()),
-            'gif'  => @imagecreatefromgif($file->getRealPath()),
+            'gif' => @imagecreatefromgif($file->getRealPath()),
             'webp' => @imagecreatefromwebp($file->getRealPath()),
             default => null,
         };
@@ -160,21 +178,48 @@ class KopSuratController extends Controller
         $lebarAsli  = imagesx($sumber);
         $tinggiAsli = imagesy($sumber);
 
-        $rasio = min(self::LOGO_LEBAR / $lebarAsli, self::LOGO_TINGGI / $tinggiAsli);
+        $rasio = min(
+            self::LOGO_LEBAR / $lebarAsli,
+            self::LOGO_TINGGI / $tinggiAsli
+        );
+
         $lebarBaru  = (int) round($lebarAsli * $rasio);
         $tinggiBaru = (int) round($tinggiAsli * $rasio);
 
-        $kanvas = imagecreatetruecolor(self::LOGO_LEBAR, self::LOGO_TINGGI);
-        $putih  = imagecolorallocate($kanvas, 255, 255, 255);
+        $kanvas = imagecreatetruecolor(
+            self::LOGO_LEBAR,
+            self::LOGO_TINGGI
+        );
+
+        $putih = imagecolorallocate($kanvas, 255, 255, 255);
         imagefill($kanvas, 0, 0, $putih);
 
-        $offsetX = (int) round((self::LOGO_LEBAR - $lebarBaru) / 2);
-        $offsetY = (int) round((self::LOGO_TINGGI - $tinggiBaru) / 2);
+        $offsetX = (int) round(
+            (self::LOGO_LEBAR - $lebarBaru) / 2
+        );
 
-        imagecopyresampled($kanvas, $sumber, $offsetX, $offsetY, 0, 0, $lebarBaru, $tinggiBaru, $lebarAsli, $tinggiAsli);
+        $offsetY = (int) round(
+            (self::LOGO_TINGGI - $tinggiBaru) / 2
+        );
+
+        imagecopyresampled(
+            $kanvas,
+            $sumber,
+            $offsetX,
+            $offsetY,
+            0,
+            0,
+            $lebarBaru,
+            $tinggiBaru,
+            $lebarAsli,
+            $tinggiAsli
+        );
 
         $namaFile = 'kop-surat/logo_' . uniqid() . '.png';
-        $pathFisik = storage_path('app/public/' . $namaFile);
+
+        $pathFisik = storage_path(
+            'app/public/' . $namaFile
+        );
 
         if (!is_dir(dirname($pathFisik))) {
             mkdir(dirname($pathFisik), 0755, true);

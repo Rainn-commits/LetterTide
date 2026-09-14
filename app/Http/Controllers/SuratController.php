@@ -141,8 +141,8 @@ class SuratController extends Controller
             }
 
             $path = $request->file('file_arsip')->store('arsip_surat', 'public');
-
             $surat->file_arsip = $path;
+            $surat->status = 'Disetujui';
             $surat->save();
         }
 
