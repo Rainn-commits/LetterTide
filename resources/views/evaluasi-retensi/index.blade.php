@@ -28,6 +28,112 @@
         </div>
     </div>
 
+    <form action="{{ route('evaluasi-retensi.index') }}" method="GET" class="retensi-filter-card">
+        <div class="retensi-filter-grid">
+
+            <div class="retensi-filter-group retensi-filter-group--search">
+                <label for="q">Cari Surat</label>
+                <input
+                    type="text"
+                    id="q"
+                    name="q"
+                    value="{{ request('q') }}"
+                    class="retensi-filter-control"
+                    placeholder="Nomor surat, template, atau pembuat..."
+                >
+            </div>
+
+            <div class="retensi-filter-group">
+                <label for="template_id">Jenis Surat</label>
+                <select id="template_id" name="template_id" class="retensi-filter-control">
+                    <option value="">Semua Template</option>
+                    @foreach ($templates as $template)
+                        <option value="{{ $template->id }}"
+                            {{ (string) request('template_id') === (string) $template->id ? 'selected' : '' }}>
+                            {{ $template->nama_template }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+
+            <div class="retensi-filter-group">
+                <label for="tanggal_mulai">Tanggal Mulai</label>
+                <input
+                    type="date"
+                    id="tanggal_mulai"
+                    name="tanggal_mulai"
+                    value="{{ request('tanggal_mulai') }}"
+                    class="retensi-filter-control"
+                >
+            </div>
+
+            <div class="retensi-filter-group">
+                <label for="tanggal_selesai">Tanggal Selesai</label>
+                <input
+                    type="date"
+                    id="tanggal_selesai"
+                    name="tanggal_selesai"
+                    value="{{ request('tanggal_selesai') }}"
+                    class="retensi-filter-control"
+                >
+            </div>
+
+            @if ($isPrivileged)
+                <div class="retensi-filter-group">
+                    <label for="status_evaluasi">Status Evaluasi</label>
+                    <select id="status_evaluasi" name="status_evaluasi" class="retensi-filter-control">
+                        <option value="">Semua Status</option>
+                        <option value="belum" {{ request('status_evaluasi') === 'belum' ? 'selected' : '' }}>
+                            Belum Dievaluasi
+                        </option>
+                        <option value="menunggu" {{ request('status_evaluasi') === 'menunggu' ? 'selected' : '' }}>
+                            Menunggu Validasi
+                        </option>
+                        <option value="tervalidasi" {{ request('status_evaluasi') === 'tervalidasi' ? 'selected' : '' }}>
+                            Tervalidasi
+                        </option>
+                    </select>
+                </div>
+            @endif
+
+            <div class="retensi-filter-group">
+                <label for="sort">Urutkan</label>
+                <select id="sort" name="sort" class="retensi-filter-control">
+                    <option value="tanggal_terbaru" {{ $sort === 'tanggal_terbaru' ? 'selected' : '' }}>
+                        Tanggal Terbaru
+                    </option>
+                    <option value="tanggal_terlama" {{ $sort === 'tanggal_terlama' ? 'selected' : '' }}>
+                        Tanggal Terlama
+                    </option>
+
+                    @if ($isPrivileged)
+                        <option value="skor_tertinggi" {{ $sort === 'skor_tertinggi' ? 'selected' : '' }}>
+                            Skor Tertinggi
+                        </option>
+                        <option value="skor_terendah" {{ $sort === 'skor_terendah' ? 'selected' : '' }}>
+                            Skor Terendah
+                        </option>
+                    @endif
+
+                    <option value="akses_terbanyak" {{ $sort === 'akses_terbanyak' ? 'selected' : '' }}>
+                        Akses Terbanyak
+                    </option>
+                </select>
+            </div>
+
+        </div>
+
+        <div class="retensi-filter-actions">
+            <button type="submit" class="retensi-filter-btn retensi-filter-btn--apply">
+                Terapkan Filter
+            </button>
+
+            <a href="{{ route('evaluasi-retensi.index') }}" class="retensi-filter-btn retensi-filter-btn--reset">
+                Reset
+            </a>
+        </div>
+    </form>
+
     <div class="retensi-card-expanded">
         <table class="retensi-table-modern" style="width: 100%; table-layout: fixed;">
             <thead>
@@ -145,5 +251,10 @@
             </tbody>
         </table>
     </div>
+        @if ($arsip->hasPages())
+        <div class="retensi-pagination-wrapper">
+            {{ $arsip->links() }}
+        </div>
+    @endif
 
 @endsection
