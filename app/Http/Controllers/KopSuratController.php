@@ -15,7 +15,8 @@ class KopSuratController extends Controller
 
     public function index()
     {
-        $riwayat = PengaturanKopSurat::orderByDesc('versi')
+        $riwayat = PengaturanKopSurat::orderBy('nama_kop')
+            ->orderByDesc('versi')
             ->get();
 
         return view('kop-surat.index', [
@@ -39,6 +40,7 @@ class KopSuratController extends Controller
     {
         $validated = $request->validate([
             'logo'      => ['nullable', 'image', 'max:10240'],
+            'nama_kop'  => ['required', 'string', 'max:100'],
             'nama_pt'   => ['required', 'string', 'max:100'],
             'alamat_pt' => ['required', 'string', 'max:255'],
             'telepon'   => ['required', 'string', 'max:20'],
@@ -46,7 +48,7 @@ class KopSuratController extends Controller
             'website'   => ['nullable', 'string', 'max:100'],
         ]);
 
-        // Setiap kop surat BARU selalu dimulai dari versi 1.
+        // Kop surat baru selalu dimulai dari versi 1.
         $versiBaru = 1;
 
         if ($request->hasFile('logo')) {
@@ -57,6 +59,7 @@ class KopSuratController extends Controller
 
         PengaturanKopSurat::create([
             'logo'       => $logoPath,
+            'nama_kop'   => $validated['nama_kop'],
             'nama_pt'    => $validated['nama_pt'],
             'alamat_pt'  => $validated['alamat_pt'],
             'telepon'    => $validated['telepon'],
@@ -69,13 +72,13 @@ class KopSuratController extends Controller
         LogAktivitas::catat(
             'Membuat',
             'Kop Surat',
-            "Membuat kop surat \"{$validated['nama_pt']}\" versi {$versiBaru}"
+            "Membuat kop surat \"{$validated['nama_kop']}\" untuk \"{$validated['nama_pt']}\" versi {$versiBaru}"
         );
 
         return redirect()->route('kop-surat.index')
             ->with(
                 'success',
-                "Kop surat berhasil dibuat sebagai versi {$versiBaru}."
+                "Kop surat \"{$validated['nama_kop']}\" berhasil dibuat sebagai versi {$versiBaru}."
             );
     }
 
@@ -92,6 +95,7 @@ class KopSuratController extends Controller
 
         $validated = $request->validate([
             'logo'      => ['nullable', 'image', 'max:10240'],
+            'nama_kop'  => ['required', 'string', 'max:100'],
             'nama_pt'   => ['required', 'string', 'max:100'],
             'alamat_pt' => ['required', 'string', 'max:255'],
             'telepon'   => ['required', 'string', 'max:20'],
@@ -105,11 +109,12 @@ class KopSuratController extends Controller
             $logoPath = $kopSurat->logo;
         }
 
-        // Edit selalu membuat versi baru.
+        // Edit membuat versi baru dari kop surat yang sedang diedit.
         $versiBaru = $kopSurat->versi + 1;
 
         PengaturanKopSurat::create([
             'logo'       => $logoPath,
+            'nama_kop'   => $validated['nama_kop'],
             'nama_pt'    => $validated['nama_pt'],
             'alamat_pt'  => $validated['alamat_pt'],
             'telepon'    => $validated['telepon'],
@@ -122,13 +127,13 @@ class KopSuratController extends Controller
         LogAktivitas::catat(
             'Mengubah',
             'Kop Surat',
-            "Memperbarui kop surat \"{$validated['nama_pt']}\" ke versi {$versiBaru}"
+            "Memperbarui kop surat \"{$validated['nama_kop']}\" ke versi {$versiBaru}"
         );
 
         return redirect()->route('kop-surat.index')
             ->with(
                 'success',
-                "Kop surat berhasil disimpan sebagai versi {$versiBaru}."
+                "Kop surat \"{$validated['nama_kop']}\" berhasil disimpan sebagai versi {$versiBaru}."
             );
     }
 
@@ -137,7 +142,7 @@ class KopSuratController extends Controller
         $kopSurat = PengaturanKopSurat::findOrFail($id);
 
         $versi = $kopSurat->versi;
-        $nama  = $kopSurat->nama_pt;
+        $nama  = $kopSurat->nama_kop;
 
         if ($kopSurat->logo && Storage::disk('public')->exists($kopSurat->logo)) {
             Storage::disk('public')->delete($kopSurat->logo);
@@ -155,7 +160,7 @@ class KopSuratController extends Controller
         return redirect()->route('kop-surat.index')
             ->with(
                 'success',
-                "Kop surat versi {$versi} berhasil dihapus."
+                "Kop surat \"{$nama}\" versi {$versi} berhasil dihapus."
             );
     }
 

@@ -417,3 +417,23 @@ input[type="file"]::file-selector-button {
 input[type="file"]::file-selector-button:hover {
   background-color: #008e90;
 }
+
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 5px 12px;
+  border-radius: var(--radius-pill);
+  font-size: 12px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.status-badge--signed {
+  background-color: var(--color-success-bg);
+  color: var(--color-success);
+}
+
+.status-badge--unsigned {
+  background-color: var(--color-danger-bg);
+  color: var(--color-danger);
+}

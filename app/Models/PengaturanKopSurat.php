@@ -11,7 +11,7 @@ class PengaturanKopSurat extends Model
     public $timestamps = false;
 
     protected $fillable = [
-        'logo', 'nama_pt', 'alamat_pt', 'telepon', 'email', 'website', 'versi', 'created_at'
+        'logo','nama_kop', 'nama_pt', 'alamat_pt', 'telepon', 'email', 'website', 'versi', 'created_at'
     ];
 
     public function surat()
