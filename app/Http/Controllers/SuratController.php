@@ -245,7 +245,14 @@ class SuratController extends Controller
     {
         $surat->load(['template', 'kopSurat', 'isiSurat', 'user', 'penandatangan']);
 
-        $values = $surat->isiSurat->pluck('nilai_field', 'nama_field')->toArray();
+        $values = $surat->isiSurat->pluck('nilai_field', 'nama_field')            ->toArray();
+
+        foreach ($values as $namaField => $nilaiField) {
+            if (str_contains(strtolower($namaField), 'deskripsi_pelanggaran')) {
+                $values[$namaField] = $this->formatDeskripsiPelanggaran($nilaiField);
+            }
+        }
+
         $isiSuratRendered = PlaceholderParser::render($surat->template->isi_template, $values);
 
         $namaPenandatangan = $surat->penandatangan?->name
@@ -290,6 +297,33 @@ class SuratController extends Controller
             'jabatanPenandatangan',
             'qrDataUri'
         );
+    }
+
+    private function formatDeskripsiPelanggaran(string $value): string
+    {
+        $points = json_decode($value, true);
+
+        if (!is_array($points)) {
+            return e($value);
+        }
+
+        $points = array_values(array_filter(
+            $points,
+            fn($point) => trim((string) $point) !== ''
+        ));
+
+        if (empty($points)) {
+            return '';
+        }
+
+        return collect($points)
+            ->map(function ($point, $index) {
+                return '<span class="deskripsi-point">'
+                    . '<span class="deskripsi-number">' . ($index + 1) . '.</span>'
+                    . '<span class="deskripsi-text">' . e(trim((string) $point)) . '</span>'
+                    . '</span>';
+            })
+            ->implode('');
     }
 
     private function buildQrDataUri(string $data): ?string
