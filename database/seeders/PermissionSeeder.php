@@ -18,6 +18,8 @@ class PermissionSeeder extends Seeder
             ['nama_permission' => 'Buat Surat Baru', 'kode_permission' => 'surat.create', 'created_at' => now(), 'updated_at' => now()],
             ['nama_permission' => 'Cetak Surat', 'kode_permission' => 'surat.print', 'created_at' => now(), 'updated_at' => now()],
             ['nama_permission' => 'Kelola Arsip Digital', 'kode_permission' => 'arsip.manage', 'created_at' => now(), 'updated_at' => now()],
+            ['nama_permission' => 'Lihat Log Aktivitas Sistem', 'kode_permission' => 'log.view', 'created_at' => now(), 'updated_at' => now()],
+            ['nama_permission' => 'Kelola Kriteria Retensi Arsip', 'kode_permission' => 'retensi.manage', 'created_at' => now(), 'updated_at' => now()],
         ]);
     }
 }

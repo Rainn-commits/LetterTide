@@ -9,7 +9,7 @@
 @section('content')
 <div class="rk-page">
     <h2 class="rk-page__title">Kelola Kriteria Retensi Arsip</h2>
-    <p class="rk-page__subtitle">Atur bobot tiap kriteria yang digunakan untuk menghitung skor evaluasi retensi arsip (metode SAW).</p>
+    <p class="rk-page__subtitle">Atur bobot tiap kriteria yang digunakan untuk menghitung skor evaluasi retensi arsip (metode TOPSIS + AHP).</p>
 
     @if (session('success'))
         <div class="rk-alert {{ str_contains(session('success'), 'disarankan') ? 'rk-alert--warning' : 'rk-alert--success' }}">
