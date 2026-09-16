@@ -44,6 +44,7 @@ class PenggunaController extends Controller
         ]);
 
         $this->cegahPenugasanSuperAdminTanpaIzin($validated['role_id']);
+        $this->cegahPenugasanAdminOlehAdmin($validated['role_id']);
 
         User::create([
             'name'     => $validated['name'],
@@ -159,9 +160,25 @@ class PenggunaController extends Controller
         $roleDipilih = Role::find($roleId);
         $userSaatIni = User::with('role')->find(Auth::id());
 
-        if ($roleDipilih && $roleDipilih->nama_role === 'Super Admin' 
-            && $userSaatIni?->role?->nama_role !== 'Super Admin') {
+        if (
+            $roleDipilih &&
+            $roleDipilih->nama_role === 'Super Admin' &&
+            $userSaatIni?->role?->nama_role !== 'Super Admin'
+        ) {
             abort(403, 'Hanya Super Admin yang dapat menetapkan role Super Admin.');
+        }
+    }
+
+    private function cegahPenugasanAdminOlehAdmin(int $roleId): void
+    {
+        $roleDipilih = Role::find($roleId);
+        $userSaatIni = User::with('role')->find(Auth::id());
+
+        if (
+            $roleDipilih?->nama_role === 'Admin' &&
+            $userSaatIni?->role?->nama_role !== 'Super Admin'
+        ) {
+            abort(403, 'Hanya Super Admin yang dapat membuat pengguna dengan role Admin.');
         }
     }
 
@@ -170,8 +187,10 @@ class PenggunaController extends Controller
         $pengguna->load('role');
         $userSaatIni = User::with('role')->find(Auth::id());
 
-        if ($pengguna->role?->nama_role === 'Super Admin' 
-            && $userSaatIni?->role?->nama_role !== 'Super Admin') {
+        if (
+            $pengguna->role?->nama_role === 'Super Admin' &&
+            $userSaatIni?->role?->nama_role !== 'Super Admin'
+        ) {
             abort(403, 'Anda tidak memiliki izin untuk mengubah akun Super Admin.');
         }
     }
@@ -189,6 +208,15 @@ class PenggunaController extends Controller
 
     private function rolesUntukTambahPengguna()
     {
-        return Role::where('nama_role', '!=', 'Super Admin')->orderBy('nama_role')->get();
+        $userSaatIni = User::with('role')->find(Auth::id());
+
+        if ($userSaatIni?->role?->nama_role === 'Super Admin') {
+            return Role::where('nama_role', '!=', 'Super Admin')
+                ->orderBy('nama_role')
+                ->get();
+        }
+
+        return Role::where('nama_role', 'User')
+            ->get();
     }
 }

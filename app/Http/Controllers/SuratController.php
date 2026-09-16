@@ -318,12 +318,9 @@ class SuratController extends Controller
 
         return collect($points)
             ->map(function ($point, $index) {
-                return '<span class="deskripsi-point">'
-                    . '<span class="deskripsi-number">' . ($index + 1) . '.</span>'
-                    . '<span class="deskripsi-text">' . e(trim((string) $point)) . '</span>'
-                    . '</span>';
+                return ($index + 1) . '. ' . e(trim((string) $point));
             })
-            ->implode('');
+            ->implode('<br>');
     }
 
     private function buildQrDataUri(string $data): ?string

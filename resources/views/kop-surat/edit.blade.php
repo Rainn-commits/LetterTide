@@ -49,6 +49,19 @@
             </div>
 
             <div style="margin-bottom: 16px;">
+                <label for="nama_kop" style="display: block; font-weight: 600; font-size: 0.875rem; margin-bottom: 6px; color: #334155;">Nama Kop Surat</label>
+                <input
+                    type="text"
+                    name="nama_kop"
+                    id="nama_kop"
+                    value="{{ old('nama_kop', $kopSurat->nama_kop) }}"
+                    placeholder="Contoh: Kop Utama"
+                    required
+                    style="width: 100%; padding: 10px; border: 1px solid #CBD5E1; border-radius: 8px;"
+                >
+            </div>
+
+            <div style="margin-bottom: 16px;">
                 <label for="nama_pt" style="display: block; font-weight: 600; font-size: 0.875rem; margin-bottom: 6px; color: #334155;">Nama Perusahaan / PT</label>
                 <input type="text" name="nama_pt" id="nama_pt" value="{{ old('nama_pt', $kopSurat->nama_pt) }}" required style="width: 100%; padding: 10px; border: 1px solid #CBD5E1; border-radius: 8px;">
             </div>

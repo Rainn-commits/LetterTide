@@ -45,7 +45,16 @@
             </thead>
             <tbody>
                 @foreach($pengguna as $p)
-                <tr>
+
+                    @if (
+                        ($authRole = auth()->user()->role->nama_role ?? '') !== 'Super Admin'
+                        && ($p->role?->nama_role ?? '') === 'Super Admin'
+                    )
+                        @continue
+                    @endif
+
+                    <tr>
+                        
                     <td>{{ $p->name }}</td>
                     <td>{{ $p->email }}</td>
                     <td>

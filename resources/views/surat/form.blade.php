@@ -230,6 +230,12 @@
                             removeButton.style.display = 'inline-flex';
                         }
                     });
+
+                    if (points.length >= 4) {
+                        addButton.style.display = 'none';
+                    } else {
+                        addButton.style.display = 'inline-flex';
+                    }
                 }
 
                 function syncHiddenInput() {
@@ -247,6 +253,12 @@
                 }
 
                 function createPoint() {
+                    const points = pointsContainer.querySelectorAll('.deskripsi-pelanggaran-point');
+
+                    if (points.length >= 4) {
+                        return;
+                    }
+
                     const point = document.createElement('div');
                     point.className = 'deskripsi-pelanggaran-point';
 
@@ -280,6 +292,12 @@
                 }
 
                 addButton.addEventListener('click', function () {
+                    const points = pointsContainer.querySelectorAll('.deskripsi-pelanggaran-point');
+
+                    if (points.length >= 4) {
+                        return;
+                    }
+
                     createPoint();
                 });
 
