@@ -69,18 +69,18 @@
             'icon' => 'kriteria',
         ],
         [
-            'label' => 'Log Aktivitas Sistem',
-            'route' => 'log-aktivitas.index',
-            'active' => request()->routeIs('log-aktivitas.*'),
-            'roles' => ['Super Admin', 'Admin'],
-            'icon' => 'log',        
-        ],
-        [
             'label'  => 'Evaluasi Retensi Arsip',
             'route'  => 'evaluasi-retensi.index',
             'active' => request()->routeIs('evaluasi-retensi.*'),
             'roles'  => ['Super Admin', 'Admin', 'User'], 
             'icon'   => 'archive-clock', 
+        ],
+                [
+            'label' => 'Log Aktivitas Sistem',
+            'route' => 'log-aktivitas.index',
+            'active' => request()->routeIs('log-aktivitas.*'),
+            'roles' => ['Super Admin', 'Admin'],
+            'icon' => 'log',        
         ],
     ];
 @endphp
@@ -133,14 +133,6 @@
                     @case('shield')
                         <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 8v4M12 16h.01" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
                         @break
-                    @case('log')
-                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M4 21V14M4 10V3M12 21V12M12 8V3M20 21V16M20 12V3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
-                            <circle cx="4" cy="12" r="2" stroke="currentColor" stroke-width="1.6"/>
-                            <circle cx="12" cy="10" r="2" stroke="currentColor" stroke-width="1.6"/>
-                            <circle cx="20" cy="14" r="2" stroke="currentColor" stroke-width="1.6"/>
-                        </svg>
-                        @break
                     @case('kriteria')
                         <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 6h16M4 12h10M4 18h6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><circle cx="19" cy="12" r="2" stroke="currentColor" stroke-width="1.6"/><circle cx="17" cy="18" r="2" stroke="currentColor" stroke-width="1.6"/></svg>
                         @break    
@@ -150,6 +142,14 @@
                             <path d="M12 10v4l2 2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                         </svg>
                         @break
+                     @case('log')
+                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M4 21V14M4 10V3M12 21V12M12 8V3M20 21V16M20 12V3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+                            <circle cx="4" cy="12" r="2" stroke="currentColor" stroke-width="1.6"/>
+                            <circle cx="12" cy="10" r="2" stroke="currentColor" stroke-width="1.6"/>
+                            <circle cx="20" cy="14" r="2" stroke="currentColor" stroke-width="1.6"/>
+                        </svg>
+                        @break    
                     @default
                         <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="8" r="3.5" stroke="currentColor" stroke-width="1.6"/><path d="M5 20c0-3.3 3.1-6 7-6s7 2.7 7 6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
                 @endswitch
