@@ -70,7 +70,7 @@ Sistem memiliki tiga role bawaan. Role bersifat **dinamis** — Super Admin dapa
 | Kelola Pengguna | Ya | Ya | Tidak |
 | Kelola Role dan Hak Akses | Ya | Tidak | Tidak |
 | Log Aktivitas Sistem | Ya (penuh) | Ya (tanpa modul Role) | Tidak |
-| Kelola Kriteria Retensi | Ya | Ya | Tidak |
+| Kelola Kriteria Retensi | Ya | Tidak | Tidak |
 
 ### Daftar Kode Hak Akses (Permission)
 
