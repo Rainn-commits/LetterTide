@@ -8,6 +8,18 @@
 
 @section('content')
 
+    <div class="retensi-tabs">
+        @if (auth()->user()->role->nama_role === 'Super Admin')
+            <a href="{{ route('retensi-kriteria.index') }}" class="retensi-tabs__link">
+                Kelola Kriteria Retensi
+            </a>
+        @endif
+
+        <a href="{{ route('evaluasi-retensi.index') }}" class="retensi-tabs__link is-active">
+            Evaluasi Retensi Arsip
+        </a>
+    </div>
+
     @php
         $isPrivileged = in_array(auth()->user()->role->nama_role ?? '', ['Super Admin', 'Admin']);
         $jumlahKolom = $isPrivileged ? 7 : 5;

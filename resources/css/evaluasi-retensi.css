@@ -72,9 +72,10 @@
 
 .retensi-table-modern {
   width: 100%;
+  min-width: 1000px;
+  table-layout: auto;
   border-collapse: separate;
   border-spacing: 0 6px;
-  min-width: 900px;
 }
 
 .retensi-table-modern th {
@@ -87,6 +88,8 @@
   border-bottom: 2px solid var(--color-border);
   text-align: center !important;
   white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .retensi-table-modern td {
@@ -98,6 +101,8 @@
   border-bottom: 1px solid var(--color-border);
   text-align: center;
   white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .retensi-table-modern tbody tr {
@@ -471,3 +476,57 @@
   }
 }
 
+.retensi-tabs {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 20px;
+  background-color: #ffffff;
+  border-radius: 999px;
+  padding: 6px;
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.06);
+  width: fit-content;
+}
+
+.retensi-tabs__link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 20px;
+  font-weight: 700;
+  font-size: 13.5px;
+  color: #000000;
+  border-radius: 999px;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: all 0.15s ease;
+}
+
+.retensi-tabs__link:hover {
+  color: #00838a;
+  background-color: #e6fbfc;
+}
+
+.retensi-tabs__link.is-active {
+  color: #ffffff;
+  background-color: #00c3d0;
+  box-shadow: 0 3px 10px rgba(0, 135, 147, 0.35);
+}
+
+@media (max-width: 720px) {
+  .retensi-tabs {
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    box-sizing: border-box;
+    overflow: hidden;
+  }
+
+  .retensi-tabs__link {
+    flex: 1 1 0;
+    min-width: 0;
+    width: 0;
+    padding: 10px 12px;
+    font-size: 13px;
+    box-sizing: border-box;
+  }
+}

@@ -19,7 +19,7 @@
   padding: 10px 20px;
   font-weight: 700;
   font-size: 13.5px;
-  color: var(--color-ink-soft);
+  color: #000000;
   border-radius: var(--radius-pill);
   transition: all 0.15s ease;
 }

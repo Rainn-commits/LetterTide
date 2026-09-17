@@ -8,9 +8,11 @@
 
 @section('content')
 
-    <div class="km-tabs">
-        <a href="{{ route('pengguna.index') }}" class="km-tabs__link">Pengguna</a>
-        <a href="{{ route('role.index') }}" class="km-tabs__link is-active">Role dan Hak Akses</a>
+    <div class="role-tabs-container">
+        <div class="km-tabs">
+            <a href="{{ route('pengguna.index') }}" class="km-tabs__link">Pengguna</a>
+            <a href="{{ route('role.index') }}" class="km-tabs__link is-active">Role dan Hak Akses</a>
+        </div>
     </div>
 
     @if(session('success'))
