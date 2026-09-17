@@ -24,7 +24,7 @@
             'route'  => 'profile.edit',
             'active' => request()->routeIs('profile.*'),
             'roles'  => ['Super Admin', 'Admin', 'User'], 
-            'icon'   => 'user',
+            'icon'   => 'user', 
         ],
         [
             'label' => 'Buat Surat',
@@ -32,6 +32,8 @@
             'active' => request()->routeIs('surat.*'),
             'roles' => ['Super Admin', 'Admin', 'User'],
             'icon' => 'mail',
+            'permission' => 'arsip.manage',
+            'permission' => 'surat.create',
         ],
         [
             'label' => 'Template Surat',
@@ -39,6 +41,7 @@
             'active' => request()->routeIs('template-surat.*'),
             'roles' => ['Super Admin', 'Admin', 'User'],
             'icon' => 'document',
+            'permission' => 'template.manage',
         ],
         [
             'label' => 'Arsip Digital',
@@ -46,6 +49,7 @@
             'active' => request()->routeIs('arsip.*'),
             'roles' => ['Super Admin', 'Admin', 'User'],
             'icon' => 'archive',
+
         ],
         [
             'label' => 'Pengaturan Kop Surat',
@@ -53,6 +57,7 @@
             'active' => request()->routeIs('kop-surat.*'),
             'roles' => ['Super Admin', 'Admin'],
             'icon' => 'settings',
+            'permission' => 'kopsurat.manage',
         ],
         [
             'label' => str_contains($roleName, 'Super Admin') ? 'Kelola Pengguna & Role' : 'Kelola Pengguna',
@@ -60,6 +65,7 @@
             'active' => request()->routeIs('pengguna.*') || request()->routeIs('role.*'),
             'roles' => ['Super Admin', 'Admin'],
             'icon' => 'users',
+            'permission' => 'user_role.manage',
         ],
         [
             'label' => 'Retensi Arsip',
@@ -68,13 +74,15 @@
                     || request()->routeIs('evaluasi-retensi.*'),
             'roles' => ['Super Admin', 'Admin', 'User'],
             'icon' => 'archive-clock',
+            'permission' => 'retensi.evaluate',
         ],
         [
             'label' => 'Log Aktivitas Sistem',
             'route' => 'log-aktivitas.index',
             'active' => request()->routeIs('log-aktivitas.*'),
             'roles' => ['Super Admin', 'Admin'],
-            'icon' => 'log',        
+            'icon' => 'log',  
+            'permission' => 'log.view',
         ],
     ];
 @endphp
@@ -89,7 +97,13 @@
 
     <nav class="sidebar__nav">
         @foreach ($menuItems as $item)
-            @continue($roleName && !in_array($roleName, $item['roles']))
+            @continue(
+                $roleName &&
+                (
+                    !in_array($roleName, $item['roles']) ||
+                    (isset($item['permission']) && !auth()->user()->role?->permissions->contains('kode_permission', $item['permission']))
+                )
+            )
 
             <a href="{{ Route::has($item['route']) ? route($item['route']) : url('/dashboard') }}"
                class="sidebar__link {{ $item['active'] ? 'is-active' : '' }}">

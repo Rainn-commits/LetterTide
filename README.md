@@ -62,15 +62,15 @@ Sistem memiliki tiga role bawaan. Role bersifat **dinamis** — Super Admin dapa
 |---|:---:|:---:|:---:|
 | Dashboard | Ya | Ya | Ya |
 | Kelola Profil Sendiri | Ya | Ya | Ya |
-| Buat Surat dan Riwayat Surat | Ya | Ya | Ya |
+| Buat Surat | Ya | Ya | Ya |
 | Template Surat | Ya | Ya | Ya |
 | Arsip Digital | Ya | Ya | Terbatas (surat sendiri) |
-| Evaluasi Retensi Arsip | Ya | Ya | Terbatas (surat sendiri) |
-| Pengaturan Kop Surat | Ya | Ya | Tidak |
+| Retensi Arsip | Ya | Ya | Terbatas (surat sendiri) |
+| Pengaturan Kop Sura | Ya | Ya | Tidak |
 | Kelola Pengguna | Ya | Ya | Tidak |
 | Kelola Role dan Hak Akses | Ya | Tidak | Tidak |
 | Log Aktivitas Sistem | Ya (penuh) | Ya (tanpa modul Role) | Tidak |
-| Kelola Kriteria Retensi | Ya | Tidak | Tidak |
+
 
 ### Daftar Kode Hak Akses (Permission)
 

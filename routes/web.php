@@ -66,7 +66,7 @@ Route::middleware(['auth', 'active'])->group(function () {
     Route::get('/surat/{surat}/edit', [SuratController::class, 'edit'])->name('surat.edit');
     Route::put('/surat/{surat}', [SuratController::class, 'update'])->name('surat.update');
 
-    Route::middleware('permission:user.manage')->group(function () {
+    Route::middleware('permission:user_role.manage')->group(function () {
         Route::get('/pengguna', [PenggunaController::class, 'index'])->name('pengguna.index');
         Route::get('/pengguna/create', [PenggunaController::class, 'create'])->name('pengguna.create');
         Route::post('/pengguna', [PenggunaController::class, 'store'])->name('pengguna.store');
@@ -100,7 +100,7 @@ Route::middleware(['auth', 'active'])->group(function () {
         Route::post('/surat/{surat}/upload-arsip', [SuratController::class, 'uploadArsip'])->name('surat.upload-arsip');
     });
 
-    Route::middleware('permission:role.manage')->group(function () {
+    Route::middleware('permission:user_role.manage')->group(function () {
         Route::get('/role', [RoleController::class, 'index'])->name('role.index');
         Route::get('/role/create', [RoleController::class, 'create'])->name('role.create');
         Route::post('/role', [RoleController::class, 'store'])->name('role.store');

@@ -11,8 +11,7 @@ class PermissionSeeder extends Seeder
     public function run(): void
     {
         DB::table('permissions')->insertOrIgnore([
-            ['nama_permission' => 'Kelola Role & Hak Akses', 'kode_permission' => 'role.manage', 'created_at' => now(), 'updated_at' => now()],
-            ['nama_permission' => 'Kelola Pengguna', 'kode_permission' => 'user.manage', 'created_at' => now(), 'updated_at' => now()],
+            ['nama_permission' => 'Kelola Pengguna & Role', 'kode_permission' => 'user_role.manage', 'created_at' => now(), 'updated_at' => now()],
             ['nama_permission' => 'Kelola Pengaturan Kop Surat', 'kode_permission' => 'kopsurat.manage', 'created_at' => now(), 'updated_at' => now()],
             ['nama_permission' => 'Kelola Template Surat', 'kode_permission' => 'template.manage', 'created_at' => now(), 'updated_at' => now()],
             ['nama_permission' => 'Buat Surat Baru', 'kode_permission' => 'surat.create', 'created_at' => now(), 'updated_at' => now()],
@@ -20,6 +19,7 @@ class PermissionSeeder extends Seeder
             ['nama_permission' => 'Kelola Arsip Digital', 'kode_permission' => 'arsip.manage', 'created_at' => now(), 'updated_at' => now()],
             ['nama_permission' => 'Lihat Log Aktivitas Sistem', 'kode_permission' => 'log.view', 'created_at' => now(), 'updated_at' => now()],
             ['nama_permission' => 'Kelola Kriteria Retensi Arsip', 'kode_permission' => 'retensi.manage', 'created_at' => now(), 'updated_at' => now()],
+            ['nama_permission' => 'Evaluasi Retensi Arsip', 'kode_permission' => 'retensi.evaluate', 'created_at' => now(), 'updated_at' => now()],
         ]);
     }
 }
