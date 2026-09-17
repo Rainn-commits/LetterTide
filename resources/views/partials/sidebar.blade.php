@@ -62,6 +62,13 @@
             'icon' => 'users',
         ],
         [
+            'label' => 'Kelola Kriteria Retensi',
+            'route' => 'retensi-kriteria.index',
+            'active' => request()->routeIs('retensi-kriteria.*'),
+            'roles' => ['Super Admin'],
+            'icon' => 'kriteria',
+        ],
+        [
             'label' => 'Log Aktivitas Sistem',
             'route' => 'log-aktivitas.index',
             'active' => request()->routeIs('log-aktivitas.*'),
@@ -134,6 +141,9 @@
                             <circle cx="20" cy="14" r="2" stroke="currentColor" stroke-width="1.6"/>
                         </svg>
                         @break
+                    @case('kriteria')
+                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 6h16M4 12h10M4 18h6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><circle cx="19" cy="12" r="2" stroke="currentColor" stroke-width="1.6"/><circle cx="17" cy="18" r="2" stroke="currentColor" stroke-width="1.6"/></svg>
+                        @break    
                     @case('archive-clock')
                         <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" width="20" height="20">
                             <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>

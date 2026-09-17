@@ -12,6 +12,7 @@
     font-weight: 700;
     margin-bottom: 6px;
     color: var(--color-ink);
+    text-shadow: 0 2px 8px rgba(255, 255, 255, 0.95);
 }
 
 .rk-page__subtitle {
@@ -46,33 +47,44 @@
 .rk-total-bobot--ok    { background: var(--color-success-bg); color: var(--color-success); }
 .rk-total-bobot--warn  { background: var(--color-warning-bg); color: var(--color-warning); }
 
+.rk-table-container {
+    width: 100%;
+    background: var(--color-white);
+    border-radius: var(--radius-lg);
+    padding: 1rem;
+    box-sizing: border-box;
+    border: 1px solid var(--color-border);
+    box-shadow: var(--shadow-card);
+    overflow: hidden;
+    animation: fadeSlideUp 0.4s var(--ease);
+}
+
 .rk-table {
     width: 100%;
     border-collapse: collapse;
     background: var(--color-white);
-    border-radius: var(--radius-lg);
-    overflow: hidden;
-    box-shadow: var(--shadow-card);
-    animation: fadeSlideUp 0.4s var(--ease);
 }
 
 .rk-table th {
-    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
-    color: #fff;
-    text-align: left;
-    padding: 14px 18px;
+    background: var(--color-bg-tint);
+    color: var(--color-ink);
+    text-align: center;
+    padding: 14px 16px;
     font-size: 13px;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.03em;
     white-space: nowrap;
+    border-bottom: 2px solid var(--color-border);
 }
 
 .rk-table td {
-    padding: 14px 18px;
+    padding: 14px 16px;
     font-size: 13.5px;
+    text-align: center;
     border-bottom: 1px solid var(--color-border);
-    color: var(--color-ink-soft);
+    color: var(--color-ink);
+    vertical-align: middle;
 }
 
 .rk-table tbody tr {
@@ -95,13 +107,23 @@
     font-weight: 700;
 }
 
-.rk-tipe-badge--benefit { background: var(--color-bg-tint-2); color: var(--color-primary-darker); }
-.rk-tipe-badge--cost    { background: #FDF0E6; color: #B85C00; }
+.rk-tipe-badge--benefit {
+    background: #DDF8EF;
+    color: #009B72;
+    border: 1px solid #8BE3C5;
+}
+
+.rk-tipe-badge--cost {
+    background: #FFE4C7;
+    color: #D45B00;
+    border: 1px solid #FFAD66;
+}
 
 .rk-bobot-form {
     display: flex;
-    gap: 8px;
+    justify-content: center;
     align-items: center;
+    gap: 8px;
     flex-wrap: wrap;
 }
 
@@ -110,6 +132,7 @@
     padding: 7px 10px;
     border: 1.5px solid var(--color-border);
     border-radius: var(--radius-sm);
+    text-align: center;
     transition: border-color var(--transition-fast);
 }
 
@@ -137,10 +160,12 @@
 
 @media (max-width: 720px) {
     .rk-page { padding: 16px; }
-    .rk-table {
-        display: block;
+    .rk-table-container {
         overflow-x: auto;
-        white-space: nowrap;
         -webkit-overflow-scrolling: touch;
+    }
+
+    .rk-table {
+        min-width: 700px;
     }
 }

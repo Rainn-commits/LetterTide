@@ -54,8 +54,13 @@
 .card--table {
   max-width: 1000px;
   margin: 0 auto;
-  padding: 0;
+  padding: 1rem;
+  background: var(--color-white);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-border);
+  box-shadow: var(--shadow-card);
   overflow: hidden;
+  animation: fadeSlideUp 0.4s var(--ease);
 }
 
 .btn-teal {
@@ -382,3 +387,4 @@ s
     gap: 12px !important;
   }
 }
+
