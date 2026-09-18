@@ -48,7 +48,7 @@
             'active' => request()->routeIs('arsip.*'),
             'roles' => ['Super Admin', 'Admin', 'User'],
             'icon' => 'archive',
-
+            'permission' => 'arsip.manage',
         ],
         [
             'label' => 'Pengaturan Kop Surat',
@@ -64,7 +64,7 @@
             'active' => request()->routeIs('pengguna.*') || request()->routeIs('role.*'),
             'roles' => ['Super Admin', 'Admin'],
             'icon' => 'users',
-            'permission' => 'user_role.manage',
+            'permission' => 'role.manage',
         ],
         [
             'label' => 'Retensi Arsip',
@@ -73,6 +73,7 @@
                     || request()->routeIs('evaluasi-retensi.*'),
             'roles' => ['Super Admin', 'Admin', 'User'],
             'icon' => 'archive-clock',
+            'permission' => 'retensi.evaluate',
         ],
         [
             'label' => 'Log Aktivitas Sistem',

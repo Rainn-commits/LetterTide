@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
@@ -17,26 +16,27 @@ class RolePermissionSeeder extends Seeder
         $permissions = DB::table('permissions')->pluck('id', 'kode_permission');
 
         $data = [
-            ['role_id' => $superAdmin, 'permission_id' => $permissions['role.manage']],
-            ['role_id' => $superAdmin, 'permission_id' => $permissions['user.manage']],
-            ['role_id' => $superAdmin, 'permission_id' => $permissions['kopsurat.manage']],
-            ['role_id' => $superAdmin, 'permission_id' => $permissions['template.manage']],
             ['role_id' => $superAdmin, 'permission_id' => $permissions['surat.create']],
-            ['role_id' => $superAdmin, 'permission_id' => $permissions['surat.print']],
+            ['role_id' => $superAdmin, 'permission_id' => $permissions['template.manage']],
             ['role_id' => $superAdmin, 'permission_id' => $permissions['arsip.manage']],
+            ['role_id' => $superAdmin, 'permission_id' => $permissions['kopsurat.manage']],
+            ['role_id' => $superAdmin, 'permission_id' => $permissions['role.manage']],
+            ['role_id' => $superAdmin, 'permission_id' => $permissions['retensi.evaluate']],
             ['role_id' => $superAdmin, 'permission_id' => $permissions['retensi.manage']],
+            ['role_id' => $superAdmin, 'permission_id' => $permissions['log.view']],
 
-            ['role_id' => $admin, 'permission_id' => $permissions['user.manage']],
-            ['role_id' => $admin, 'permission_id' => $permissions['kopsurat.manage']],
-            ['role_id' => $admin, 'permission_id' => $permissions['template.manage']],
             ['role_id' => $admin, 'permission_id' => $permissions['surat.create']],
-            ['role_id' => $admin, 'permission_id' => $permissions['surat.print']],
+            ['role_id' => $admin, 'permission_id' => $permissions['template.manage']],
             ['role_id' => $admin, 'permission_id' => $permissions['arsip.manage']],
+            ['role_id' => $admin, 'permission_id' => $permissions['kopsurat.manage']],
+            ['role_id' => $admin, 'permission_id' => $permissions['role.manage']],
+            ['role_id' => $admin, 'permission_id' => $permissions['retensi.evaluate']],
+            ['role_id' => $admin, 'permission_id' => $permissions['log.view']],
 
-            ['role_id' => $user, 'permission_id' => $permissions['template.manage']],
             ['role_id' => $user, 'permission_id' => $permissions['surat.create']],
-            ['role_id' => $user, 'permission_id' => $permissions['surat.print']],
+            ['role_id' => $user, 'permission_id' => $permissions['template.manage']],
             ['role_id' => $user, 'permission_id' => $permissions['arsip.manage']],
+            ['role_id' => $user, 'permission_id' => $permissions['retensi.evaluate']],
         ];
 
         foreach ($data as $row) {
