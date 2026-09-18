@@ -37,7 +37,7 @@ class ProfileController extends Controller
                 'string', 
                 'email', 
                 'max:255', 
-                Rule::unique('users')->ignore($user->id) // Email harus unik, tapi abaikan email milik sendiri
+                Rule::unique('users')->ignore($user->id)
             ];
         }
 

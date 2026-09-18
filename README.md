@@ -29,12 +29,12 @@ Sebelum adanya sistem ini, proses persuratan dilakukan secara manual menggunakan
 
 LetterTide menyelesaikan masalah tersebut dengan:
 
-- **Template surat dinamis** — format surat dibuat sekali, lalu dipakai berulang hanya dengan mengisi data yang berubah.
-- **Penomoran otomatis** — nomor surat digenerate sistem, tidak diketik manual.
-- **Tanda tangan digital** — surat yang disetujui memperoleh QR Code yang dapat dipindai untuk verifikasi.
-- **Arsip terpusat** — seluruh surat keluar otomatis tersimpan dalam bentuk PDF, ditambah arsip surat masuk dari pihak luar.
-- **Audit trail** — setiap aksi penting tercatat pada Log Aktivitas Sistem.
-- **Evaluasi retensi arsip** — sistem merekomendasikan status penyimpanan arsip (Musnah / Simpan Lokal / Permanen) berdasarkan perhitungan skor dengan metode TOPSIS + AHP.
+- **Template surat dinamis** - format surat dibuat sekali, lalu dipakai berulang hanya dengan mengisi data yang berubah.
+- **Penomoran otomatis** - nomor surat digenerate sistem, tidak diketik manual.
+- **Tanda tangan digital** - surat yang disetujui memperoleh QR Code yang dapat dipindai untuk verifikasi.
+- **Arsip terpusat** - seluruh surat keluar otomatis tersimpan dalam bentuk PDF, ditambah arsip surat masuk dari pihak luar.
+- **Audit trail** - setiap aksi penting tercatat pada Log Aktivitas Sistem.
+- **Evaluasi retensi arsip** - sistem merekomendasikan status penyimpanan arsip (Musnah/Simpan Lokal/Permanen) berdasarkan perhitungan skor dengan metode TOPSIS + AHP.
 
 ---
 
@@ -44,7 +44,7 @@ LetterTide menyelesaikan masalah tersebut dengan:
 |---|---|
 | Framework Backend | Laravel 13 |
 | Bahasa | PHP 8.3+ |
-| Database | MySQL / MariaDB |
+| Database | MySQL/MariaDB |
 | Build Tool Frontend | Vite + Laravel Vite Plugin |
 | Styling | Tailwind CSS v4 dan CSS kustom per fitur |
 | Font | Playfair Display (judul) dan Inter (isi) |
@@ -56,9 +56,9 @@ LetterTide menyelesaikan masalah tersebut dengan:
 
 ## Struktur Hak Akses (Role)
 
-Sistem memiliki tiga role bawaan. Role bersifat **dinamis** — Super Admin dapat membuat role baru dan mengatur hak akses per modul tanpa mengubah kode program.
+Sistem memiliki tiga role bawaan. Role bersifat **dinamis** - Super Admin dapat membuat role baru dan mengatur hak akses per modul tanpa mengubah kode program.
 
-| Modul / Fitur | Super Admin | Admin | User |
+| Modul/Fitur | Super Admin | Admin | User |
 |---|:---:|:---:|:---:|
 | Dashboard | Ya | Ya | Ya |
 | Kelola Profil Sendiri | Ya | Ya | Ya |
@@ -66,7 +66,7 @@ Sistem memiliki tiga role bawaan. Role bersifat **dinamis** — Super Admin dapa
 | Template Surat | Ya | Ya | Ya |
 | Arsip Digital | Ya | Ya | Terbatas (surat sendiri) |
 | Retensi Arsip | Ya | Ya | Terbatas (surat sendiri) |
-| Pengaturan Kop Sura | Ya | Ya | Tidak |
+| Pengaturan Kop Surat | Ya | Ya | Tidak |
 | Kelola Pengguna | Ya | Ya | Tidak |
 | Kelola Role dan Hak Akses | Ya | Tidak | Tidak |
 | Log Aktivitas Sistem | Ya (penuh) | Ya (tanpa modul Role) | Tidak |
@@ -115,9 +115,9 @@ Beberapa pembatasan diterapkan agar struktur wewenang tidak dapat disalahgunakan
 
 Tampilan berbeda untuk tiap role, namun dengan gaya visual yang seragam:
 
-- **Super Admin** — Total Surat, Surat Bulan Ini, Total Pengguna, Total Role, grafik Traffic Surat 6 bulan terakhir, dan panel Aktivitas Terbaru dengan pencarian.
-- **Admin** — sama seperti Super Admin tanpa kartu Total Role.
-- **User** — kartu Surat Saya, tombol pintas Buat Surat Baru, grafik surat pribadi, dan Riwayat Terakhir.
+- **Super Admin** - Total Surat, Surat Bulan Ini, Total Pengguna, Total Role, grafik Traffic Surat 6 bulan terakhir, dan panel Aktivitas Terbaru dengan pencarian.
+- **Admin** - sama seperti Super Admin tanpa kartu Total Role.
+- **User** - kartu Surat Saya, tombol pintas Buat Surat Baru, grafik surat pribadi, dan Riwayat Terakhir.
 
 ### 3. Kelola Profil
 
@@ -167,16 +167,16 @@ Nomor urut dihitung per template per bulan, dan kode template diambil dari inisi
 
 Menu Buat Surat memiliki dua tab:
 
-- **Buat Surat Baru** — pemilihan template.
-- **Riwayat Surat Saya** — daftar surat yang dibuat oleh pengguna yang sedang login, lengkap dengan pencarian, filter tanggal, filter template, serta aksi lihat, edit, cetak, dan hapus.
+- **Buat Surat Baru** - pemilihan template.
+- **Riwayat Surat Saya** - daftar surat yang dibuat oleh pengguna yang sedang login, lengkap dengan pencarian, filter tanggal, filter template, serta aksi lihat, edit, cetak, dan hapus.
 
 ### 6. Preview, Cetak, dan PDF
 
 Tiga keluaran ini dijaga agar **identik**: ukuran kertas A4 (210 x 297 mm) dengan margin 30 mm di keempat sisi.
 
-- **Preview** — tampilan surat di dalam aplikasi.
-- **Cetak** — halaman siap cetak yang langsung membuka dialog print browser.
-- **PDF Arsip** — dibuat otomatis oleh sistem dan tersimpan ke storage.
+- **Preview** - tampilan surat di dalam aplikasi.
+- **Cetak** - halaman siap cetak yang langsung membuka dialog print browser.
+- **PDF Arsip** - dibuat otomatis oleh sistem dan tersimpan ke storage.
 
 PDF arsip di-generate ulang secara otomatis pada tiga kondisi: saat surat dibuat, saat isi surat diubah, dan saat surat ditandatangani secara digital.
 
@@ -184,7 +184,7 @@ PDF arsip di-generate ulang secara otomatis pada tiga kondisi: saat surat dibuat
 
 - Surat yang disetujui memperoleh QR Code yang mengarah ke halaman detail surat, sehingga keaslian surat dapat diverifikasi dengan memindainya.
 - QR Code digenerate secara lokal oleh server, bukan mengambil dari layanan luar, agar tetap muncul konsisten pada Preview, Cetak, maupun PDF.
-- Surat yang belum disetujui menampilkan keterangan "(Belum Menyetujui / Ditandatangani)".
+- Surat yang belum disetujui menampilkan keterangan "(Belum Menyetujui/Ditandatangani)".
 - Persetujuan hanya dapat dilakukan oleh pengguna yang ditunjuk sebagai penandatangan, atau oleh Admin/Super Admin.
 
 ### 8. Pengaturan Kop Surat
@@ -198,8 +198,8 @@ PDF arsip di-generate ulang secara otomatis pada tiga kondisi: saat surat dibuat
 
 Terbagi menjadi dua folder:
 
-- **Surat Keluar** — seluruh surat yang dibuat melalui sistem, otomatis masuk ke sini beserta file PDF-nya.
-- **Surat Masuk** — arsip dokumen dari pihak luar, diinput manual (nomor surat pengirim, instansi asal, perihal, tanggal, dan file).
+- **Surat Keluar** - seluruh surat yang dibuat melalui sistem, otomatis masuk ke sini beserta file PDF-nya.
+- **Surat Masuk** - arsip dokumen dari pihak luar, diinput manual (nomor surat pengirim, instansi asal, perihal, tanggal, dan file).
 
 Fitur pendukung: pencarian, filter tanggal, filter template, filter status file, dan filter cakupan surat (semua surat atau surat buatan sendiri, khusus Admin/Super Admin).
 
@@ -228,7 +228,7 @@ Kedua modul digabung dalam satu menu. Super Admin melihat dua tab (Pengguna dan 
 
 Audit trail yang mencatat aksi penting beserta pelaku dan waktunya. Modul yang tercatat meliputi Surat, Surat Masuk, Template Surat, Kop Surat, Pengguna, dan Role.
 
-Log bersifat **hanya-baca** — tidak ada fitur edit maupun hapus, sehingga jejak aktivitas tetap dapat dipercaya sebagai bukti. Admin dapat mengakses log, kecuali entri dengan modul "Role".
+Log bersifat **hanya-baca** - tidak ada fitur edit maupun hapus, sehingga jejak aktivitas tetap dapat dipercaya sebagai bukti. Admin dapat mengakses log, kecuali entri dengan modul "Role".
 
 Data sensitif seperti password tidak pernah dicatat pada log.
 
@@ -241,9 +241,9 @@ Fitur pendukung keputusan untuk menentukan masa simpan arsip menggunakan metode 
 | Kode | Kriteria | Tipe | Bobot Bawaan |
 |---|---|---|---|
 | K1 | Nilai Guna Dokumen | Benefit | 0.4 |
-| K2 | Sifat / Kerahasiaan Surat | Benefit | 0.3 |
-| K3 | Masa Simpan / Umur Surat | Cost | 0.2 |
-| K4 | Frekuensi Akses / Download | Benefit | 0.1 |
+| K2 | Sifat/Kerahasiaan Surat | Benefit | 0.3 |
+| K3 | Masa Simpan/Umur Surat | Cost | 0.2 |
+| K4 | Frekuensi Akses/Download | Benefit | 0.1 |
 
 K3 bertipe *cost*, artinya semakin lama sebuah arsip tersimpan, semakin rendah skornya dan semakin condong ke rekomendasi Musnah. K4 dihitung otomatis dari jumlah akses surat, sedangkan K1 dan K2 diisi manual oleh pengguna.
 
@@ -264,9 +264,11 @@ Bobot tiap kriteria dapat diubah melalui menu Kelola Kriteria Retensi, dengan to
 3. Hasil berstatus **Menunggu Validasi** hingga disetujui Admin/Super Admin.
 4. Admin/Super Admin melakukan validasi, dan status berubah menjadi **Tervalidasi**.
 
-**Pembatasan tampilan:** User tidak melihat kolom skor maupun status rekomendasi (Musnah / Simpan Lokal / Permanen). User hanya melihat status prosesnya: Belum Dievaluasi, Menunggu Validasi, atau Tervalidasi. Keputusan retensi merupakan wewenang administratif.
+**Pembatasan tampilan:** User tidak melihat kolom skor maupun status rekomendasi (Musnah/Simpan Lokal/Permanen). User hanya melihat status prosesnya: Belum Dievaluasi, Menunggu Validasi, atau Tervalidasi. Keputusan retensi merupakan wewenang administratif.
 
 Halaman ini dilengkapi pencarian, filter tanggal, filter template, filter status evaluasi, dan pengurutan (tanggal, jumlah akses, serta skor untuk Admin/Super Admin).
+
+**Hak Akses Kelola Kriteria:** Pengisian evaluasi retensi dapat dilakukan oleh seluruh role (Super Admin, Admin, dan User). Namun, pengaturan kriteria dan bobot penilaian (K1–K4) secara khusus hanya dapat diakses oleh Super Admin.
 
 ---
 
@@ -355,7 +357,7 @@ Catatan: kolom `template_id` dan `kop_surat_id` pada tabel `surat` bersifat *nul
 - PHP 8.3 atau lebih baru
 - Composer
 - Node.js dan NPM
-- MySQL / MariaDB
+- MySQL/MariaDB
 - **Ekstensi PHP GD dalam keadaan aktif** (wajib, dipakai untuk resize logo kop surat dan pembuatan PDF)
 
 Cara memastikan GD aktif:

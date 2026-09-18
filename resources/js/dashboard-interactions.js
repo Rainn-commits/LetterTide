@@ -1,7 +1,6 @@
 document.addEventListener('DOMContentLoaded', function () {
 
     var searchInput = document.getElementById('activitySearch');
-    // FIX: Samakan selector dengan class HTML di Blade (.activity-feed__item)
     var activityItems = document.querySelectorAll('.activity-feed__item');
     var searchEmptyMsg = document.getElementById('activitySearchEmpty');
 
@@ -13,7 +12,6 @@ document.addEventListener('DOMContentLoaded', function () {
             activityItems.forEach(function (item) {
                 var matches = item.textContent.toLowerCase().includes(query);
                 
-                // FIX: Langsung kontrol style display agar pasti tersembunyi/tampil
                 if (matches) {
                     item.style.display = 'flex';
                     visibleCount++;
@@ -28,7 +26,6 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // Traffic Chart Click Event
     var trafficCols = document.querySelectorAll('.traffic-chart-pro__col');
     var trafficDetail = document.getElementById('trafficDetail');
 

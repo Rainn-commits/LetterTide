@@ -17,7 +17,7 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained('users');
             $table->foreignId('kop_surat_id')->constrained('pengaturan_kop_surat');
             $table->string('nomor_surat', 50)->unique();
-            $table->string('jenis', 20); // 'Masuk' / 'Keluar'
+            $table->string('jenis', 20);
             $table->date('tanggal_surat');
             $table->string('file_arsip', 255)->nullable();
             $table->timestamps();

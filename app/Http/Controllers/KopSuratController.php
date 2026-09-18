@@ -48,7 +48,6 @@ class KopSuratController extends Controller
             'website'   => ['nullable', 'string', 'max:100'],
         ]);
 
-        // Kop surat baru selalu dimulai dari versi 1.
         $versiBaru = 1;
 
         if ($request->hasFile('logo')) {
@@ -109,7 +108,6 @@ class KopSuratController extends Controller
             $logoPath = $kopSurat->logo;
         }
 
-        // Edit membuat versi baru dari kop surat yang sedang diedit.
         $versiBaru = $kopSurat->versi + 1;
 
         PengaturanKopSurat::create([
@@ -148,7 +146,6 @@ class KopSuratController extends Controller
             Storage::disk('public')->delete($kopSurat->logo);
         }
 
-        // Hard delete.
         $kopSurat->delete();
 
         LogAktivitas::catat(

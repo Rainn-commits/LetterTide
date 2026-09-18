@@ -32,7 +32,6 @@
             'active' => request()->routeIs('surat.*'),
             'roles' => ['Super Admin', 'Admin', 'User'],
             'icon' => 'mail',
-            'permission' => 'arsip.manage',
             'permission' => 'surat.create',
         ],
         [
@@ -74,7 +73,6 @@
                     || request()->routeIs('evaluasi-retensi.*'),
             'roles' => ['Super Admin', 'Admin', 'User'],
             'icon' => 'archive-clock',
-            'permission' => 'retensi.evaluate',
         ],
         [
             'label' => 'Log Aktivitas Sistem',
@@ -97,16 +95,18 @@
 
     <nav class="sidebar__nav">
         @foreach ($menuItems as $item)
-            @continue(
-                $roleName &&
-                (
-                    !in_array($roleName, $item['roles']) ||
-                    (isset($item['permission']) && !auth()->user()->role?->permissions->contains('kode_permission', $item['permission']))
+            {{-- 1. Cek apakah role pengguna ada di daftar 'roles' menu --}}
+            @continue($roleName && !in_array($roleName, $item['roles']))
+
+            {{-- 2. Cek permission khusus jika item memiliki atribut 'permission' --}}
+            @if (isset($item['permission']))
+                @continue(
+                    !auth()->user()->role?->permissions->contains('kode_permission', $item['permission'])
                 )
-            )
+            @endif
 
             <a href="{{ Route::has($item['route']) ? route($item['route']) : url('/dashboard') }}"
-               class="sidebar__link {{ $item['active'] ? 'is-active' : '' }}">
+            class="sidebar__link {{ $item['active'] ? 'is-active' : '' }}">
                 
                 @switch($item['icon'])
                     @case('grid')
@@ -117,7 +117,7 @@
                             <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
                             <circle cx="12" cy="7" r="4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
                         </svg>
-                    @break
+                        @break
                     @case('mail')
                         <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 6.5C3 5.67 3.67 5 4.5 5H19.5C20.33 5 21 5.67 21 6.5V17.5C21 18.33 20.33 19 19.5 19H4.5C3.67 19 3 18.33 3 17.5V6.5Z" stroke="currentColor" stroke-width="1.6"/><path d="M4 6.5L12 13L20 6.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
                         @break
@@ -144,7 +144,7 @@
                             <path d="M12 10v4l2 2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                         </svg>
                         @break
-                     @case('log')
+                    @case('log')
                         <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M4 21V14M4 10V3M12 21V12M12 8V3M20 21V16M20 12V3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
                             <circle cx="4" cy="12" r="2" stroke="currentColor" stroke-width="1.6"/>

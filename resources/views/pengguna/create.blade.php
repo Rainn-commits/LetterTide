@@ -9,7 +9,7 @@
     <h2>Tambah Pengguna</h2>
 
     @if($errors->any())
-        <div class="alert-message alert-danger">{{ $errors->first() }}</div> <!-- // Notifikasi error yang lebih rapi -->
+        <div class="alert-message alert-danger">{{ $errors->first() }}</div> 
     @endif
 
     <div class="form-card"> 
@@ -18,7 +18,7 @@
             
             <div class="form-group">
                 <label>Nama:</label>
-                <input type="text" name="name" class="form-control-pengguna" value="{{ old('name') }}" required> <!-- // Menghapus tag <br> dan memberi kelas input -->
+                <input type="text" name="name" class="form-control-pengguna" value="{{ old('name') }}" required> 
             </div>
 
             <div class="form-group">
@@ -43,7 +43,7 @@
                 </select>
             </div>
 
-            <button type="submit" class="btn-pengguna btn-primary-pengguna">Simpan</button> <!-- // Mengubah tombol submit -->
+            <button type="submit" class="btn-pengguna btn-primary-pengguna">Simpan</button>
         </form>
     </div>
 </div>
