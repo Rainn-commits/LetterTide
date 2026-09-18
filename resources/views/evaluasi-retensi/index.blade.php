@@ -8,17 +8,17 @@
 
 @section('content')
 
-    <div class="retensi-tabs">
-        @if (auth()->user()->role->nama_role === 'Super Admin')
+    @if (auth()->user()->role?->nama_role === 'Super Admin')
+        <div class="retensi-tabs">
             <a href="{{ route('retensi-kriteria.index') }}" class="retensi-tabs__link">
                 Kelola Kriteria Retensi
             </a>
-        @endif
 
-        <a href="{{ route('evaluasi-retensi.index') }}" class="retensi-tabs__link is-active">
-            Evaluasi Retensi Arsip
-        </a>
-    </div>
+            <a href="{{ route('evaluasi-retensi.index') }}" class="retensi-tabs__link is-active">
+                Evaluasi Retensi Arsip
+            </a>
+        </div>
+    @endif
 
     @php
         $isPrivileged = in_array(auth()->user()->role->nama_role ?? '', ['Super Admin', 'Admin']);

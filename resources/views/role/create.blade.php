@@ -25,12 +25,30 @@
                 <label>Hak Akses:</label>
                 <div class="permission-grid">
                     @foreach($permissions as $permission)
+                        @if(in_array($permission->kode_permission, ['retensi.evaluate', 'retensi.manage']))
+                            @continue
+                        @endif
+
                         <label class="permission-item">
                             <input type="checkbox" name="permissions[]" value="{{ $permission->id }}"
                                 {{ in_array($permission->id, old('permissions', [])) ? 'checked' : '' }}>
                             <span>{{ $permission->nama_permission }}</span>
                         </label>
                     @endforeach
+
+                    @php
+                        $retensiEvaluate = $permissions->firstWhere('kode_permission', 'retensi.evaluate');
+                        $retensiChecked = $retensiEvaluate
+                            && in_array($retensiEvaluate->id, old('permissions', []));
+                    @endphp
+
+                    <label class="permission-item">
+                        <input type="checkbox"
+                            name="retensi_arsip"
+                            value="1"
+                            {{ $retensiChecked ? 'checked' : '' }}>
+                        <span>Retensi Arsip</span>
+                    </label>
                 </div>
             </div>
 

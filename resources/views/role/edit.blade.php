@@ -29,17 +29,33 @@
             <div class="form-field">
                 <label>Hak Akses untuk {{ $role->nama_role }}:</label>
                 <div class="permission-grid">
+
+                    @php
+                        $checkedList = old('permissions', $permissionTerpilih);
+
+                        $retensiEvaluate = $permissions->firstWhere('kode_permission', 'retensi.evaluate');
+                        $retensiChecked = $retensiEvaluate
+                            && in_array($retensiEvaluate->id, $checkedList);
+                    @endphp
+
                     @foreach($permissions as $permission)
+                        @if(in_array($permission->kode_permission, ['retensi.evaluate', 'retensi.manage']))
+                            @continue
+                        @endif
+
                         @php
-                            $checkedList = old('permissions', $permissionTerpilih);
                             $isChecked = in_array($permission->id, $checkedList);
-                            $isLockedRoleManage = $role->nama_role === 'Super Admin' && $permission->kode_permission === 'role.manage';
+                            $isLockedRoleManage = $role->nama_role === 'Super Admin'
+                                && $permission->kode_permission === 'role.manage';
                         @endphp
+
                         <label class="permission-item {{ $isLockedRoleManage ? 'permission-item--locked' : '' }}">
                             <input type="checkbox" name="permissions[]" value="{{ $permission->id }}"
                                 {{ $isChecked ? 'checked' : '' }}
                                 {{ $isLockedRoleManage ? 'disabled' : '' }}>
+
                             <span>{{ $permission->nama_permission }}</span>
+
                             @if($isLockedRoleManage)
                                 <small class="permission-item__note">(wajib untuk Super Admin)</small>
                             @endif
@@ -49,6 +65,15 @@
                             <input type="hidden" name="permissions[]" value="{{ $permission->id }}">
                         @endif
                     @endforeach
+
+                    <label class="permission-item">
+                        <input type="checkbox"
+                            name="retensi_arsip"
+                            value="1"
+                            {{ $retensiChecked ? 'checked' : '' }}>
+                        <span>Retensi Arsip</span>
+                    </label>
+
                 </div>
             </div>
 
