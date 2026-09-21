@@ -193,6 +193,7 @@ PDF arsip di-generate ulang secara otomatis pada tiga kondisi: saat surat dibuat
 - Tersedia **Live Preview** saat mengisi form, serta **halaman Preview** untuk melihat kembali kop surat versi aktif maupun versi lama pada simulasi surat utuh.
 - Logo yang diunggah **otomatis diseragamkan** ke kanvas 400 x 150 piksel dengan latar putih, sehingga proporsi kop surat konsisten berapapun ukuran file aslinya.
 - Riwayat versi ditampilkan dalam tabel beserta aksi preview.
+- Pengaturan kop surat dengan dukungan status aktif dan versi kop surat.
 
 ### 9. Arsip Digital
 
@@ -378,8 +379,8 @@ Simpan, kemudian jalankan ulang server.
 
 ```bash
 # 1. Clone repository
-git clone https://github.com/Rainn-commits/LetterFlow.git
-cd LetterFlow
+git clone https://github.com/Rainn-commits/LetterTide.git
+cd LetterTide
 
 # 2. Install dependency backend
 composer install
@@ -396,6 +397,8 @@ php artisan storage:link
 ```
 
 ### Konfigurasi `.env`
+
+Sesuaikan konfigurasi database pada file `.env`:
 
 ```env
 APP_NAME=LetterTide
@@ -415,12 +418,6 @@ Pastikan `config/app.php` memakai zona waktu Indonesia agar tanggal dan jam pada
 
 ```php
 'timezone' => 'Asia/Jakarta',
-```
-
-### Migrasi dan Data Awal
-
-```bash
-php artisan migrate --seed
 ```
 
 ### Menjalankan Aplikasi
@@ -460,6 +457,8 @@ Password masing-masing akun dapat dilihat dan diubah pada `database/seeders/Data
 **Penting:** seeder memakai `updateOrCreate`, sehingga menjalankan `php artisan db:seed` kembali akan **menimpa** data akun tersebut dengan nilai yang tertulis pada file seeder, termasuk password yang mungkin sudah diubah melalui aplikasi. Hindari menjalankan seeder pada database yang sudah berisi data aktif.
 
 Segera ganti seluruh password bawaan sebelum aplikasi digunakan secara nyata.
+
+**Peringatan:** Seeder ditujukan untuk instalasi awal atau pengembangan. Jangan menjalankan `php artisan db:seed` atau `php artisan migrate --seed` pada database project yang sudah berisi data karena seeder menggunakan `updateOrCreate` dan dapat memperbarui data akun yang sudah ada.
 
 ---
 
