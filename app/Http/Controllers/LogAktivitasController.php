@@ -23,7 +23,10 @@ class LogAktivitasController extends Controller
         $query = LogAktivitas::with('user');
 
         if ($roleName !== 'Super Admin') {
-            $query->where('modul', '!=', 'Role');
+            $query->where(function ($q) {
+                $q->whereNotIn('modul', ['Role', 'Pengguna'])
+                ->orWhere('user_id', '!=', 1);
+            });
         }
 
         if ($request->filled('q')) {

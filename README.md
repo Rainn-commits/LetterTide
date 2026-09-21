@@ -69,8 +69,7 @@ Sistem memiliki tiga role bawaan. Role bersifat **dinamis** - Super Admin dapat 
 | Pengaturan Kop Surat | Ya | Ya | Tidak |
 | Kelola Pengguna | Ya | Ya | Tidak |
 | Kelola Role dan Hak Akses | Ya | Tidak | Tidak |
-| Log Aktivitas Sistem | Ya (penuh) | Ya (tanpa modul Role) | Tidak |
-
+| Log Aktivitas Sistem | Ya (penuh) | Ya (tanpa aktivitas Super Admin pada modul Role dan Pengguna) | Tidak |
 
 ### Daftar Kode Hak Akses (Permission)
 
@@ -229,7 +228,7 @@ Kedua modul digabung dalam satu menu. Super Admin melihat dua tab (Pengguna dan 
 
 Audit trail yang mencatat aksi penting beserta pelaku dan waktunya. Modul yang tercatat meliputi Surat, Surat Masuk, Template Surat, Kop Surat, Pengguna, dan Role.
 
-Log bersifat **hanya-baca** - tidak ada fitur edit maupun hapus, sehingga jejak aktivitas tetap dapat dipercaya sebagai bukti. Admin dapat mengakses log, kecuali entri dengan modul "Role".
+Log bersifat **hanya-baca** - tidak ada fitur edit maupun hapus, sehingga jejak aktivitas tetap dapat dipercaya sebagai bukti. Admin dapat mengakses log, tetapi tidak dapat melihat aktivitas Super Admin pada modul "Role" dan "Pengguna". Aktivitas pada modul lainnya tetap dapat ditampilkan sesuai hak akses.
 
 Data sensitif seperti password tidak pernah dicatat pada log.
 
