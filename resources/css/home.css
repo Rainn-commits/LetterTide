@@ -794,3 +794,33 @@ body,
     opacity: 0;
   }
 }
+
+@media (max-width: 1100px) {
+  .navbar {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+
+  .navbar__brand-name {
+    font-size: 21px;
+    white-space: nowrap;
+  }
+
+  .navbar__links {
+    gap: 12px;
+  }
+
+  .navbar__links a {
+    font-size: 16px;
+    white-space: nowrap;
+  }
+
+  .navbar__actions {
+    gap: 6px;
+  }
+
+  .navbar__login {
+    font-size: 14px;
+    padding: 7px 10px;
+  }
+}
