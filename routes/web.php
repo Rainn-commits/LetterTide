@@ -94,7 +94,7 @@ Route::middleware(['auth', 'active'])->group(function () {
         Route::post('/surat/create/{template}', [SuratController::class, 'store'])->name('surat.store');
     });
 
-    Route::middleware('permission:surat.print')->group(function () {
+    Route::middleware('permission:surat.create')->group(function () {
         Route::get('/surat/{surat}', [SuratController::class, 'show'])->name('surat.show');
         Route::get('/surat/{surat}/cetak', [SuratController::class, 'cetak'])->name('surat.cetak');
         Route::post('/surat/{surat}/upload-arsip', [SuratController::class, 'uploadArsip'])->name('surat.upload-arsip');

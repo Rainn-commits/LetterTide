@@ -4,14 +4,8 @@
     <meta charset="UTF-8">
     <title>{{ $surat->nomor_surat }}</title>
     <style>
-        
         @page {
             margin: 30mm;
-        }
-
-        .surat-paper {
-            width: 100%;
-            background: #ffffff;
         }
 
         body {
@@ -22,27 +16,34 @@
             margin: 0;
         }
 
-        .surat-paper__header {
-            display: block;
+        .surat-paper {
             width: 100%;
+            background: #ffffff;
+        }
+
+        .surat-paper__header-table {
+            width: 100%;
+            border-collapse: collapse;
             margin-bottom: 6px;
         }
 
+        .surat-paper__header-table td {
+            padding: 0;
+            vertical-align: middle;
+        }
+
         .surat-paper__logo-left {
-            display: inline-block;
-            width: 24%;
-            vertical-align: top;
+            width: 25%;
+            text-align: left;
         }
 
         .surat-paper__logo {
-            max-height: 85px;
+            max-height: 75px;
             width: auto;
         }
 
         .surat-paper__company-right {
-            display: inline-block;
-            width: 74%;
-            vertical-align: top;
+            width: 85%;
             text-align: right;
             color: #000000;
         }
@@ -57,6 +58,7 @@
         .surat-paper__company-right p {
             font-size: 9.5pt;
             margin: 1px 0;
+            line-height: 1.35;
         }
 
         .surat-paper__divider {
@@ -107,36 +109,37 @@
     </style>
 </head>
 <body>
-
     <div class="surat-paper">
-
         @if ($surat->kopSurat)
-            <div class="surat-paper__header">
-                <div class="surat-paper__logo-left">
-                    @if ($logoDataUri)
-                        <!-- <img src="{{ buildLogoDataUri($logoDataUri) }}" alt="Logo" class="surat-paper__logo"> -->
-                        <img src="{{ storage_path('app/public/' . $logoDataUri) }}" alt="Logo" class="surat-paper__logo">
-                    @endif
-                </div>
-
-                <div class="surat-paper__company-right">
-                    <h2>{{ $surat->kopSurat->nama_pt }}</h2>
-                    @if($surat->kopSurat->alamat)
-                        <p>{{ $surat->kopSurat->alamat }}</p>
-                    @endif
-                    <p>
-                        @if($surat->kopSurat->telepon)
-                            WhatsApp. +62 {{ ltrim($surat->kopSurat->telepon, '+62') }}
+            <table class="surat-paper__header-table">
+                <tr>
+                    <td class="surat-paper__logo-left">
+                        @if ($logoDataUri)
+                            <img src="{{ storage_path('app/public/' . $logoDataUri) }}" alt="Logo" class="surat-paper__logo">
                         @endif
-                        @if($surat->kopSurat->website)
-                            &nbsp;&middot;&nbsp; Website. {{ $surat->kopSurat->website }}
+                    </td>
+                    <td class="surat-paper__company-right">
+                        <h2>{{ $surat->kopSurat->nama_pt }}</h2>
+                        @php
+                            $alamatPt = $surat->kopSurat->alamat_pt ?? $surat->kopSurat->alamat ?? null;
+                        @endphp
+                        @if ($alamatPt)
+                            <p>{{ $alamatPt }}</p>
                         @endif
-                    </p>
-                    @if($surat->kopSurat->email)
-                        <p>Email: {{ $surat->kopSurat->email }}</p>
-                    @endif
-                </div>
-            </div>
+                        <p>
+                            @if ($surat->kopSurat->telepon)
+                                WhatsApp. +62 {{ ltrim($surat->kopSurat->telepon, '+62') }}
+                            @endif
+                            @if ($surat->kopSurat->website)
+                                &nbsp;&middot;&nbsp; Website. {{ $surat->kopSurat->website }}
+                            @endif
+                        </p>
+                        @if ($surat->kopSurat->email)
+                            <p>Email: {{ $surat->kopSurat->email }}</p>
+                        @endif
+                    </td>
+                </tr>
+            </table>
             <div class="surat-paper__divider"></div>
         @endif
 
@@ -169,7 +172,6 @@
             <div class="signature-box">
                 <div>Hormat Kami,</div>
                 <div>{{ $jabatanPenandatangan }}</div>
-
                 <div style="height: 90px;">
                     @if (strtolower($surat->status ?? '') === 'disetujui' && $qrDataUri)
                         <img src="{{ $qrDataUri }}" alt="QR TTD Digital" style="width: 70px; height: 70px;">
@@ -179,7 +181,6 @@
                         </p>
                     @endif
                 </div>
-
                 <div style="font-weight: bold; text-decoration: underline;">
                     {{ $namaPenandatangan }}
                 </div>
@@ -188,13 +189,10 @@
 
         @if ($isiLampiran !== null)
             <div style="page-break-before: always;"></div>
-
             <div class="surat-paper__body">
                 {!! $isiLampiran !!}
             </div>
         @endif
-
     </div>
-
 </body>
 </html>
