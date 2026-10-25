@@ -73,12 +73,19 @@ class PenggunaController extends Controller
     {
         $this->cegahEditSuperAdminOlehAdmin($pengguna);
 
-        $validated = $request->validate([
-            'name'     => ['required', 'string', 'max:100'],
-            'email'    => ['required', 'email', 'max:100', 'unique:users,email,' . $pengguna->id],
-            'role_id'  => ['required', 'exists:roles,id'],
-            'password' => ['nullable', 'string', 'min:8', 'confirmed'],
-        ]);
+        $isSuperAdmin = (auth()->user()->role->nama_role ?? '') === 'Super Admin';
+
+        $rules = [
+            'name'    => ['required', 'string', 'max:100'],
+            'email'   => ['required', 'email', 'max:100', 'unique:users,email,' . $pengguna->id],
+            'role_id' => ['required', 'exists:roles,id'],
+        ];
+
+        if ($isSuperAdmin) {
+            $rules['password'] = ['nullable', 'string', 'min:8', 'confirmed'];
+        }
+
+        $validated = $request->validate($rules);
 
         $this->cegahPenugasanSuperAdminTanpaIzin($validated['role_id']);
 
@@ -88,7 +95,7 @@ class PenggunaController extends Controller
             'role_id' => $validated['role_id'],
         ];
 
-        $passwordDiubah = !empty($validated['password']);
+        $passwordDiubah = $isSuperAdmin && !empty($validated['password']);
 
         if ($passwordDiubah) {
             $dataUpdate['password'] = Hash::make($validated['password']);

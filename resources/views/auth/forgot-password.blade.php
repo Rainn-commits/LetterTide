@@ -32,7 +32,7 @@
 
             <div class="forgot-card__state {{ session('reset_requested') ? '' : 'is-active' }}" id="state-contact">
             <img src="{{ asset('images/download.svg') }}" alt="Lupa password" class="forgot-card__icon">
-                <p class="forgot-card__message">Hubungi Admin untuk reset password</p>
+                <p class="forgot-card__message">Silakan hubungi Super Admin untuk melakukan reset password</p>
 
                 <form method="POST" action="{{ route('password.request.submit') }}">
                     @csrf
@@ -50,13 +50,13 @@
                         <small class="forgot-card__error">{{ $message }}</small>
                     @enderror
 
-                    <button type="submit" class="btn-contact-admin">Contact Admin</button>
+                    <button type="submit" class="btn-contact-admin">Contact Super Admin</button>
                 </form>
             </div>
 
             <div class="forgot-card__state {{ session('reset_requested') ? 'is-active' : '' }}" id="state-processing">
 <img src="{{ asset('images/download.svg') }}" alt="Lupa password" class="forgot-card__icon">
-                <p class="forgot-card__message">Admin memproses reset password</p>
+                <p class="forgot-card__message">Super Admin memproses reset password</p>
                 <p class="forgot-card__eta">1x24 Jam</p>
             </div>
 

@@ -27,6 +27,7 @@ export default defineConfig({
                 'resources/css/surat-riwayat.css',
                 'resources/css/surat-edit.css',
                 'resources/js/confirm-modal.js',
+                'resources/js/dashboard-interactions.js',
             ],
             refresh: true,
             fonts: [

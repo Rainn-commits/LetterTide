@@ -21,6 +21,10 @@
                 $unreadNotifications = auth()->user()->unreadNotifications;
             @endphp
 
+            <audio id="notifSound" preload="auto">
+                <source src="{{ asset('audio/notification.mp3') }}" type="audio/mpeg">
+            </audio>
+
             <div class="notification-wrapper">
                 <button type="button" class="topbar__bell" id="notifDropdownBtn" aria-label="Notifikasi">
                     <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -131,5 +135,33 @@
                 profileMenu.style.display = 'none';
             }
         });
+
+        const notifSound = document.getElementById('notifSound');
+        const badge = document.querySelector('.notification-badge');
+        
+        const currentCount = badge ? (parseInt(badge.innerText.trim()) || 0) : 0;
+        const lastCount = parseInt(localStorage.getItem('lettertide_unread_notif') || '0');
+
+        if (currentCount > lastCount && notifSound) {
+            const playAudio = () => {
+                notifSound.currentTime = 0;
+                notifSound.play().then(() => {
+                    console.log('Audio berhasil diputar!');
+                }).catch(err => {
+                    console.warn('Autoplay dicegat Chrome. Menunggu klik pertama dari user...', err);
+                    
+                    const playOnFirstClick = () => {
+                        notifSound.currentTime = 0;
+                        notifSound.play();
+                        document.removeEventListener('click', playOnFirstClick);
+                    };
+                    document.addEventListener('click', playOnFirstClick);
+                });
+            };
+
+            playAudio();
+        }
+
+        localStorage.setItem('lettertide_unread_notif', currentCount);
     });
 </script>

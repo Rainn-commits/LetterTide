@@ -18,7 +18,7 @@ class ForgotPasswordController extends Controller
         $user = User::where('email', $request->email)->first();
 
         $admins = User::whereHas('role', function ($q) {
-            $q->whereIn('nama_role', ['Admin', 'Super Admin']);
+            $q->whereIn('nama_role', ['Super Admin']);
         })->get();
 
         foreach ($admins as $admin) {
