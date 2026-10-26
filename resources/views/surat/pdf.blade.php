@@ -175,10 +175,6 @@
                 <div style="height: 90px;">
                     @if (strtolower($surat->status ?? '') === 'disetujui' && $qrDataUri)
                         <img src="{{ $qrDataUri }}" alt="QR TTD Digital" style="width: 70px; height: 70px;">
-                    @else
-                        <p style="color: #ef4444; font-size: 9pt; font-style: italic;">
-                            (Belum Menyetujui / Ditandatangani)
-                        </p>
                     @endif
                 </div>
                 <div style="font-weight: bold; text-decoration: underline;">

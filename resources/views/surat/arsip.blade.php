@@ -209,12 +209,11 @@
         <table class="template-table-modern"> 
             <thead> 
                 <tr> 
-                    <th style="width: 16%;">Nomor Surat</th>
-                    <th style="width: 20%;">{{ $folder === 'masuk' ? 'Perihal' : 'Template' }}</th>
-                    <th style="width: 12%;">{{ $folder === 'masuk' ? 'Diarsipkan Oleh' : 'Pembuat' }}</th>
-                    <th style="width: 10%;">Tanggal</th>
-                    <th style="width: 10%;">File Arsip</th>
-                    <th style="width: 12%;">Status</th>
+                    <th style="width: 18%;">Nomor Surat</th>
+                    <th style="width: 22%;">{{ $folder === 'masuk' ? 'Perihal' : 'Template' }}</th>
+                    <th style="width: 14%;">{{ $folder === 'masuk' ? 'Diarsipkan Oleh' : 'Pembuat' }}</th>
+                    <th style="width: 12%;">Tanggal</th>
+                    <th style="width: 14%;">File Arsip</th>
                     <th style="width: 20%; text-align: center;">Aksi</th>
                 </tr> 
             </thead> 
@@ -279,20 +278,6 @@
                             @endif 
                         </td> 
 
-                        {{-- STATUS --}}
-                        <td>
-                            @if (strtolower($surat->status ?? '') === 'disetujui')
-                                <span class="status-badge status-badge--signed">
-                                    Sudah Ditandatangani
-                                </span>
-                            @else
-                                <span class="status-badge status-badge--unsigned">
-                                    Belum Ditandatangani
-                                </span>
-                            @endif
-                        </td>
-
-                        {{-- AKSI --}}
                         <td> 
                             <div class="action-buttons-group-expanded"> 
                                 @if ($surat->jenis === 'Keluar') 
@@ -407,7 +392,7 @@
                     </tr> 
                 @empty 
                     <tr> 
-                        <td colspan="7" class="table-empty-state"> 
+                        <td colspan="6" class="table-empty-state"> 
                             @if ($folder === 'masuk') 
                                 Belum ada Surat Masuk. Klik "Tambah Surat Masuk" di atas untuk mengarsipkan surat dari pihak luar. 
                             @else 
@@ -426,3 +411,4 @@
         </div> 
     @endif 
 @endsection
+
