@@ -113,7 +113,7 @@ Route::middleware(['auth', 'active'])->group(function () {
         Route::get('/log-aktivitas', [LogAktivitasController::class, 'index'])->name('log-aktivitas.index');
     });
 
-    Route::middleware('permission:retensi.manage')->group(function () {
+    Route::middleware('permission:retensi.evaluate')->group(function () {
         Route::get('/retensi-kriteria', [RetensiKriteriaController::class, 'index'])->name('retensi-kriteria.index');
         Route::put('/retensi-kriteria/{retensiKriterion}', [RetensiKriteriaController::class, 'update'])->name('retensi-kriteria.update');
     });

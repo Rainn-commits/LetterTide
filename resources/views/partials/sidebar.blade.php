@@ -13,11 +13,11 @@
 
     $menuItems = [
         [
-            'label' => 'Dashboard',
-            'route' => $dashboardRoute,
+            'label'  => 'Dashboard',
+            'route'  => $dashboardRoute,
             'active' => request()->routeIs('dashboard*'),
-            'roles' => ['Super Admin', 'Admin', 'User'],
-            'icon' => 'grid',
+            'roles'  => ['Super Admin', 'Admin', 'User'],
+            'icon'   => 'grid',
         ],
         [
             'label'  => 'Kelola Profil',
@@ -27,60 +27,59 @@
             'icon'   => 'user', 
         ],
         [
-            'label' => 'Buat Surat',
-            'route' => 'surat.create',
-            'active' => request()->routeIs('surat.*'),
-            'roles' => ['Super Admin', 'Admin', 'User'],
-            'icon' => 'mail',
+            'label'      => 'Buat Surat',
+            'route'      => 'surat.create',
+            'active'     => request()->routeIs('surat.*'),
+            'roles'      => ['Admin', 'User'], 
+            'icon'       => 'mail',
             'permission' => 'surat.create',
         ],
         [
-            'label' => 'Template Surat',
-            'route' => 'template-surat.index',
-            'active' => request()->routeIs('template-surat.*'),
-            'roles' => ['Super Admin', 'Admin', 'User'],
-            'icon' => 'document',
+            'label'      => 'Template Surat',
+            'route'      => 'template-surat.index',
+            'active'     => request()->routeIs('template-surat.*'),
+            'roles'      => ['Super Admin'], 
+            'icon'       => 'document',
             'permission' => 'template.manage',
         ],
         [
-            'label' => 'Arsip Digital',
-            'route' => 'arsip.index',
-            'active' => request()->routeIs('arsip.*'),
-            'roles' => ['Super Admin', 'Admin', 'User'],
-            'icon' => 'archive',
+            'label'      => 'Arsip Digital',
+            'route'      => 'arsip.index',
+            'active'     => request()->routeIs('arsip.*'),
+            'roles'      => ['Admin', 'User'], 
+            'icon'       => 'archive',
             'permission' => 'arsip.manage',
         ],
         [
-            'label' => 'Pengaturan Kop Surat',
-            'route' => 'kop-surat.index',
-            'active' => request()->routeIs('kop-surat.*'),
-            'roles' => ['Super Admin', 'Admin'],
-            'icon' => 'settings',
+            'label'      => 'Pengaturan Kop Surat',
+            'route'      => 'kop-surat.index',
+            'active'     => request()->routeIs('kop-surat.*'),
+            'roles'      => ['Super Admin', 'Admin'], 
+            'icon'       => 'settings',
             'permission' => 'kopsurat.manage',
         ],
         [
-            'label' => str_contains($roleName, 'Super Admin') ? 'Kelola Pengguna & Role' : 'Kelola Pengguna',
-            'route' => 'pengguna.index',
-            'active' => request()->routeIs('pengguna.*') || request()->routeIs('role.*'),
-            'roles' => ['Super Admin', 'Admin'],
-            'icon' => 'users',
+            'label'      => str_contains($roleName, 'Super Admin') ? 'Kelola Pengguna & Role' : 'Kelola Pengguna',
+            'route'      => 'pengguna.index',
+            'active'     => request()->routeIs('pengguna.*') || request()->routeIs('role.*'),
+            'roles'      => ['Super Admin', 'Admin'],
+            'icon'       => 'users',
             'permission' => 'role.manage',
         ],
         [
-            'label' => 'Retensi Arsip',
-            'route' => 'evaluasi-retensi.index',
-            'active' => request()->routeIs('retensi-kriteria.*')
-                    || request()->routeIs('evaluasi-retensi.*'),
-            'roles' => ['Super Admin', 'Admin', 'User'],
-            'icon' => 'archive-clock',
+            'label'      => 'Retensi Arsip',
+            'route'      => str_contains($roleName, 'User') ? 'evaluasi-retensi.index' : 'retensi-kriteria.index',
+            'active'     => request()->routeIs('retensi-kriteria.*') || request()->routeIs('evaluasi-retensi.*'),
+            'roles'      => ['Admin', 'User'], 
+            'icon'       => 'archive-clock',
             'permission' => 'retensi.evaluate',
         ],
         [
-            'label' => 'Log Aktivitas Sistem',
-            'route' => 'log-aktivitas.index',
-            'active' => request()->routeIs('log-aktivitas.*'),
-            'roles' => ['Super Admin', 'Admin'],
-            'icon' => 'log',  
+            'label'      => 'Log Aktivitas Sistem',
+            'route'      => 'log-aktivitas.index',
+            'active'     => request()->routeIs('log-aktivitas.*'),
+            'roles'      => ['Super Admin', 'Admin'],
+            'icon'       => 'log',  
             'permission' => 'log.view',
         ],
     ];
@@ -96,20 +95,19 @@
 
     <nav class="sidebar__nav">
         @foreach ($menuItems as $item)
-            {{-- 1. Cek apakah role pengguna ada di daftar 'roles' menu --}}
-            @continue($roleName && !in_array($roleName, $item['roles']))
+            @php
+                $userRole = auth()->user()->role;
+                $isDefaultAllowed = $roleName && in_array($roleName, $item['roles']);
+                $hasDbPermission = isset($item['permission']) && $userRole?->permissions?->contains('kode_permission', $item['permission']);
+                $isExplicitlyRevoked = isset($item['permission']) && $userRole?->permissions->isNotEmpty() && !$hasDbPermission;
+            @endphp
 
-            {{-- 2. Cek permission khusus jika item memiliki atribut 'permission' --}}
-            @if (isset($item['permission']))
-                @continue(
-                    !auth()->user()->role?->permissions->contains('kode_permission', $item['permission'])
-                )
-            @endif
+            @continue((!$isDefaultAllowed && !$hasDbPermission) || $isExplicitlyRevoked)
 
             <a href="{{ Route::has($item['route']) ? route($item['route']) : url('/dashboard') }}"
             class="sidebar__link {{ $item['active'] ? 'is-active' : '' }}">
                 
-                @switch($item['icon'])
+                @switch($item['icon'] ?? 'default')
                     @case('grid')
                         <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="3" width="8" height="8" rx="1.5" stroke="currentColor" stroke-width="1.6"/><rect x="13" y="3" width="8" height="8" rx="1.5" stroke="currentColor" stroke-width="1.6"/><rect x="3" y="13" width="8" height="8" rx="1.5" stroke="currentColor" stroke-width="1.6"/><rect x="13" y="13" width="8" height="8" rx="1.5" stroke="currentColor" stroke-width="1.6"/></svg>
                         @break

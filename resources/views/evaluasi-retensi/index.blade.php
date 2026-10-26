@@ -8,7 +8,7 @@
 
 @section('content')
 
-    @if (auth()->user()->role?->nama_role === 'Super Admin')
+    @if (in_array(auth()->user()->role?->nama_role ?? '', ['Super Admin', 'Admin']))
         <div class="retensi-tabs">
             <a href="{{ route('retensi-kriteria.index') }}" class="retensi-tabs__link">
                 Kelola Kriteria Retensi
@@ -22,7 +22,7 @@
 
     @php
         $isPrivileged = in_array(auth()->user()->role->nama_role ?? '', ['Super Admin', 'Admin']);
-        $jumlahKolom = $isPrivileged ? 7 : 5;
+        $jumlahKolom = $isPrivileged ? 8 : 6;
     @endphp
 
     @if (session('success'))
@@ -147,24 +147,21 @@
     </form>
 
     <div class="retensi-card-expanded">
-        <table class="retensi-table-modern" style="width: 100%; table-layout: fixed;">
+        <table class="retensi-table-modern {{ $isPrivileged ? 'retensi-table--admin' : 'retensi-table--user' }}">
             <thead>
                 <tr>
-                    <th style="width: 20%;">Nomor Surat</th>
-
+                    <th>Nomor Surat</th>
                     @if ($isPrivileged)
-                        <th style="width: 12%;">Pembuat</th>
+                        <th>Pembuat</th>
                     @endif
-
-                    <th style="width: 11%;">Tanggal</th>
-                    <th style="width: 6%; text-align: center;">Akses</th>
-                    <th style="width: 33%;">Nilai Guna & Kerahasiaan</th>
-
+                    <th>Tanggal</th>
+                    <th>Akses</th>
+                    <th>File Surat</th>
+                    <th>Nilai Guna &amp; Kerahasiaan</th>
                     @if ($isPrivileged)
-                        <th style="width: 6%; text-align: center;">Skor</th>
+                        <th>Skor</th>
                     @endif
-
-                    <th style="width: 12%; text-align: center;">Status</th>
+                    <th>Status</th>
                 </tr>
             </thead>
             <tbody>
@@ -189,13 +186,37 @@
                             </td>
                         @endif
 
-                        <td class="col-tanggal" style="white-space: nowrap;">{{ $item->tanggal_surat->format('d M Y') }}</td>
+                        <td class="col-tanggal">{{ $item->tanggal_surat->format('d M Y') }}</td>
+
                         <td style="text-align: center;">
                             <span class="badge-akses-count">{{ $item->jumlah_akses ?? 0 }}x</span>
                         </td>
+
+                        <td class="retensi-file-cell">
+                            @if ($item->file_arsip)
+                            <a href="{{ asset('storage/' . $item->file_arsip) }}"
+                                target="_blank"
+                                class="file-badge-link">
+                                    <svg width="14" height="14" viewBox="0 0 24 24"
+                                        fill="none" stroke="currentColor" stroke-width="2"
+                                        stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/>
+                                        <polyline points="14 2 14 8 20 8"/>
+                                        <line x1="16" y1="13" x2="8" y2="13"/>
+                                        <line x1="16" y1="17" x2="8" y2="17"/>
+                                        <line x1="10" y1="9" x2="8" y2="9"/>
+                                    </svg>
+                                    Lihat PDF
+                                </a>
+                            @else
+                                <span class="badge-empty">Belum ada</span>
+                            @endif
+                        </td>
+
                         <td>
-                            <form action="{{ route('retensi.simpan-penilaian', $item->id) }}" method="POST" class="form-penilaian-inline" style="display: flex; gap: 4px;">
-                                <select name="nilai_guna" class="select-futuristic" style="padding: 4px 6px; font-size: 12px; width: 42%;" required>
+                            <form action="{{ route('retensi.simpan-penilaian', $item->id) }}" method="POST" class="form-penilaian-inline">
+                                @csrf
+                                <select name="nilai_guna" class="select-futuristic" required>
                                     <option value="" disabled {{ !$eval?->nilai_guna ? 'selected' : '' }}>-- Nilai Guna --</option>
                                     <option value="Hukum" {{ $eval?->nilai_guna === 'Hukum' ? 'selected' : '' }}>Hukum</option>
                                     <option value="Keuangan" {{ $eval?->nilai_guna === 'Keuangan' ? 'selected' : '' }}>Keuangan</option>
@@ -203,14 +224,14 @@
                                     <option value="Pemberitahuan" {{ $eval?->nilai_guna === 'Pemberitahuan' ? 'selected' : '' }}>Pemberitahuan</option>
                                 </select>
 
-                                <select name="kerahasiaan" class="select-futuristic" style="padding: 4px 6px; font-size: 12px; width: 42%;" required>
+                                <select name="kerahasiaan" class="select-futuristic" required>
                                     <option value="" disabled {{ !$eval?->kerahasiaan ? 'selected' : '' }}>-- Kerahasiaan --</option>
                                     <option value="Sangat Rahasia" {{ $eval?->kerahasiaan === 'Sangat Rahasia' ? 'selected' : '' }}>Sangat Rahasia</option>
                                     <option value="Rahasia" {{ $eval?->kerahasiaan === 'Rahasia' ? 'selected' : '' }}>Rahasia</option>
                                     <option value="Biasa/Terbuka" {{ $eval?->kerahasiaan === 'Biasa/Terbuka' ? 'selected' : '' }}>Biasa / Terbuka</option>
                                 </select>
 
-                                <button type="submit" class="btn-futuristic-save" style="padding: 4px 8px; font-size: 12px;">✓</button>
+                                <button type="submit" class="btn-futuristic-save" aria-label="Simpan penilaian">✓</button>
                             </form>
                         </td>
 

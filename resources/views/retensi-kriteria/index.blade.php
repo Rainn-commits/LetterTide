@@ -8,7 +8,7 @@
 
 @section('content')
 
-    @if (auth()->user()->role->nama_role === 'Super Admin')
+    @if (in_array(auth()->user()->role?->nama_role ?? '', ['Super Admin', 'Admin']))
         <div class="retensi-tabs">
             <a href="{{ route('retensi-kriteria.index') }}" class="retensi-tabs__link is-active">
                 Kelola Kriteria Retensi
