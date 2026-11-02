@@ -172,7 +172,7 @@
             <div class="signature-box">
                 <div>Hormat Kami,</div>
                 <div>{{ $jabatanPenandatangan }}</div>
-                <div style="height: 90px;">
+                <div style="height: 90px; padding-top: 10px; box-sizing: border-box;">
                     @if (strtolower($surat->status ?? '') === 'disetujui' && $qrDataUri)
                         <img src="{{ $qrDataUri }}" alt="QR TTD Digital" style="width: 70px; height: 70px;">
                     @endif

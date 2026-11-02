@@ -36,23 +36,25 @@
             </div>
 
             <div class="form-field">
-                <label for="ttd_by_user_id">Pilih Penandatangan (Approval Sistem):</label>
-                <select name="ttd_by_user_id" id="ttd_by_user_id" class="form-control" autocomplete="off" required>
-                    <option value="">-- Pilih User Penandatangan --</option>
-                    @foreach ($users as $u)
-                        <option value="{{ $u->id }}" {{ old('ttd_by_user_id') == $u->id ? 'selected' : '' }}>
-                            {{ $u->name }}
-                        </option>
-                    @endforeach
-                </select>
-                @error('ttd_by_user_id')
-                    <p class="form-field__hint" style="color: var(--color-danger);">{{ $message }}</p>
-                @enderror
-            </div>
-
-            <div class="form-field">
                 <label for="lampiran">Lampiran Surat:</label>
-                <input type="text" id="lampiran" name="lampiran" value="{{ old('lampiran', '-') }}" placeholder="Contoh: 1 Lembar / -">
+
+                @if ($templatePunyaLampiran)
+                    <p style="color: #16803d; font-size: 13px; margin: 4px 0 8px;">
+                        ✓ Template ini terdeteksi memiliki halaman lampiran.
+                    </p>
+                @else
+                    <p style="color: #b45309; font-size: 13px; margin: 4px 0 8px;">
+                        ⚠ Template ini tidak terdeteksi memiliki halaman lampiran.
+                    </p>
+                @endif
+
+                <input
+                    type="text"
+                    id="lampiran"
+                    name="lampiran"
+                    value="{{ old('lampiran', '-') }}"
+                    placeholder="Contoh: 1 Lembar / -"
+                >
             </div>
 
             @forelse ($fields as $field)
@@ -69,7 +71,9 @@
 
                     $oldValue = old('fields.' . $key);
                     $lowerKey = strtolower($key);
-                    $isPenandatangan = str_contains($lowerKey, 'penandatangan') || str_contains($lowerKey, 'hrd');
+                    $isPenandatangan = str_contains($lowerKey, 'penandatangan')
+                        || str_contains($lowerKey, 'hrd')
+                        || str_contains($lowerKey, 'nama_direktur');
                     $isDeskripsiPelanggaran = str_contains($lowerKey, 'deskripsi_pelanggaran');
 
                     $deskripsiPoints = [];
@@ -94,19 +98,13 @@
                     <label for="field_{{ Str::slug($key) }}">{{ $label }}:</label>
 
                     @if ($isPenandatangan)
-                        <select 
-                            id="field_{{ Str::slug($key) }}" 
-                            name="fields[{{ $key }}]" 
-                            class="form-control" 
-                            required
+                        <input
+                            type="text"
+                            id="field_{{ Str::slug($key) }}"
+                            name="fields[{{ $key }}]"
+                            value="Novi Setia Nurviat"
+                            readonly
                         >
-                            <option value="">-- Pilih User Penandatangan --</option>
-                            @foreach ($users as $u)
-                                <option value="{{ $u->name }}" {{ $oldValue == $u->name ? 'selected' : '' }}>
-                                    {{ $u->name }}
-                                </option>
-                            @endforeach
-                        </select>
 
                     @elseif ($type === 'autocomplete_user' || $key === 'nama_karyawan')
                         <div class="autocomplete">

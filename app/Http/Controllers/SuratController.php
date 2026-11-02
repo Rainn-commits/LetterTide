@@ -63,24 +63,28 @@ class SuratController extends Controller
         return view('surat.riwayat', compact('suratList', 'templates'));
     }
 
+
     public function form(TemplateSurat $template)
     {
         $fields = PlaceholderParser::toFormFields($template->isi_template);
         $users = User::orderBy('name')->get();
-
         $kopSurats = PengaturanKopSurat::orderBy('versi', 'desc')->get();
 
-        return view('surat.form', compact('template', 'fields', 'users', 'kopSurats'));
+        $templatePunyaLampiran = preg_match(
+            '/<div[^>]*style=["\'][^"\']*page-break-before:\s*always[^"\']*["\'][^>]*><\/div>\s*\S/is',
+            $template->isi_template
+        ) === 1;
+
+        return view('surat.form', compact('template', 'fields', 'users', 'kopSurats', 'templatePunyaLampiran'));
     }
 
     public function store(Request $request, TemplateSurat $template)
     {
         $validated = $request->validate([
-            'kop_surat_id'   => ['required', 'exists:pengaturan_kop_surat,id'],
-            'ttd_by_user_id' => ['required', 'exists:users,id'],
-            'lampiran'       => ['nullable', 'string'],
-            'fields'         => ['required', 'array'],
-            'fields.*'       => ['required', 'string'],
+            'kop_surat_id' => ['required', 'exists:pengaturan_kop_surat,id'],
+            'lampiran'     => ['nullable', 'string'],
+            'fields'       => ['required', 'array'],
+            'fields.*'     => ['required', 'string'],
         ]);
 
         $nomorSurat = $this->generateNomorSurat($template);
@@ -88,7 +92,7 @@ class SuratController extends Controller
         $surat = Surat::create([
             'template_id'    => $template->id,
             'user_id'        => Auth::id(),
-            'ttd_by_user_id' => $validated['ttd_by_user_id'],
+            'ttd_by_user_id' => null,
             'kop_surat_id'   => $validated['kop_surat_id'],
             'nomor_surat'    => $nomorSurat,
             'lampiran'       => $request->input('lampiran', '-'),
@@ -255,17 +259,8 @@ class SuratController extends Controller
 
         $isiSuratRendered = PlaceholderParser::render($surat->template->isi_template, $values);
 
-        $namaPenandatangan = $surat->penandatangan?->name
-                        ?? $values['nama_penandatangan']
-                        ?? $values['Nama Penandatangan']
-                        ?? $values['penandatangan']
-                        ?? $surat->user?->name;
-
-        $jabatanPenandatangan = $values['jabatan_penandatangan']
-                            ?? $values['Jabatan Penandatangan']
-                            ?? $values['jabatan']
-                            ?? $surat->penandatangan?->jabatan
-                            ?? 'Direktur PT. Inovindo Digital Media';
+        $namaPenandatangan = 'Novi Setia Nurviat';
+        $jabatanPenandatangan = 'Direktur PT. Inovindo Digital Media';
 
         $isiUtama = $isiSuratRendered;
         $isiLampiran = null;
