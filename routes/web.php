@@ -17,6 +17,7 @@ use App\Http\Controllers\LogAktivitasController;
 use App\Http\Controllers\RetensiKriteriaController;
 use App\Http\Controllers\EvaluasiRetensiController;
 use App\Http\Controllers\SuratMasukController;
+use App\Http\Controllers\KontakLookupController;
 
 Route::get('/', function () {
     return view('home');
@@ -44,6 +45,9 @@ Route::middleware(['auth', 'active'])->group(function () {
     Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::put('/profile/password', [ProfileController::class, 'updatePassword'])->name('profile.password.update');
 
+    Route::get('/kontak/search', [KontakLookupController::class, 'search'])
+        ->name('kontak.search');
+    
     Route::get('/arsip', [ArsipController::class, 'index'])->name('arsip.index');
     Route::post('/arsip/surat-masuk', [SuratMasukController::class, 'store'])->name('arsip.surat-masuk.store');
 
