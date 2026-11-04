@@ -85,3 +85,106 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
 });
+
+document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('[data-autocomplete="kontak"]').forEach(function (input) {
+        const results = document.getElementById(
+            'results_' + input.id.replace('field_', '')
+        );
+
+        const form = input.closest('form');
+        let timeout = null;
+
+        if (!results || !form) return;
+
+        function closeResults() {
+            results.innerHTML = '';
+            results.classList.remove('is-open');
+        }
+
+        function showResults() {
+            results.classList.add('is-open');
+        }
+
+        input.addEventListener('input', function () {
+            clearTimeout(timeout);
+            closeResults();
+
+            const query = input.value.trim();
+
+            if (query.length < 2) return;
+
+            timeout = setTimeout(async function () {
+                try {
+                    const response = await fetch(
+                        input.dataset.searchUrl + '?q=' + encodeURIComponent(query),
+                        {
+                            headers: {
+                                'Accept': 'application/json',
+                                'X-Requested-With': 'XMLHttpRequest'
+                            }
+                        }
+                    );
+
+                    if (!response.ok) {
+                        throw new Error('Gagal mencari kontak');
+                    }
+
+                    const contacts = await response.json();
+                    results.innerHTML = '';
+
+                    if (contacts.length === 0) {
+                        closeResults();
+                        return;
+                    }
+
+                    contacts.forEach(function (contact) {
+                        const item = document.createElement('div');
+                        item.className = 'autocomplete__item';
+
+                        const details = [
+                            contact.nomor_hp,
+                            contact.instansi,
+                            contact.jabatan
+                        ].filter(Boolean).join(' • ');
+
+                        item.textContent = details
+                            ? `${contact.nama} (${details})`
+                            : contact.nama;
+
+                        item.addEventListener('click', function () {
+                            input.value = contact.nama;
+
+                            const phoneField = form.querySelector(
+                                `[name="fields[${input.dataset.phoneField}]"]`
+                            );
+
+                            if (phoneField) {
+                                phoneField.value = contact.nomor_hp || '';
+                                phoneField.dispatchEvent(
+                                    new Event('input', { bubbles: true })
+                                );
+                            }
+
+                            closeResults();
+                        });
+
+                        results.appendChild(item);
+                    });
+
+                    showResults();
+
+                } catch (error) {
+                    console.error('Pencarian kontak:', error);
+                    closeResults();
+                }
+            }, 300);
+        });
+
+        document.addEventListener('click', function (event) {
+            if (!input.contains(event.target) && !results.contains(event.target)) {
+                closeResults();
+            }
+        });
+    });
+});

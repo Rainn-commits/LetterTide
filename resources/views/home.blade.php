@@ -32,7 +32,7 @@
             <a href="#">Template Surat</a>
             <a href="#">Pengaturan Kop surat</a>
             <a href="#">Arsip Digital</a>
-            <a href="#">Evaluasi Retensi Arsip</a>
+            <a href="#">Retensi Arsip</a>
         </nav>
 
         <div class="navbar__actions">

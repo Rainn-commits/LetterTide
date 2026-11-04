@@ -74,6 +74,14 @@
                     $isPenandatangan = str_contains($lowerKey, 'penandatangan')
                         || str_contains($lowerKey, 'hrd')
                         || str_contains($lowerKey, 'nama_direktur');
+                    $contactPhoneField = match ($key) {
+                        'nama_guru_pembimbing' => 'kontak_guru_pembimbing',
+                        'nama_dosen_pembimbing' => 'kontak_dosen',
+                        'anggota_1_nama' => 'anggota_1_kontak',
+                        'anggota_2_nama' => 'anggota_2_kontak',
+                        'anggota_3_nama' => 'anggota_3_kontak',
+                        default => null,
+                    };
                     $isDeskripsiPelanggaran = str_contains($lowerKey, 'deskripsi_pelanggaran');
 
                     $deskripsiPoints = [];
@@ -119,6 +127,25 @@
                                 required
                             >
                             <div class="autocomplete__results" id="results_{{ Str::slug($key) }}"></div>
+                        </div>
+
+                    @elseif ($contactPhoneField)
+                        <div class="autocomplete">
+                            <input
+                                type="text"
+                                id="field_{{ Str::slug($key) }}"
+                                name="fields[{{ $key }}]"
+                                value="{{ $oldValue }}"
+                                data-autocomplete="kontak"
+                                data-search-url="{{ route('kontak.search') }}"
+                                data-phone-field="{{ $contactPhoneField }}"
+                                autocomplete="off"
+                                required
+                            >
+                            <div
+                                class="autocomplete__results"
+                                id="results_{{ Str::slug($key) }}"
+                            ></div>
                         </div>
 
                     @elseif ($type === 'date' || str_contains($lowerKey, 'tanggal'))

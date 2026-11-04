@@ -10,6 +10,7 @@ use App\Models\Surat;
 use App\Models\TemplateSurat;
 use App\Models\User;
 use App\Services\PlaceholderParser;
+use App\Models\Kontak;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -107,6 +108,35 @@ class SuratController extends Controller
                 'nilai_field' => $nilaiField,
                 'created_at'  => now(),
             ]);
+        }
+
+        $contactPairs = [
+            'nama_guru_pembimbing' => 'kontak_guru_pembimbing',
+            'nama_dosen_pembimbing' => 'kontak_dosen',
+            'nama_atasan_langsung' => 'kontak_atasan_langsung',
+            'anggota_1_nama' => 'anggota_1_kontak',
+            'anggota_2_nama' => 'anggota_2_kontak',
+            'anggota_3_nama' => 'anggota_3_kontak',
+        ];
+
+        foreach ($contactPairs as $namaField => $nomorField) {
+            $nama = trim($validated['fields'][$namaField] ?? '');
+            $nomorHp = trim($validated['fields'][$nomorField] ?? '');
+
+            if ($nama === '' || $nomorHp === '') {
+                continue;
+            }
+
+            Kontak::firstOrCreate(
+                [
+                    'nama' => $nama,
+                    'nomor_hp' => $nomorHp,
+                ],
+                [
+                    'instansi' => null,
+                    'jabatan' => null,
+                ]
+            );
         }
 
         $this->generatePdfArsip($surat);
