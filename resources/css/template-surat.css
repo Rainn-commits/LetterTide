@@ -48,6 +48,8 @@
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-card);
   padding: 32px;
+  max-width: 1000px;
+  margin: 0 auto;
   animation: fadeSlideUp 0.4s var(--ease);
 }
 
@@ -237,7 +239,8 @@
 }
 
 .template-form {
-  max-width: 720px;
+  width: 100%;
+  max-width: none; 
 }
 
 .form-field {
@@ -318,6 +321,7 @@
 .form-actions {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 16px;
   margin-top: 32px;
 }

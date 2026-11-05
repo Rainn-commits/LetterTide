@@ -26,7 +26,7 @@
                     <option value="">-- Pilih Kop Surat --</option>
                     @foreach($kopSurats as $kop)
                         <option value="{{ $kop->id }}">
-                            {{ $kop->nama_pt }} (Versi {{ $kop->versi }}) ({{ $kop->email }})
+                            {{ $kop->nama_pt }} (Versi {{ $kop->versi }})
                         </option>
                     @endforeach
                 </select>
@@ -111,7 +111,46 @@
                 <div class="form-field">
                     <label for="field_{{ Str::slug($key) }}">{{ $label }}:</label>
 
-                    @if ($isPenandatangan)
+                    @if ($key === 'paket_layanan')
+                        <select
+                            id="field_{{ Str::slug($key) }}"
+                            name="fields[{{ $key }}]"
+                            required
+                        >
+                            <option value="">Pilih Paket Layanan</option>
+                            @foreach (['Basic', 'Standard', 'Premium'] as $paket)
+                                <option value="{{ $paket }}"
+                                    {{ $oldValue === $paket ? 'selected' : '' }}>
+                                    {{ $paket }}
+                                </option>
+                            @endforeach
+                        </select>
+
+                    @elseif ($key === 'biaya_berlangganan')
+                        <div class="input-currency">
+                            <span>Rp</span>
+                            <input
+                                type="number"
+                                id="field_{{ Str::slug($key) }}"
+                                name="fields[{{ $key }}]"
+                                value="{{ $oldValue }}"
+                                min="0"
+                                step="1000"
+                                placeholder="Masukkan nominal biaya"
+                                required
+                            >
+                        </div>
+
+                    @elseif (in_array($key, ['tanggal_mulai_layanan', 'tanggal_selesai_layanan']))
+                        <input
+                            type="date"
+                            id="field_{{ Str::slug($key) }}"
+                            name="fields[{{ $key }}]"
+                            value="{{ $oldValue }}"
+                            required
+                        >
+
+                    @elseif ($isPenandatangan)
                         <input
                             type="text"
                             id="field_{{ Str::slug($key) }}"

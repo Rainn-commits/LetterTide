@@ -303,3 +303,93 @@ form label,
     color: var(--color-white);
     transform: translateY(-1px);
 }
+
+.input-currency {
+    display: flex;
+    align-items: center;
+    border: 1px solid var(--color-border, #ddd);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.input-currency span {
+    padding: 10px 14px;
+    background: #f1f5f9;
+    color: var(--color-ink);
+    font-weight: 600;
+}
+
+.input-currency input {
+    flex: 1;
+    min-width: 0;
+    border: none;
+    outline: none;
+    padding: 10px;
+}
+
+.form-field select:not(.form-control) {
+    width: 100%;
+    height: 40px;
+    box-sizing: border-box;
+    padding: 0 14px;
+    border: 1.5px solid var(--color-ink);
+    border-radius: var(--radius-sm);
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--color-ink);
+    background-color: var(--color-white);
+    text-align: left;
+    cursor: pointer;
+}
+
+.form-field select:not(.form-control):focus {
+    outline: none;
+    border-color: var(--color-primary);
+}
+
+.input-currency {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: 40px;
+    box-sizing: border-box;
+    border: 1.5px solid var(--color-ink);
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    background: var(--color-white);
+}
+
+.input-currency span {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    padding: 0 14px;
+    background: #f1f5f9;
+    color: var(--color-ink);
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.input-currency input[type="number"] {
+    flex: 1;
+    min-width: 0;
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+    padding: 0 12px;
+    border: none;
+    outline: none;
+    border-radius: 0;
+    background: transparent;
+    color: var(--color-ink);
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 400;
+}
+
+.input-currency:focus-within {
+    border-color: var(--color-primary);
+}

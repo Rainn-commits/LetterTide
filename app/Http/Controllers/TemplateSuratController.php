@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\TemplateSurat;
+use App\Models\PengaturanKopSurat;
 use App\Models\LogAktivitas;
 use App\Http\Controllers\Controller;
 use App\Services\PlaceholderParser;
@@ -12,8 +13,8 @@ class TemplateSuratController extends Controller
 {
     public function index()
     {
-        $templates = TemplateSurat::where('is_aktif', true)
-            ->orderBy('nama_template')
+        $templates = TemplateSurat::orderBy('nama_template')
+            ->orderByDesc('versi')
             ->get();
 
         return view('template-surat.index', compact('templates'));
@@ -95,4 +96,49 @@ class TemplateSuratController extends Controller
 
         return response()->json(['placeholders' => $placeholders]);
     }
+
+    public function preview(Request $request, TemplateSurat $templateSurat)
+    {
+        $daftarKop = PengaturanKopSurat::orderBy('nama_kop')
+            ->orderByDesc('versi')
+            ->get();
+
+        $kopId = $request->integer('kop_id') ?: null;
+
+        $kopSurat = $kopId ? $daftarKop->firstWhere('id', $kopId) : null;
+        $kopSurat ??= $daftarKop->sortByDesc('id')->first();
+
+        $nilaiContoh = [];
+        foreach (PlaceholderParser::extract($templateSurat->isi_template) as $nama) {
+            $nilaiContoh[$nama] = '<span class="ph-preview">' . e($nama) . '</span>';
+        }
+
+        $isiRender = PlaceholderParser::render($templateSurat->isi_template, $nilaiContoh);
+
+        $isiUtama = $isiRender;
+        $isiLampiran = null;
+
+        if (stripos($isiRender, 'page-break-before: always') !== false) {
+            $bagian = preg_split(
+                '/<div[^>]*style=["\'][^"\']*page-break-before:\s*always[^"\']*["\'][^>]*><\/div>/i',
+                $isiRender,
+                2
+            );
+
+            if (count($bagian) === 2) {
+                [$isiUtama, $isiLampiran] = $bagian;
+            }
+        }
+
+        return view('template-surat.preview', [
+            'template'             => $templateSurat,
+            'daftarKop'            => $daftarKop,
+            'kopSurat'             => $kopSurat,
+            'isiUtama'             => $isiUtama,
+            'isiLampiran'          => $isiLampiran,
+            'jabatanPenandatangan' => 'Direktur PT. Inovindo Digital Media',
+            'namaPenandatangan'    => 'Novi Setia Nurviat',
+        ]);
+    }
 }
+

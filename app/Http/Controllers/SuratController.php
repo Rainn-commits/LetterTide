@@ -86,6 +86,18 @@ class SuratController extends Controller
             'lampiran'     => ['nullable', 'string'],
             'fields'       => ['required', 'array'],
             'fields.*'     => ['required', 'string'],
+
+            'fields.tanggal_mulai_layanan' => ['sometimes', 'required', 'date'],
+            'fields.tanggal_selesai_layanan' => [
+                'sometimes',
+                'required',
+                'date',
+                'after_or_equal:fields.tanggal_mulai_layanan',
+            ],
+        ], [
+            'fields.tanggal_mulai_layanan.required' => 'Tanggal mulai layanan wajib diisi.',
+            'fields.tanggal_selesai_layanan.required' => 'Tanggal selesai layanan wajib diisi.',
+            'fields.tanggal_selesai_layanan.after_or_equal' => 'Tanggal selesai tidak boleh lebih awal dari tanggal mulai layanan.',
         ]);
 
         $nomorSurat = $this->generateNomorSurat($template);
@@ -199,6 +211,18 @@ class SuratController extends Controller
         $validated = $request->validate([
             'fields'   => ['required', 'array'],
             'fields.*' => ['required', 'string'],
+
+            'fields.tanggal_mulai_layanan' => ['sometimes', 'required', 'date'],
+            'fields.tanggal_selesai_layanan' => [
+                'sometimes',
+                'required',
+                'date',
+                'after_or_equal:fields.tanggal_mulai_layanan',
+            ],
+        ], [
+            'fields.tanggal_mulai_layanan.required' => 'Tanggal mulai layanan wajib diisi.',
+            'fields.tanggal_selesai_layanan.required' => 'Tanggal selesai layanan wajib diisi.',
+            'fields.tanggal_selesai_layanan.after_or_equal' => 'Tanggal selesai tidak boleh lebih awal dari tanggal mulai layanan.',
         ]);
 
         foreach ($validated['fields'] as $namaField => $nilaiField) {

@@ -1,13 +1,13 @@
 @import url('variables.css');
 
 .card {
-    background: var(--color-white);
-    border-radius: var(--radius-lg);
-    box-shadow: var(--shadow-card);
-    padding: 38px 32px;
-    animation: fadeSlideUp 0.4s var(--ease);
-    max-width: 520px;
-    margin: 0 auto;
+  background: var(--color-white);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+  padding: 38px 32px;
+  animation: fadeSlideUp 0.4s var(--ease);
+  max-width: 520px;
+  margin: 0 auto;
 }
 
 .wizard-step {
@@ -25,9 +25,9 @@
 }
 
 .surat-form {
-    max-width: 420px;
-    margin: 0 auto;
-    text-align: center;
+  max-width: 420px;
+  margin: 0 auto;
+  text-align: center;
 }
 
 .form-field {
@@ -39,7 +39,7 @@ form label,
 .form-field label {
   display: block !important;
   width: 100% !important;
-  text-align: center !important;
+  text-align: left !important;
   font-weight: 700;
   font-size: 13px;
   margin-bottom: 8px;
@@ -69,25 +69,25 @@ form label,
 }
 
 .btn-block-wide {
-    display: block;
-    width: 320px;
-    max-width: 80%;
-    margin: 30px auto 0;
-    text-align: center;
-    background: var(--color-primary);
-    color: var(--color-white);
-    border: none;
-    font-weight: 700;
-    font-size: 14px;
-    padding: 11px 20px;
-    border-radius: var(--radius-pill);
-    transition: background 0.15s ease, transform 0.15s ease;
-    box-shadow: 0 4px 12px rgba(0, 195, 208, 0.25);
+  display: block;
+  width: 320px;
+  max-width: 80%;
+  margin: 30px auto 0;
+  text-align: center;
+  background: var(--color-primary);
+  color: var(--color-white);
+  border: none;
+  font-weight: 700;
+  font-size: 14px;
+  padding: 11px 20px;
+  border-radius: var(--radius-pill);
+  transition: background 0.15s ease, transform 0.15s ease;
+  box-shadow: 0 4px 12px rgba(0, 195, 208, 0.25);
 }
 
 .btn-block-wide:hover {
-    background: var(--color-primary-dark);
-    transform: translateY(-1px);
+  background: var(--color-primary-dark);
+  transform: translateY(-1px);
 }
 
 .surat-form .form-actions,
@@ -147,10 +147,10 @@ form label,
 }
 
 @media print {
-    .surat-paper {
-        width: 215mm;
-        min-height: 330mm;
-        padding: 20mm 20mm 20mm 25mm;
-        font-size: 12pt;
-    }
+  .surat-paper {
+    width: 215mm;
+    min-height: 330mm;
+    padding: 20mm 20mm 20mm 25mm;
+    font-size: 12pt;
+  }
 }

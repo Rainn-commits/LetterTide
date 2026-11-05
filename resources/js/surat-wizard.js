@@ -188,3 +188,64 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 });
+
+document.addEventListener('DOMContentLoaded', function () {
+    const tanggalMulai = document.getElementById(
+        'field_tanggal-mulai-layanan'
+    );
+
+    const tanggalSelesai = document.getElementById(
+        'field_tanggal-selesai-layanan'
+    );
+
+    if (!tanggalMulai || !tanggalSelesai) return;
+
+    const form = tanggalMulai.closest('form');
+
+    function validasiPeriodeLayanan() {
+        tanggalMulai.setCustomValidity('');
+        tanggalSelesai.setCustomValidity('');
+
+        tanggalSelesai.min = tanggalMulai.value || '';
+
+        if (!tanggalMulai.value) {
+            tanggalMulai.setCustomValidity(
+                'Tanggal mulai layanan wajib diisi.'
+            );
+            return tanggalMulai;
+        }
+
+        if (!tanggalSelesai.value) {
+            tanggalSelesai.setCustomValidity(
+                'Tanggal selesai layanan wajib diisi.'
+            );
+            return tanggalSelesai;
+        }
+
+        if (tanggalSelesai.value < tanggalMulai.value) {
+            tanggalSelesai.setCustomValidity(
+                'Tanggal selesai tidak boleh lebih awal dari tanggal mulai layanan.'
+            );
+            return tanggalSelesai;
+        }
+
+        return null;
+    }
+
+    tanggalMulai.addEventListener('change', function () {
+        validasiPeriodeLayanan();
+    });
+
+    tanggalSelesai.addEventListener('change', function () {
+        validasiPeriodeLayanan();
+    });
+
+    form.addEventListener('submit', function (event) {
+        const inputTidakValid = validasiPeriodeLayanan();
+
+        if (inputTidakValid) {
+            event.preventDefault();
+            inputTidakValid.reportValidity();
+        }
+    });
+});

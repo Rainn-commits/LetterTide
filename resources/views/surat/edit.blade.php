@@ -17,10 +17,17 @@
             @csrf
             @method('PUT')
 
+
             @forelse ($fields as $field)
                 @php
-                    $key = is_array($field) ? ($field['name'] ?? '') : ($field->name ?? '');
-                    $label = is_array($field) ? ($field['label'] ?? '') : ($field->label ?? ucwords(str_replace('_', ' ', $key)));
+                    $key = is_array($field)
+                        ? ($field['name'] ?? ($field['key'] ?? ''))
+                        : ($field->name ?? ($field->key ?? ''));
+
+                    $label = is_array($field)
+                        ? ($field['label'] ?? ucwords(str_replace(['_', '-'], ' ', $key)))
+                        : ($field->label ?? ucwords(str_replace(['_', '-'], ' ', $key)));
+
                     $type = is_array($field) ? ($field['type'] ?? 'text') : 'text';
 
                     $currentValue = old('fields.' . $key, $values[$key] ?? '');
@@ -29,20 +36,60 @@
                 <div class="form-field">
                     <label for="field_{{ Str::slug($key) }}">{{ $label }}:</label>
 
-                    @if ($type === 'date' || str_contains(strtolower($key), 'tanggal'))
-                        <input 
-                            type="date" 
-                            id="field_{{ Str::slug($key) }}" 
-                            name="fields[{{ $key }}]" 
-                            value="{{ $currentValue }}" 
+                    @if ($key === 'paket_layanan')
+                        <select
+                            id="field_{{ Str::slug($key) }}"
+                            name="fields[{{ $key }}]"
                             required
                         >
+                            <option value="">Pilih Paket Layanan</option>
+                            @foreach (['Basic', 'Standard', 'Premium'] as $paket)
+                                <option value="{{ $paket }}"
+                                    {{ $currentValue === $paket ? 'selected' : '' }}>
+                                    {{ $paket }}
+                                </option>
+                            @endforeach
+                        </select>
+
+                    @elseif ($key === 'biaya_berlangganan')
+                        <div class="input-currency">
+                            <span>Rp</span>
+                            <input
+                                type="number"
+                                id="field_{{ Str::slug($key) }}"
+                                name="fields[{{ $key }}]"
+                                value="{{ $currentValue }}"
+                                min="0"
+                                step="1000"
+                                placeholder="Masukkan nominal biaya"
+                                required
+                            >
+                        </div>
+
+                    @elseif (in_array($key, ['tanggal_mulai_layanan', 'tanggal_selesai_layanan']))
+                        <input
+                            type="date"
+                            id="field_{{ Str::slug($key) }}"
+                            name="fields[{{ $key }}]"
+                            value="{{ $currentValue }}"
+                            required
+                        >
+
+                    @elseif ($type === 'date' || str_contains(strtolower($key), 'tanggal'))
+                        <input
+                            type="date"
+                            id="field_{{ Str::slug($key) }}"
+                            name="fields[{{ $key }}]"
+                            value="{{ $currentValue }}"
+                            required
+                        >
+
                     @else
-                        <input 
-                            type="text" 
-                            id="field_{{ Str::slug($key) }}" 
-                            name="fields[{{ $key }}]" 
-                            value="{{ $currentValue }}" 
+                        <input
+                            type="text"
+                            id="field_{{ Str::slug($key) }}"
+                            name="fields[{{ $key }}]"
+                            value="{{ $currentValue }}"
                             required
                         >
                     @endif

@@ -85,6 +85,7 @@ Route::middleware(['auth', 'active'])->group(function () {
         Route::get('/template-surat', [TemplateSuratController::class, 'index'])->name('template-surat.index');
         Route::get('/template-surat/create', [TemplateSuratController::class, 'create'])->name('template-surat.create');
         Route::post('/template-surat', [TemplateSuratController::class, 'store'])->name('template-surat.store');
+        Route::get('/template-surat/{templateSurat}/preview', [TemplateSuratController::class, 'preview'])->name('template-surat.preview');
         Route::get('/template-surat/{templateSurat}/edit', [TemplateSuratController::class, 'edit'])->name('template-surat.edit');
         Route::put('/template-surat/{templateSurat}', [TemplateSuratController::class, 'update'])->name('template-surat.update');
         Route::delete('/template-surat/{templateSurat}', [TemplateSuratController::class, 'destroy'])->name('template-surat.destroy');
