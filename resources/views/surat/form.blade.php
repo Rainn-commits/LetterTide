@@ -69,6 +69,12 @@
                         $type = 'text';
                     }
 
+                    $label = str_replace(
+                        ['Nip', 'Wfo', 'Hrd', 'Nim', 'Nidn', 'Sp', 'Nis', 'Smk', 'SPesifikasi'],
+                        ['NIP', 'WFO', 'HRD', 'NIM', 'NIDN', 'SP', 'NIS', 'SMK', 'Spesifikasi'],
+                        $label
+                    );
+
                     $oldValue = old('fields.' . $key);
                     $lowerKey = strtolower($key);
                     $isPenandatangan = str_contains($lowerKey, 'penandatangan')
@@ -147,7 +153,7 @@
                                 id="results_{{ Str::slug($key) }}"
                             ></div>
                         </div>
-
+                        
                     @elseif ($type === 'date' || str_contains($lowerKey, 'tanggal'))
                         <input 
                             type="date" 
@@ -157,6 +163,22 @@
                             required
                         >
 
+                    @elseif ($key === 'tingkat_sp')
+                        <div style="display: flex; gap: 32px; align-items: center; flex-direction: row;">
+                            @foreach ([1, 2, 3] as $tingkat)
+                                <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                                    <input
+                                        type="radio"
+                                        name="fields[{{ $key }}]"
+                                        value="{{ $tingkat }}"
+                                        {{ old('fields.' . $key) == $tingkat ? 'checked' : '' }}
+                                        required
+                                    >
+                                    SP {{ $tingkat }}
+                                </label>
+                            @endforeach
+                        </div>
+                        
                     @elseif ($isDeskripsiPelanggaran)
                         <div
                             class="deskripsi-pelanggaran-input"
