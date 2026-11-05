@@ -77,6 +77,11 @@ class TemplateSuratController extends Controller
         $nama = $templateSurat->nama_template;
         $versi = $templateSurat->versi;
 
+        if ($templateSurat->surat()->exists()) {
+            return redirect()->route('template-surat.index')
+                ->with('error', "Template \"{$nama}\" versi {$versi} tidak bisa dihapus karena sudah dipakai oleh surat.");
+        }
+
         $templateSurat->delete();
 
         LogAktivitas::catat(

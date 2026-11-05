@@ -67,7 +67,7 @@
             @endif
 
             <span class="btn-dark" style="cursor: default; opacity: 0.85;">
-                Versi {{ $template->versi }} {{ $template->is_aktif ? '(Aktif)' : '(Lama)' }}
+                Versi {{ $template->versi }} {{ $template->is_aktif ? '(Aktif)' : '(Tidak Aktif)' }}
             </span>
         </div>
     </div>

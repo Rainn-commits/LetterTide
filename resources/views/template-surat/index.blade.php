@@ -14,6 +14,12 @@
         </div>
     @endif
 
+    @if(session('error'))
+        <div class="alert alert-danger" style="padding: 12px 16px; background-color: #f8d7da; color: #842029; border: 1px solid #f5c2c7; border-radius: 8px; margin-bottom: 20px;">
+            {{ session('error') }}
+        </div>
+    @endif
+
     <div class="page-toolbar">
         <div class="page-toolbar__spacer"></div>
         <a href="{{ route('template-surat.create') }}" class="btn-teal">
@@ -43,7 +49,7 @@
                             @if ($template->is_aktif)
                                 <span class="status-pill status-pill--active">Aktif</span>
                             @else
-                                <span class="status-pill status-pill--inactive">Lama</span>
+                                <span class="status-pill status-pill--inactive" style="background: #f8d7da; color: #842029; border: 1px solid #f5c2c7; white-space: nowrap;">Tidak Aktif</span>
                             @endif
                         </td>
                         <td>
@@ -62,17 +68,17 @@
                                             <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
                                         </svg>
                                     </a>
-
-                                    <form method="POST" action="{{ route('template-surat.destroy', $template->id) }}" style="display:inline" data-confirm="Hapus template ini? Data yang dihapus tidak dapat dikembalikan." data-confirm-variant="danger" data-confirm-label="Ya, Hapus">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="icon-btn icon-btn--ghost icon-btn--lg" title="Hapus template" aria-label="Hapus template" style="border:none; background:transparent; cursor:pointer;">
-                                            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                <path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-                                            </svg>
-                                        </button>
-                                    </form>
                                 @endif
+
+                                <form method="POST" action="{{ route('template-surat.destroy', $template->id) }}" style="display:inline" data-confirm="Hapus template ini? Data yang dihapus tidak dapat dikembalikan." data-confirm-variant="danger" data-confirm-label="Ya, Hapus">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="icon-btn icon-btn--ghost icon-btn--lg" title="Hapus template" aria-label="Hapus template" style="border:none; background:transparent; cursor:pointer;">
+                                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+                                        </svg>
+                                    </button>
+                                </form>
                             </div>
                         </td>
                     </tr>
