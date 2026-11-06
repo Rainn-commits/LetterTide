@@ -111,7 +111,7 @@
                 <div class="form-field">
                     <label for="field_{{ Str::slug($key) }}">{{ $key === 'masa_berlaku_penawaran' ? 'Masa Berlaku Penawaran (Hari)' : $label }}:</label>
 
-                    @if (in_array($key, ['ringkasan_fitur', 'platform_aplikasi', 'estimasi_biaya', 'estimasi_waktu_pengerjaan', 'masa_berlaku_penawaran']))
+                    @if (in_array($key, ['ringkasan_fitur', 'platform_aplikasi', 'estimasi_biaya', 'biaya_berlangganan', 'estimasi_waktu_pengerjaan', 'masa_berlaku_penawaran']))
                         @include('surat.partials.field-penawaran', ['key' => $key, 'value' => $oldValue])
                     @elseif ($key === 'paket_layanan')
                         <select

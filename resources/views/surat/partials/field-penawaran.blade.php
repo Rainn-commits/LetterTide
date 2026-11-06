@@ -54,7 +54,7 @@
         <p class="field-error" data-platform-error hidden>Pilih minimal satu platform.</p>
     </div>
 
-@elseif ($key === 'estimasi_biaya')
+@elseif (in_array($key, ['estimasi_biaya', 'biaya_berlangganan']))
     @php
         $nominal = preg_replace('/\D/', '', $value);
     @endphp
@@ -69,12 +69,12 @@
             min="0"
             step="1000"
             inputmode="numeric"
-            placeholder="Contoh: 50000000"
+            placeholder="Contoh: 5000000"
             required
         >
     </div>
     <p class="field-help">
-        Masukkan total estimasi biaya pengembangan dalam rupiah, tanpa titik atau koma. Contoh: 50000000 akan tampil sebagai Rp 50.000.000 di surat.
+        Masukkan nominal biaya dalam rupiah, tanpa titik atau koma. Contoh: 5000000 akan tampil sebagai Rp 5.000.000 di surat.
     </p>
 
 @elseif ($key === 'estimasi_waktu_pengerjaan')
