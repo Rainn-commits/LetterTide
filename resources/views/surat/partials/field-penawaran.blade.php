@@ -182,8 +182,14 @@
             gap: 10px;
         }
 
-        .durasi-row input {
-            flex: 1;
+        .form-field .durasi-row {
+            display: flex;
+            gap: 10px;
+        }
+
+        .form-field .durasi-row input[type="number"] {
+            flex: 1 1 auto !important;
+            width: auto !important;
             min-width: 0;
             box-sizing: border-box;
             height: 40px;
@@ -194,8 +200,9 @@
             text-align: left;
         }
 
-        .durasi-row select {
-            width: 130px;
+        .form-field .durasi-row select {
+            flex: 0 0 130px !important;
+            width: 130px !important;
             height: 40px;
             box-sizing: border-box;
             padding: 0 10px;

@@ -95,6 +95,7 @@ class SuratController extends Controller
                 'after_or_equal:fields.tanggal_mulai_layanan',
             ],
             'fields.estimasi_biaya' => ['sometimes', 'required', 'integer', 'min:1'],
+            'fields.masa_berlaku_penawaran' => ['sometimes', 'required', 'integer', 'min:1', 'max:365'],
         ], 
         [
             'fields.tanggal_mulai_layanan.required' => 'Tanggal mulai layanan wajib diisi.',
