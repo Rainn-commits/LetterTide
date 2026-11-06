@@ -303,11 +303,23 @@ class SuratController extends Controller
     {
         $surat->load(['template', 'kopSurat', 'isiSurat', 'user', 'penandatangan']);
 
-        $values = $surat->isiSurat->pluck('nilai_field', 'nama_field')            ->toArray();
+        $values = $surat->isiSurat->pluck('nilai_field', 'nama_field')->toArray();
 
         foreach ($values as $namaField => $nilaiField) {
-            if (str_contains(strtolower($namaField), 'deskripsi_pelanggaran')) {
+            $nilaiField = (string) $nilaiField;
+            $namaKecil = strtolower($namaField);
+
+            if (str_contains($namaKecil, 'deskripsi_pelanggaran')) {
                 $values[$namaField] = $this->formatDeskripsiPelanggaran($nilaiField);
+                continue;
+            }
+
+            if (str_contains($namaKecil, 'tanggal')) {
+                $values[$namaField] = $this->formatTanggalIndonesia($nilaiField);
+            }
+
+            if ($namaKecil === 'biaya_berlangganan') {
+                $values[$namaField] = $this->formatAngkaRibuan($nilaiField);
             }
         }
 
@@ -346,6 +358,49 @@ class SuratController extends Controller
             'jabatanPenandatangan',
             'qrDataUri'
         );
+    }
+
+    private function formatTanggalIndonesia(string $value): string
+    {
+        if (!preg_match('/^(\d{4})-(\d{2})-(\d{2})$/', trim($value), $matches)) {
+            return $value;
+        }
+
+        $tahun = (int) $matches[1];
+        $bulan = (int) $matches[2];
+        $hari  = (int) $matches[3];
+
+        if (!checkdate($bulan, $hari, $tahun)) {
+            return $value;
+        }
+
+        $namaBulan = [
+            1 => 'Januari',
+            2 => 'Februari',
+            3 => 'Maret',
+            4 => 'April',
+            5 => 'Mei',
+            6 => 'Juni',
+            7 => 'Juli',
+            8 => 'Agustus',
+            9 => 'September',
+            10 => 'Oktober',
+            11 => 'November',
+            12 => 'Desember',
+        ];
+
+        return $hari . ' ' . $namaBulan[$bulan] . ' ' . $tahun;
+    }
+
+    private function formatAngkaRibuan(string $value): string
+    {
+        $bersih = trim($value);
+
+        if ($bersih === '' || !ctype_digit($bersih)) {
+            return $value;
+        }
+
+        return number_format((int) $bersih, 0, ',', '.');
     }
 
     private function formatDeskripsiPelanggaran(string $value): string
