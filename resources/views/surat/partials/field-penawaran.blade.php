@@ -54,6 +54,60 @@
         <p class="field-error" data-platform-error hidden>Pilih minimal satu platform.</p>
     </div>
 
+@elseif ($key === 'estimasi_biaya')
+    @php
+        $nominal = preg_replace('/\D/', '', $value);
+    @endphp
+
+    <div class="input-currency">
+        <span>Rp</span>
+        <input
+            type="number"
+            id="{{ $fieldId }}"
+            name="fields[{{ $key }}]"
+            value="{{ $nominal }}"
+            min="0"
+            step="1000"
+            inputmode="numeric"
+            placeholder="Contoh: 50000000"
+            required
+        >
+    </div>
+    <p class="field-help">
+        Masukkan total estimasi biaya pengembangan dalam rupiah, tanpa titik atau koma. Contoh: 50000000 akan tampil sebagai Rp 50.000.000 di surat.
+    </p>
+
+@elseif ($key === 'estimasi_waktu_pengerjaan')
+    @php
+        $satuanOpsi = ['Hari', 'Minggu', 'Bulan'];
+        $angkaWaktu = preg_match('/^\s*(\d+)/', $value, $m1) ? $m1[1] : '';
+        $satuanWaktu = 'Bulan';
+        foreach ($satuanOpsi as $s) {
+            if (stripos($value, $s) !== false) {
+                $satuanWaktu = $s;
+                break;
+            }
+        }
+    @endphp
+
+    <div class="durasi-field" data-durasi-field>
+        <input type="hidden" id="{{ $fieldId }}" name="fields[{{ $key }}]" value="{{ $value }}" data-durasi-value>
+
+        <div class="durasi-row">
+            <input type="number" min="1" step="1" inputmode="numeric" placeholder="Contoh: 3" value="{{ $angkaWaktu }}" data-durasi-angka>
+            <select data-durasi-satuan>
+                @foreach ($satuanOpsi as $s)
+                    <option value="{{ $s }}" {{ $satuanWaktu === $s ? 'selected' : '' }}>{{ $s }}</option>
+                @endforeach
+            </select>
+        </div>
+
+        <p class="field-help">
+            Isi lama pengerjaan proyek sejak kesepakatan, lalu pilih satuannya. Contoh: 3 Bulan atau 12 Minggu.
+        </p>
+        <p class="field-error" data-durasi-error hidden>Isi lama pengerjaan dengan angka minimal 1.</p>
+    </div>
+
 @elseif ($key === 'masa_berlaku_penawaran')
     @php
         $hari = preg_match('/^\s*(\d+)/', $value, $cocok) ? $cocok[1] : '';
@@ -112,7 +166,8 @@
             font-size: 12px;
             line-height: 1.45;
             color: #64748b;
-            text-align: justify;
+            text-align: justify !important;
+            text-align-last: left;
         }
 
         .field-error {
@@ -120,6 +175,34 @@
             font-size: 12px;
             color: var(--color-danger);
             text-align: left;
+        }
+
+        .durasi-row {
+            display: flex;
+            gap: 10px;
+        }
+
+        .durasi-row input {
+            flex: 1;
+            min-width: 0;
+            box-sizing: border-box;
+            height: 40px;
+            padding: 9px 14px;
+            border: 1.5px solid var(--color-ink);
+            border-radius: var(--radius-sm);
+            font-size: 14px;
+            text-align: left;
+        }
+
+        .durasi-row select {
+            width: 130px;
+            height: 40px;
+            box-sizing: border-box;
+            padding: 0 10px;
+            border: 1.5px solid var(--color-ink);
+            border-radius: var(--radius-sm);
+            background: var(--color-white);
+            font-size: 14px;
         }
 
         .platform-options {
@@ -202,6 +285,42 @@
                             event.preventDefault();
                             error.hidden = false;
                             options[0].focus();
+                        }
+                    });
+                }
+
+                sinkron();
+            });
+
+            document.querySelectorAll('[data-durasi-field]').forEach(function (wrapper) {
+                const hidden = wrapper.querySelector('[data-durasi-value]');
+                const angka = wrapper.querySelector('[data-durasi-angka]');
+                const satuan = wrapper.querySelector('[data-durasi-satuan]');
+                const error = wrapper.querySelector('[data-durasi-error]');
+                const form = wrapper.closest('form');
+
+                function sinkron() {
+                    const n = parseInt(angka.value, 10);
+                    const valid = !isNaN(n) && n >= 1;
+
+                    hidden.value = valid ? n + ' ' + satuan.value : '';
+
+                    if (valid) {
+                        error.hidden = true;
+                    }
+
+                    return valid;
+                }
+
+                angka.addEventListener('input', sinkron);
+                satuan.addEventListener('change', sinkron);
+
+                if (form) {
+                    form.addEventListener('submit', function (event) {
+                        if (!sinkron()) {
+                            event.preventDefault();
+                            error.hidden = false;
+                            angka.focus();
                         }
                     });
                 }
