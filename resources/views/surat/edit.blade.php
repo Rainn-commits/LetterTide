@@ -9,7 +9,7 @@
 @section('content')
 
     <div class="wizard-step">
-        <h2 class="wizard-step__title">Edit Isi Surat ({{ $surat->nomor_surat }})</h2>
+        <h2 class="wizard-step__title"> Edit Isi Surat (<span class="nomor-surat-text">{{ $surat->nomor_surat }}</span>)</h2>
     </div>
 
     <div class="card">
