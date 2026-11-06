@@ -112,7 +112,7 @@
             font-size: 12px;
             line-height: 1.45;
             color: #64748b;
-            text-align: left;
+            text-align: justify;
         }
 
         .field-error {

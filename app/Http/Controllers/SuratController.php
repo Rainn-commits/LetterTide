@@ -94,7 +94,9 @@ class SuratController extends Controller
                 'date',
                 'after_or_equal:fields.tanggal_mulai_layanan',
             ],
-        ], [
+            'fields.estimasi_biaya' => ['sometimes', 'required', 'integer', 'min:1'],
+        ], 
+        [
             'fields.tanggal_mulai_layanan.required' => 'Tanggal mulai layanan wajib diisi.',
             'fields.tanggal_selesai_layanan.required' => 'Tanggal selesai layanan wajib diisi.',
             'fields.tanggal_selesai_layanan.after_or_equal' => 'Tanggal selesai tidak boleh lebih awal dari tanggal mulai layanan.',
@@ -220,7 +222,9 @@ class SuratController extends Controller
                 'date',
                 'after_or_equal:fields.tanggal_mulai_layanan',
             ],
-        ], [
+            'fields.estimasi_biaya' => ['sometimes', 'required', 'integer', 'min:1'],
+        ], 
+        [
             'fields.tanggal_mulai_layanan.required' => 'Tanggal mulai layanan wajib diisi.',
             'fields.tanggal_selesai_layanan.required' => 'Tanggal selesai layanan wajib diisi.',
             'fields.tanggal_selesai_layanan.after_or_equal' => 'Tanggal selesai tidak boleh lebih awal dari tanggal mulai layanan.',
@@ -317,6 +321,13 @@ class SuratController extends Controller
 
             if (str_contains($namaKecil, 'tanggal')) {
                 $values[$namaField] = $this->formatTanggalIndonesia($nilaiField);
+            }
+
+            if ($namaKecil === 'estimasi_biaya') {
+                $values[$namaField] = ctype_digit(trim($nilaiField))
+                    ? 'Rp ' . $this->formatAngkaRibuan(trim($nilaiField))
+                    : $nilaiField;
+                continue;
             }
 
             if ($namaKecil === 'ringkasan_fitur') {

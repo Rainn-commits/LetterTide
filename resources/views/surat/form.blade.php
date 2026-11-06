@@ -113,6 +113,8 @@
 
                     @if (in_array($key, ['ringkasan_fitur', 'platform_aplikasi', 'masa_berlaku_penawaran']))
                         @include('surat.partials.field-penawaran', ['key' => $key, 'value' => $oldValue])
+                    @endif
+                    @if (in_array($key, ['ringkasan_fitur', 'platform_aplikasi', 'estimasi_biaya', 'estimasi_waktu_pengerjaan', 'masa_berlaku_penawaran']))
                     @elseif ($key === 'paket_layanan')
                         <select
                             id="field_{{ Str::slug($key) }}"
