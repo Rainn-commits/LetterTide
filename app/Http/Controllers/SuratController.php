@@ -211,6 +211,7 @@ class SuratController extends Controller
         $validated = $request->validate([
             'fields'   => ['required', 'array'],
             'fields.*' => ['required', 'string'],
+            'fields.masa_berlaku_penawaran' => ['sometimes', 'required', 'integer', 'min:1', 'max:365'],
 
             'fields.tanggal_mulai_layanan' => ['sometimes', 'required', 'date'],
             'fields.tanggal_selesai_layanan' => [
@@ -316,6 +317,18 @@ class SuratController extends Controller
 
             if (str_contains($namaKecil, 'tanggal')) {
                 $values[$namaField] = $this->formatTanggalIndonesia($nilaiField);
+            }
+
+            if ($namaKecil === 'ringkasan_fitur') {
+                $values[$namaField] = nl2br(e($nilaiField));
+                continue;
+            }
+
+            if ($namaKecil === 'masa_berlaku_penawaran') {
+                $values[$namaField] = ctype_digit(trim($nilaiField))
+                    ? trim($nilaiField) . ' hari'
+                    : $nilaiField;
+                continue;
             }
 
             if ($namaKecil === 'biaya_berlangganan') {

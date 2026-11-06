@@ -109,7 +109,11 @@
                 @endphp
 
                 <div class="form-field">
-                    <label for="field_{{ Str::slug($key) }}">{{ $label }}:</label>
+                    <label for="field_{{ Str::slug($key) }}">{{ $key === 'masa_berlaku_penawaran' ? 'Masa Berlaku Penawaran (Hari)' : $label }}:</label>
+
+                    @if (in_array($key, ['ringkasan_fitur', 'platform_aplikasi', 'masa_berlaku_penawaran']))
+                        @include('surat.partials.field-penawaran', ['key' => $key, 'value' => $oldValue])
+                    @elseif ($key === 'paket_layanan')
 
                     @if ($key === 'paket_layanan')
                         <select
