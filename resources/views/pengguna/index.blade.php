@@ -20,9 +20,6 @@
     <div class="pengguna-header">
         <div>
             <h2>Kelola Pengguna</h2>
-            @unless ($lintasUnit)
-                <p class="pengguna-subtitle">Unit kerja: <strong>{{ $saya->unitKerja->nama ?? '-' }}</strong></p>
-            @endunless
         </div>
         @if ($lintasUnit)
             <a href="{{ route('pengguna.create') }}" class="btn-pengguna btn-primary-pengguna">

@@ -104,7 +104,7 @@
                 @empty
                     <tr>
                         <td colspan="5" class="table-empty">
-                            Belum ada kop surat. Klik "Tambah Kop Surat Baru" untuk membuat yang pertama.
+                            Belum ada kop surat yang tersedia. Silakan hubungi Super Admin untuk pengaturan kop surat.
                         </td>
                     </tr>
                 @endforelse
