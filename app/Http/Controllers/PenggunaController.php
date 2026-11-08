@@ -2,19 +2,41 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Role;
-use App\Models\User;
 use App\Models\LogAktivitas;
+use App\Models\Role;
 use App\Models\Surat;
+use App\Models\UnitKerja;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 class PenggunaController extends Controller
 {
-    public function index()
+    private const ROLE_DILINDUNGI = ['Super Admin', 'Admin'];
+
+    public function index(Request $request)
     {
-        $pengguna = User::with('role')->orderBy('name')->get();
+        $me = $this->saya();
+        $daftarUnit = UnitKerja::orderBy('id')->get();
+
+        $query = User::with(['role', 'unitKerja'])->orderBy('name');
+        $filterUnit = null;
+
+        if ($me->isGlobal()) {
+            if ($request->filled('unit')) {
+                $filterUnit = $request->input('unit') === 'none' ? 'none' : (int) $request->input('unit');
+
+                $filterUnit === 'none'
+                    ? $query->whereNull('unit_kerja_id')
+                    : $query->where('unit_kerja_id', $filterUnit);
+            }
+        } else {
+            $query->where('unit_kerja_id', $me->unit_kerja_id)
+                ->whereHas('role', fn ($q) => $q->whereNotIn('nama_role', self::ROLE_DILINDUNGI));
+        }
+
+        $pengguna = $query->get();
 
         $idPenggunaPunyaSurat = Surat::whereIn('user_id', $pengguna->pluck('id'))
             ->orWhereIn('ttd_by_user_id', $pengguna->pluck('id'))
@@ -24,37 +46,42 @@ class PenggunaController extends Controller
             ->unique()
             ->values();
 
-        return view('pengguna.index', compact('pengguna', 'idPenggunaPunyaSurat'));
+        return view('pengguna.index', compact('pengguna', 'idPenggunaPunyaSurat', 'daftarUnit', 'filterUnit'));
     }
 
     public function create()
     {
         $roles = $this->rolesUntukTambahPengguna();
+        $daftarUnit = UnitKerja::orderBy('id')->get();
 
-        return view('pengguna.create', compact('roles'));
+        return view('pengguna.create', compact('roles', 'daftarUnit'));
     }
 
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'name'     => ['required', 'string', 'max:100'],
-            'email'    => ['required', 'email', 'max:100', 'unique:users,email'],
-            'password' => ['required', 'string', 'min:8'],
-            'role_id'  => ['required', 'exists:roles,id'],
+            'name'          => ['required', 'string', 'max:100'],
+            'email'         => ['required', 'email', 'max:100', 'unique:users,email'],
+            'password'      => ['required', 'string', 'min:8'],
+            'role_id'       => ['required', 'exists:roles,id'],
+            'unit_kerja_id' => ['required', 'exists:unit_kerja,id'],
+        ], [
+            'unit_kerja_id.required' => 'Unit kerja wajib dipilih.',
         ]);
 
         $this->cegahPenugasanSuperAdminTanpaIzin($validated['role_id']);
-        $this->cegahPenugasanAdminOlehAdmin($validated['role_id']);
 
-        User::create([
-            'name'     => $validated['name'],
-            'email'    => $validated['email'],
-            'password' => Hash::make($validated['password']),
-            'role_id'  => $validated['role_id'],
-            'is_aktif' => true,
+        $user = User::create([
+            'name'          => $validated['name'],
+            'email'         => $validated['email'],
+            'password'      => Hash::make($validated['password']),
+            'role_id'       => $validated['role_id'],
+            'unit_kerja_id' => $validated['unit_kerja_id'],
+            'is_aktif'      => true,
         ]);
 
-        LogAktivitas::catat('Membuat', 'Pengguna', "Menambahkan pengguna \"{$validated['name']}\"");
+        $namaUnit = UnitKerja::find($validated['unit_kerja_id'])?->nama;
+        LogAktivitas::catat('Membuat', 'Pengguna', "Menambahkan pengguna \"{$validated['name']}\" (unit {$namaUnit})");
 
         return redirect()->route('pengguna.index')
             ->with('success', 'Pengguna baru berhasil ditambahkan.');
@@ -62,30 +89,49 @@ class PenggunaController extends Controller
 
     public function edit(User $pengguna)
     {
-        $this->cegahEditSuperAdminOlehAdmin($pengguna);
+        $this->pastikanBolehDikelola($pengguna);
 
         $roles = $this->rolesUntukTambahPengguna();
+        $daftarUnit = UnitKerja::orderBy('id')->get();
 
-        return view('pengguna.edit', compact('pengguna', 'roles'));
+        return view('pengguna.edit', compact('pengguna', 'roles', 'daftarUnit'));
     }
 
     public function update(Request $request, User $pengguna)
     {
-        $this->cegahEditSuperAdminOlehAdmin($pengguna);
+        $this->pastikanBolehDikelola($pengguna);
 
-        $isSuperAdmin = (auth()->user()->role->nama_role ?? '') === 'Super Admin';
+        $me = $this->saya();
 
-        $rules = [
-            'name'    => ['required', 'string', 'max:100'],
-            'email'   => ['required', 'email', 'max:100', 'unique:users,email,' . $pengguna->id],
-            'role_id' => ['required', 'exists:roles,id'],
-        ];
+        if (!$me->isGlobal()) {
+            $validated = $request->validate([
+                'name' => ['required', 'string', 'max:100'],
+            ]);
 
-        if ($isSuperAdmin) {
-            $rules['password'] = ['nullable', 'string', 'min:8', 'confirmed'];
+            $pengguna->update(['name' => $validated['name']]);
+
+            LogAktivitas::catat('Mengubah', 'Pengguna', "Mengubah nama pengguna \"{$pengguna->name}\"");
+
+            return redirect()->route('pengguna.index')
+                ->with('success', 'Nama pengguna berhasil diperbarui.');
         }
 
-        $validated = $request->validate($rules);
+        $adalahSuperAdmin = ($pengguna->role?->nama_role ?? '') === 'Super Admin';
+
+        $rules = [
+            'name'     => ['required', 'string', 'max:100'],
+            'email'    => ['required', 'email', 'max:100', 'unique:users,email,' . $pengguna->id],
+            'role_id'  => ['required', 'exists:roles,id'],
+            'password' => ['nullable', 'string', 'min:8', 'confirmed'],
+        ];
+
+        if (!$adalahSuperAdmin) {
+            $rules['unit_kerja_id'] = ['required', 'exists:unit_kerja,id'];
+        }
+
+        $validated = $request->validate($rules, [
+            'unit_kerja_id.required' => 'Unit kerja wajib dipilih.',
+        ]);
 
         $this->cegahPenugasanSuperAdminTanpaIzin($validated['role_id']);
 
@@ -95,7 +141,11 @@ class PenggunaController extends Controller
             'role_id' => $validated['role_id'],
         ];
 
-        $passwordDiubah = $isSuperAdmin && !empty($validated['password']);
+        if (!$adalahSuperAdmin) {
+            $dataUpdate['unit_kerja_id'] = $validated['unit_kerja_id'];
+        }
+
+        $passwordDiubah = !empty($validated['password']);
 
         if ($passwordDiubah) {
             $dataUpdate['password'] = Hash::make($validated['password']);
@@ -112,7 +162,7 @@ class PenggunaController extends Controller
 
     public function destroy(User $pengguna)
     {
-        $this->cegahEditSuperAdminOlehAdmin($pengguna);
+        $this->pastikanBolehDikelola($pengguna);
 
         if ($pengguna->id === Auth::id()) {
             return back()->withErrors(['pengguna' => 'Anda tidak dapat menonaktifkan akun Anda sendiri.']);
@@ -127,7 +177,7 @@ class PenggunaController extends Controller
 
     public function aktifkan(User $pengguna)
     {
-        $this->cegahEditSuperAdminOlehAdmin($pengguna);
+        $this->pastikanBolehDikelola($pengguna);
 
         $pengguna->update(['is_aktif' => true]);
 
@@ -135,10 +185,10 @@ class PenggunaController extends Controller
 
         return back()->with('success', "Pengguna {$pengguna->name} berhasil diaktifkan kembali.");
     }
-    
+
     public function hapusPermanen(User $pengguna)
     {
-        $this->cegahEditSuperAdminOlehAdmin($pengguna);
+        $this->pastikanBolehDikelola($pengguna);
 
         if ($pengguna->id === Auth::id()) {
             return back()->withErrors(['pengguna' => 'Anda tidak dapat menghapus akun Anda sendiri.']);
@@ -162,68 +212,44 @@ class PenggunaController extends Controller
         return back()->with('success', "Pengguna {$nama} berhasil dihapus permanen.");
     }
 
+    private function saya(): User
+    {
+        return User::with(['role.permissions', 'unitKerja'])->findOrFail(Auth::id());
+    }
+
+    private function pastikanBolehDikelola(User $target): void
+    {
+        $me = $this->saya();
+        $target->loadMissing('role');
+
+        if ($me->isGlobal()) {
+            return;
+        }
+
+        $namaRole = $target->role?->nama_role ?? '';
+
+        if (in_array($namaRole, self::ROLE_DILINDUNGI, true)) {
+            abort(403, 'Anda tidak memiliki izin untuk mengubah akun dengan role tersebut.');
+        }
+
+        if ($me->unit_kerja_id === null || (int) $target->unit_kerja_id !== (int) $me->unit_kerja_id) {
+            abort(403, 'Anda hanya dapat mengelola pengguna di unit kerja Anda sendiri.');
+        }
+    }
+
     private function cegahPenugasanSuperAdminTanpaIzin(int $roleId): void
     {
         $roleDipilih = Role::find($roleId);
-        $userSaatIni = User::with('role')->find(Auth::id());
 
-        if (
-            $roleDipilih &&
-            $roleDipilih->nama_role === 'Super Admin' &&
-            $userSaatIni?->role?->nama_role !== 'Super Admin'
-        ) {
+        if ($roleDipilih?->nama_role === 'Super Admin' && !$this->saya()->isGlobal()) {
             abort(403, 'Hanya Super Admin yang dapat menetapkan role Super Admin.');
         }
     }
 
-    private function cegahPenugasanAdminOlehAdmin(int $roleId): void
-    {
-        $roleDipilih = Role::find($roleId);
-        $userSaatIni = User::with('role')->find(Auth::id());
-
-        if (
-            $roleDipilih?->nama_role === 'Admin' &&
-            $userSaatIni?->role?->nama_role !== 'Super Admin'
-        ) {
-            abort(403, 'Hanya Super Admin yang dapat membuat pengguna dengan role Admin.');
-        }
-    }
-
-    private function cegahEditSuperAdminOlehAdmin(User $pengguna): void
-    {
-        $pengguna->load('role');
-        $userSaatIni = User::with('role')->find(Auth::id());
-
-        if (
-            $pengguna->role?->nama_role === 'Super Admin' &&
-            $userSaatIni?->role?->nama_role !== 'Super Admin'
-        ) {
-            abort(403, 'Anda tidak memiliki izin untuk mengubah akun Super Admin.');
-        }
-    }
-
-    private function rolesYangBolehDiassign()
-    {
-        $userSaatIni = User::with('role')->find(Auth::id());
-
-        if ($userSaatIni?->role?->nama_role === 'Super Admin') {
-            return Role::orderBy('nama_role')->get();
-        }
-
-        return Role::where('nama_role', '!=', 'Super Admin')->orderBy('nama_role')->get();
-    }
-
     private function rolesUntukTambahPengguna()
     {
-        $userSaatIni = User::with('role')->find(Auth::id());
-
-        if ($userSaatIni?->role?->nama_role === 'Super Admin') {
-            return Role::where('nama_role', '!=', 'Super Admin')
-                ->orderBy('nama_role')
-                ->get();
-        }
-
-        return Role::where('nama_role', 'User')
+        return Role::where('nama_role', '!=', 'Super Admin')
+            ->orderBy('nama_role')
             ->get();
     }
 }

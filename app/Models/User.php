@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
-#[Fillable(['name', 'email', 'password', 'role_id', 'is_aktif', 'can_sign'])]
+#[Fillable(['name', 'email', 'password', 'role_id', 'unit_kerja_id', 'is_aktif', 'can_sign'])]
 #[Hidden(['password', 'remember_token'])]
 
 class User extends Authenticatable
@@ -21,9 +21,35 @@ class User extends Authenticatable
         return $this->belongsTo(Role::class);
     }
 
+    public function unitKerja()
+    {
+        return $this->belongsTo(UnitKerja::class, 'unit_kerja_id');
+    }
+
     public function hasAnyRole(array $roles): bool
     {
         return in_array($this->role?->nama_role, $roles);
+    }
+
+    public function punyaPermission(string $kode): bool
+    {
+        return (bool) $this->role?->permissions->contains('kode_permission', $kode);
+    }
+
+    public function punyaSalahSatuPermission(array $kode): bool
+    {
+        foreach ($kode as $k) {
+            if ($this->punyaPermission($k)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public function isGlobal(): bool
+    {
+        return $this->punyaPermission('role.manage');
     }
 
     protected function casts(): array
@@ -41,6 +67,7 @@ class User extends Authenticatable
         'email',
         'password',
         'role_id',
+        'unit_kerja_id',
         'is_aktif',
         'can_sign',
     ];

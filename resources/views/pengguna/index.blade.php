@@ -5,8 +5,12 @@
 @endpush
 
 @section('content')
+@php
+    $saya = auth()->user();
+    $lintasUnit = $saya->isGlobal();
+@endphp
 <div class="pengguna-container">
-    @if ((auth()->user()->role->nama_role ?? '') === 'Super Admin')
+    @if ($lintasUnit)
         <div class="km-tabs">
             <a href="{{ route('pengguna.index') }}" class="km-tabs__link is-active">Pengguna</a>
             <a href="{{ route('role.index') }}" class="km-tabs__link">Role dan Hak Akses</a>
@@ -14,11 +18,31 @@
     @endif
 
     <div class="pengguna-header">
-        <h2>Kelola Pengguna</h2>
-        <a href="{{ route('pengguna.create') }}" class="btn-pengguna btn-primary-pengguna">
-            + Tambah Pengguna
-        </a>
+        <div>
+            <h2>Kelola Pengguna</h2>
+            @unless ($lintasUnit)
+                <p class="pengguna-subtitle">Unit kerja: <strong>{{ $saya->unitKerja->nama ?? '-' }}</strong></p>
+            @endunless
+        </div>
+        @if ($lintasUnit)
+            <a href="{{ route('pengguna.create') }}" class="btn-pengguna btn-primary-pengguna">
+                + Tambah Pengguna
+            </a>
+        @endif
     </div>
+
+    @if ($lintasUnit)
+        <form method="GET" action="{{ route('pengguna.index') }}" class="pengguna-filter">
+            <label for="filter-unit">Unit kerja:</label>
+            <select name="unit" id="filter-unit" onchange="this.form.submit()">
+                <option value="">Semua unit</option>
+                @foreach ($daftarUnit as $u)
+                    <option value="{{ $u->id }}" {{ (string) $filterUnit === (string) $u->id ? 'selected' : '' }}>{{ $u->nama }}</option>
+                @endforeach
+                <option value="none" {{ $filterUnit === 'none' ? 'selected' : '' }}>Lintas unit (tanpa unit)</option>
+            </select>
+        </form>
+    @endif
 
     @if(session('success'))
         <div class="alert-message alert-success">
@@ -39,22 +63,14 @@
                     <th>Nama</th>
                     <th>Email</th>
                     <th>Role</th>
+                    <th>Unit Kerja</th>
                     <th>Status</th>
                     <th class="aksi-header">Aksi</th>
                 </tr>
             </thead>
             <tbody>
-                @foreach($pengguna as $p)
-
-                    @if (
-                        ($authRole = auth()->user()->role->nama_role ?? '') !== 'Super Admin'
-                        && ($p->role?->nama_role ?? '') === 'Super Admin'
-                    )
-                        @continue
-                    @endif
-
+                @forelse($pengguna as $p)
                     <tr>
-                        
                     <td>{{ $p->name }}</td>
                     <td>{{ $p->email }}</td>
                     <td>
@@ -64,6 +80,13 @@
                         <span class="role-badge role-{{ strtolower(str_replace(' ', '-', $namaRole)) }}">
                             {{ $namaRole }}
                         </span>
+                    </td>
+                    <td>
+                        @if ($p->unitKerja)
+                            <span class="unit-badge unit-{{ strtolower($p->unitKerja->kode) }}">{{ $p->unitKerja->nama }}</span>
+                        @else
+                            <span class="unit-badge unit-semua">Semua Unit</span>
+                        @endif
                     </td>
                     <td>
                         <span class="badge-status {{ $p->is_aktif ? 'badge-active' : 'badge-inactive' }}">
@@ -80,10 +103,7 @@
                             </a>
                             @if($p->id !== auth()->id())
                                 @if ($p->is_aktif)
-                                    @if (
-                                        (auth()->user()->role->nama_role ?? '') === 'Super Admin'
-                                        || ($p->role?->nama_role ?? '') !== 'Super Admin'
-                                    )
+                                    @if ($lintasUnit || !in_array($p->role?->nama_role ?? '', ['Super Admin', 'Admin']))
                                         <form method="POST"
                                             action="{{ route('pengguna.destroy', $p) }}"
                                             class="form-nonaktif"
@@ -114,7 +134,7 @@
                                         </button>
                                     </form>
                                     @endif
-                                @unless ($idPenggunaPunyaSurat->contains($p->id))
+                                @if ($lintasUnit && !$idPenggunaPunyaSurat->contains($p->id))
                                     <form method="POST"
                                         action="{{ route('pengguna.hapus-permanen', $p) }}"
                                         data-confirm="Hapus PERMANEN pengguna ini? Tindakan ini tidak bisa dibatalkan sama sekali."
@@ -129,12 +149,16 @@
                                             </svg>
                                         </button>
                                     </form>
-                                @endunless
+                                @endif
                             @endif
                         </div>
                     </td>
                 </tr>
-                @endforeach
+                @empty
+                    <tr>
+                        <td colspan="6" class="empty-row">Belum ada pengguna.</td>
+                    </tr>
+                @endforelse
             </tbody>
         </table>
     </div>

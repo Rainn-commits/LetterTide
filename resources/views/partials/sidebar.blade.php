@@ -56,7 +56,7 @@
             'active'     => request()->routeIs('kop-surat.*'),
             'roles'      => ['Super Admin', 'Admin'], 
             'icon'       => 'settings',
-            'permission' => 'kopsurat.manage',
+            'permission' => ['kopsurat.manage', 'kopsurat.edit'],
         ],
         [
             'label'      => str_contains($roleName, 'Super Admin') ? 'Kelola Pengguna & Role' : 'Kelola Pengguna',
@@ -64,7 +64,7 @@
             'active'     => request()->routeIs('pengguna.*') || request()->routeIs('role.*'),
             'roles'      => ['Super Admin', 'Admin'],
             'icon'       => 'users',
-            'permission' => 'role.manage',
+            'permission' => ['role.manage', 'pengguna.unit'],
         ],
         [
             'label'      => 'Retensi Arsip',
@@ -98,8 +98,9 @@
             @php
                 $userRole = auth()->user()->role;
                 $isDefaultAllowed = $roleName && in_array($roleName, $item['roles']);
-                $hasDbPermission = isset($item['permission']) && $userRole?->permissions?->contains('kode_permission', $item['permission']);
-                $isExplicitlyRevoked = isset($item['permission']) && $userRole?->permissions->isNotEmpty() && !$hasDbPermission;
+                $kodeItem = (array) ($item['permission'] ?? []);
+                $hasDbPermission = !empty($kodeItem) && $userRole?->permissions?->whereIn('kode_permission', $kodeItem)->isNotEmpty();
+                $isExplicitlyRevoked = !empty($kodeItem) && $userRole?->permissions->isNotEmpty() && !$hasDbPermission;
             @endphp
 
             @continue((!$isDefaultAllowed && !$hasDbPermission) || $isExplicitlyRevoked)
@@ -164,6 +165,9 @@
             <span class="sidebar__avatar">{{ Str::of(auth()->user()->name ?? 'U')->explode(' ')->map(fn ($w) => strtoupper($w[0] ?? ''))->take(2)->implode('') }}</span>
             <div class="sidebar__user">
                 <div class="sidebar__user-name">{{ auth()->user()->name ?? 'Pengguna' }}</div>
+                @if (auth()->user()->unitKerja)
+                    <div class="sidebar__user-unit" style="font-size: 11.5px; opacity: .7; line-height: 1.2;">{{ auth()->user()->unitKerja->nama }}</div>
+                @endif
             </div>
         </a>
         <form method="POST" action="{{ route('logout') }}" class="sidebar__logout-form">

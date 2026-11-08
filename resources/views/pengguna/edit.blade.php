@@ -5,6 +5,7 @@
 @endpush
 
 @section('content')
+@php $lintasUnit = auth()->user()->isGlobal(); @endphp
 <div class="pengguna-container">
     <h2>Edit Pengguna</h2>
 
@@ -22,10 +23,38 @@
                 <input type="text" name="name" class="form-control-pengguna" value="{{ old('name', $pengguna->name) }}" required>
             </div>
 
+            @if ($lintasUnit)
             <div class="form-group">
                 <label>Email:</label>
                 <input type="email" name="email" class="form-control-pengguna" value="{{ old('email', $pengguna->email) }}" required>
             </div>
+            @else
+            <div class="form-group">
+                <label>Email:</label>
+                <input type="email" class="form-control-pengguna" value="{{ $pengguna->email }}" disabled>
+            </div>
+            <div class="form-group">
+                <label>Unit Kerja:</label>
+                <input type="text" class="form-control-pengguna" value="{{ $pengguna->unitKerja->nama ?? '-' }}" disabled>
+                <p style="font-size: 12.5px; color: #64748b; margin-top: 6px;">
+                    Sebagai Admin, Anda hanya dapat mengubah nama dan menonaktifkan akun. Perubahan email, role, unit, dan password dilakukan oleh Super Admin.
+                </p>
+            </div>
+            @endif
+
+            @if ($lintasUnit)
+            @if (($pengguna->role->nama_role ?? '') !== 'Super Admin')
+            <div class="form-group">
+                <label>Unit Kerja:</label>
+                <select name="unit_kerja_id" class="form-control-pengguna" required>
+                    @foreach($daftarUnit as $unit)
+                        <option value="{{ $unit->id }}" {{ old('unit_kerja_id', $pengguna->unit_kerja_id) == $unit->id ? 'selected' : '' }}>
+                            {{ $unit->nama }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+            @endif
 
             <div class="form-group">
                 <label>Role:</label>
@@ -45,8 +74,9 @@
                     </select>
                 @endif
             </div>
+            @endif
 
-            @if ((auth()->user()->role->nama_role ?? '') === 'Super Admin')
+            @if ($lintasUnit)
                 <hr style="margin: 24px 0; border: none; border-top: 1px solid #e2e8f0;">
 
                 <div class="form-group">

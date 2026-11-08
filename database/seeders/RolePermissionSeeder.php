@@ -9,41 +9,33 @@ class RolePermissionSeeder extends Seeder
 {
     public function run(): void
     {
-        $superAdmin = DB::table('roles')->where('nama_role', 'Super Admin')->first()->id;
-        $admin = DB::table('roles')->where('nama_role', 'Admin')->first()->id;
-        $user = DB::table('roles')->where('nama_role', 'User')->first()->id;
-
         $permissions = DB::table('permissions')->pluck('id', 'kode_permission');
 
-        $data = [
-            ['role_id' => $superAdmin, 'permission_id' => $permissions['surat.create']],
-            ['role_id' => $superAdmin, 'permission_id' => $permissions['template.manage']],
-            ['role_id' => $superAdmin, 'permission_id' => $permissions['arsip.manage']],
-            ['role_id' => $superAdmin, 'permission_id' => $permissions['kopsurat.manage']],
-            ['role_id' => $superAdmin, 'permission_id' => $permissions['role.manage']],
-            ['role_id' => $superAdmin, 'permission_id' => $permissions['retensi.evaluate']],
-            ['role_id' => $superAdmin, 'permission_id' => $permissions['retensi.manage']],
-            ['role_id' => $superAdmin, 'permission_id' => $permissions['log.view']],
-
-            ['role_id' => $admin, 'permission_id' => $permissions['surat.create']],
-            ['role_id' => $admin, 'permission_id' => $permissions['template.manage']],
-            ['role_id' => $admin, 'permission_id' => $permissions['arsip.manage']],
-            ['role_id' => $admin, 'permission_id' => $permissions['kopsurat.manage']],
-            ['role_id' => $admin, 'permission_id' => $permissions['role.manage']],
-            ['role_id' => $admin, 'permission_id' => $permissions['retensi.evaluate']],
-            ['role_id' => $admin, 'permission_id' => $permissions['log.view']],
-
-            ['role_id' => $user, 'permission_id' => $permissions['surat.create']],
-            ['role_id' => $user, 'permission_id' => $permissions['template.manage']],
-            ['role_id' => $user, 'permission_id' => $permissions['arsip.manage']],
-            ['role_id' => $user, 'permission_id' => $permissions['retensi.evaluate']],
+        $hakAkses = [
+            'Super Admin' => ['template.manage', 'kopsurat.manage', 'role.manage', 'log.view'],
+            'Admin'       => ['surat.create', 'arsip.manage', 'kopsurat.edit', 'pengguna.unit', 'retensi.evaluate', 'log.view'],
+            'User'        => ['surat.create', 'arsip.manage', 'retensi.evaluate'],
         ];
 
-        foreach ($data as $row) {
-            $row['created_at'] = now();
-            $row['updated_at'] = now();
-            
-            DB::table('role_permissions')->insertOrIgnore($row);
+        foreach ($hakAkses as $namaRole => $daftarKode) {
+            $roleId = DB::table('roles')->where('nama_role', $namaRole)->value('id');
+
+            if (!$roleId) {
+                continue;
+            }
+
+            foreach ($daftarKode as $kode) {
+                if (!isset($permissions[$kode])) {
+                    continue;
+                }
+
+                DB::table('role_permissions')->insertOrIgnore([
+                    'role_id'       => $roleId,
+                    'permission_id' => $permissions[$kode],
+                    'created_at'    => now(),
+                    'updated_at'    => now(),
+                ]);
+            }
         }
     }
 }

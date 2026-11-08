@@ -8,12 +8,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 class CheckPermission
 {
-    /**
-     * Handle an incoming request.
-     *
-     * @param  Closure(Request): (Response)  $next
-     */
-    public function handle(Request $request, Closure $next, string $kodePermission): Response
+    public function handle(Request $request, Closure $next, string ...$kodePermission): Response
     {
         $user = $request->user();
 
@@ -22,7 +17,7 @@ class CheckPermission
         }
 
         $punyaAkses = $user->role->permissions()
-            ->where('kode_permission', $kodePermission)
+            ->whereIn('kode_permission', $kodePermission)
             ->exists();
 
         if (!$punyaAkses) {

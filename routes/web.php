@@ -56,9 +56,12 @@ Route::middleware(['auth', 'active'])->group(function () {
     Route::post('/evaluasi-retensi/{surat}/validasi', [EvaluasiRetensiController::class, 'validasi'])->name('retensi.validasi');
 
     Route::middleware('permission:kopsurat.manage')->group(function () {
-        Route::get('/kop-surat', [KopSuratController::class, 'index'])->name('kop-surat.index');
         Route::get('/kop-surat/create', [KopSuratController::class, 'create'])->name('kop-surat.create');
         Route::post('/kop-surat', [KopSuratController::class, 'store'])->name('kop-surat.store');
+    });
+
+    Route::middleware('permission:kopsurat.manage,kopsurat.edit')->group(function () {
+        Route::get('/kop-surat', [KopSuratController::class, 'index'])->name('kop-surat.index');
         Route::get('/kop-surat/{pengaturanKopSurat}/preview', [KopSuratController::class, 'preview'])->name('kop-surat.preview');
         Route::get('/kop-surat/{pengaturanKopSurat}/edit', [KopSuratController::class, 'edit'])->name('kop-surat.edit');
         Route::put('/kop-surat/{pengaturanKopSurat}', [KopSuratController::class, 'update'])->name('kop-surat.update');
@@ -71,14 +74,17 @@ Route::middleware(['auth', 'active'])->group(function () {
     Route::put('/surat/{surat}', [SuratController::class, 'update'])->name('surat.update');
 
     Route::middleware('permission:role.manage')->group(function () {
-        Route::get('/pengguna', [PenggunaController::class, 'index'])->name('pengguna.index');
         Route::get('/pengguna/create', [PenggunaController::class, 'create'])->name('pengguna.create');
         Route::post('/pengguna', [PenggunaController::class, 'store'])->name('pengguna.store');
+        Route::delete('/pengguna/{pengguna}/hapus-permanen', [PenggunaController::class, 'hapusPermanen'])->name('pengguna.hapus-permanen');
+    });
+
+    Route::middleware('permission:role.manage,pengguna.unit')->group(function () {
+        Route::get('/pengguna', [PenggunaController::class, 'index'])->name('pengguna.index');
         Route::get('/pengguna/{pengguna}/edit', [PenggunaController::class, 'edit'])->name('pengguna.edit');
         Route::put('/pengguna/{pengguna}', [PenggunaController::class, 'update'])->name('pengguna.update');
         Route::delete('/pengguna/{pengguna}', [PenggunaController::class, 'destroy'])->name('pengguna.destroy');
         Route::patch('/pengguna/{pengguna}/aktifkan', [PenggunaController::class, 'aktifkan'])->name('pengguna.aktifkan');
-        Route::delete('/pengguna/{pengguna}/hapus-permanen', [PenggunaController::class, 'hapusPermanen'])->name('pengguna.hapus-permanen');
     });
 
     Route::middleware('permission:template.manage')->group(function () {

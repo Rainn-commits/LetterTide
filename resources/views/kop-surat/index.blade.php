@@ -22,12 +22,14 @@
 
     <div class="page-toolbar">
         <div class="page-toolbar__spacer"></div>
+        @if (auth()->user()->punyaPermission('kopsurat.manage'))
         <a href="{{ route('kop-surat.create') }}" class="btn-teal">
             <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M12 5V19M5 12H19" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
             </svg>
             Tambah Kop Surat Baru
         </a>
+        @endif
     </div>
 
     <div class="card card--table">

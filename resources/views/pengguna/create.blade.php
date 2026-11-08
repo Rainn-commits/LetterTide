@@ -32,6 +32,21 @@
             </div>
 
             <div class="form-group">
+                <label>Unit Kerja:</label>
+                <select name="unit_kerja_id" class="form-control-pengguna" required>
+                    <option value="">-- Pilih Unit Kerja --</option>
+                    @foreach($daftarUnit as $unit)
+                        <option value="{{ $unit->id }}" {{ old('unit_kerja_id') == $unit->id ? 'selected' : '' }}>
+                            {{ $unit->nama }}
+                        </option>
+                    @endforeach
+                </select>
+                <p style="font-size: 12.5px; color: #64748b; margin-top: 6px;">
+                    Menentukan template, kop surat, dan arsip mana yang dapat diakses akun ini.
+                </p>
+            </div>
+
+            <div class="form-group">
                 <label>Role:</label>
                 <select name="role_id" class="form-control-pengguna" required>
                     <option value="">-- Pilih Role --</option>

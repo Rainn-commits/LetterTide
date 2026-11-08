@@ -19,57 +19,45 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             RoleSeeder::class,
+            UnitKerjaSeeder::class,
             PermissionSeeder::class,
             RolePermissionSeeder::class,
         ]);
 
-        $superAdminRole = DB::table('roles')->where('nama_role', 'Super Admin')->first();
-        $adminRole      = DB::table('roles')->where('nama_role', 'Admin')->first();
-        $userRole       = DB::table('roles')->where('nama_role', 'User')->first();
+        $idRole = fn (string $nama) => DB::table('roles')->where('nama_role', $nama)->value('id');
+        $idUnit = fn (string $kode) => DB::table('unit_kerja')->where('kode', $kode)->value('id');
 
-        User::updateOrCreate(
-            ['email' => 'superadmin@gmail.com'],
-            [
-                'name'     => 'Super Admin',
-                'password' => Hash::make('o123456789n'),
-                'role_id'  => $superAdminRole?->id,
-            ]
-        );
+        $superAdmin = $idRole('Super Admin');
+        $admin      = $idRole('Admin');
+        $user       = $idRole('User');
 
-        User::updateOrCreate(
-            ['email' => 'admin@gmail.com'],
-            [
-                'name'     => 'Admin',
-                'password' => Hash::make('t123456789o'),
-                'role_id'  => $adminRole?->id,
-            ]
-        );
+        $akun = [
+            ['superadmin@gmail.com',    'Super Admin',            'o123456789n',   $superAdmin, null],
 
-        User::updateOrCreate(
-            ['email' => 'user1@gmail.com'],
-            [
-                'name'     => 'User1',
-                'password' => Hash::make('on12345678901'),
-                'role_id'  => $userRole?->id,
-            ]
-        );
+            ['admin@gmail.com',         'Admin Kantor Pusat',     't123456789o',   $admin, 'PUSAT'],
+            ['user1@gmail.com',         'User Pusat 1',           'on12345678901', $user,  'PUSAT'],
+            ['user2@gmail.com',         'User Pusat 2',           'tw12345678902', $user,  'PUSAT'],
 
-        User::updateOrCreate(
-            ['email' => 'user2@gmail.com'],
-            [
-                'name'     => 'User2',
-                'password' => Hash::make('tw12345678902'),
-                'role_id'  => $userRole?->id,
-            ]
-        );
+            ['admin.web@gmail.com',     'Admin Inovindo Web',     'a123456789w',   $admin, 'WEB'],
+            ['user3@gmail.com',         'User Web 1',             'tr12345678903', $user,  'WEB'],
+            ['user4@gmail.com',         'User Web 2',             'fo12345678904', $user,  'WEB'],
 
-        User::updateOrCreate(
-            ['email' => 'user3@gmail.com'],
-            [
-                'name'     => 'User3',
-                'password' => Hash::make('tr12345678903'),
-                'role_id'  => $userRole?->id,
-            ]
-        );
+            ['admin.academy@gmail.com', 'Admin Inovindo Academy', 'a123456789a',   $admin, 'ACADEMY'],
+            ['user5@gmail.com',         'User Academy 1',         'fv12345678905', $user,  'ACADEMY'],
+            ['user6@gmail.com',         'User Academy 2',         'si12345678906', $user,  'ACADEMY'],
+        ];
+
+        foreach ($akun as [$email, $nama, $password, $roleId, $kodeUnit]) {
+            User::updateOrCreate(
+                ['email' => $email],
+                [
+                    'name'          => $nama,
+                    'password'      => Hash::make($password),
+                    'role_id'       => $roleId,
+                    'unit_kerja_id' => $kodeUnit ? $idUnit($kodeUnit) : null,
+                    'is_aktif'      => true,
+                ]
+            );
+        }
     }
 }
