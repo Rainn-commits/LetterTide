@@ -11,7 +11,11 @@ class PengaturanKopSurat extends Model
     public $timestamps = false;
 
     protected $fillable = [
-        'logo','nama_kop', 'nama_pt', 'alamat_pt', 'telepon', 'email', 'website', 'versi', 'created_at'
+        'logo','nama_kop', 'nama_pt', 'alamat_pt', 'telepon', 'email', 'website', 'versi', 'is_aktif', 'created_at'
+    ];
+
+    protected $casts = [
+        'is_aktif' => 'boolean',
     ];
 
     public function surat()

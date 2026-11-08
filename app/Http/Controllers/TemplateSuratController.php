@@ -104,7 +104,8 @@ class TemplateSuratController extends Controller
 
     public function preview(Request $request, TemplateSurat $templateSurat)
     {
-        $daftarKop = PengaturanKopSurat::orderBy('nama_kop')
+        $daftarKop = PengaturanKopSurat::where('is_aktif', true)
+            ->orderBy('nama_kop')
             ->orderByDesc('versi')
             ->get();
 
@@ -146,4 +147,3 @@ class TemplateSuratController extends Controller
         ]);
     }
 }
-

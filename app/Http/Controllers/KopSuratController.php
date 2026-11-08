@@ -6,6 +6,7 @@ use App\Models\PengaturanKopSurat;
 use App\Models\LogAktivitas;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
 class KopSuratController extends Controller
@@ -20,7 +21,7 @@ class KopSuratController extends Controller
             ->get();
 
         return view('kop-surat.index', [
-            'riwayat' => $riwayat,
+            'daftarKop' => $riwayat,
         ]);
     }
 
@@ -65,6 +66,7 @@ class KopSuratController extends Controller
             'email'      => $validated['email'],
             'website'    => $validated['website'] ?? null,
             'versi'      => $versiBaru,
+            'is_aktif'   => true,
             'created_at' => now(),
         ]);
 
@@ -85,12 +87,20 @@ class KopSuratController extends Controller
     {
         $kopSurat = PengaturanKopSurat::findOrFail($id);
 
+        if ($tolak = $this->tolakJikaTidakAktif($kopSurat)) {
+            return $tolak;
+        }
+
         return view('kop-surat.edit', compact('kopSurat'));
     }
 
     public function update(Request $request, $id)
     {
         $kopSurat = PengaturanKopSurat::findOrFail($id);
+
+        if ($tolak = $this->tolakJikaTidakAktif($kopSurat)) {
+            return $tolak;
+        }
 
         $validated = $request->validate([
             'logo'      => ['nullable', 'image', 'max:10240'],
@@ -110,17 +120,22 @@ class KopSuratController extends Controller
 
         $versiBaru = $kopSurat->versi + 1;
 
-        PengaturanKopSurat::create([
-            'logo'       => $logoPath,
-            'nama_kop'   => $validated['nama_kop'],
-            'nama_pt'    => $validated['nama_pt'],
-            'alamat_pt'  => $validated['alamat_pt'],
-            'telepon'    => $validated['telepon'],
-            'email'      => $validated['email'],
-            'website'    => $validated['website'] ?? null,
-            'versi'      => $versiBaru,
-            'created_at' => now(),
-        ]);
+        DB::transaction(function () use ($kopSurat, $validated, $logoPath, $versiBaru) {
+            $kopSurat->update(['is_aktif' => false]);
+
+            PengaturanKopSurat::create([
+                'logo'       => $logoPath,
+                'nama_kop'   => $validated['nama_kop'],
+                'nama_pt'    => $validated['nama_pt'],
+                'alamat_pt'  => $validated['alamat_pt'],
+                'telepon'    => $validated['telepon'],
+                'email'      => $validated['email'],
+                'website'    => $validated['website'] ?? null,
+                'versi'      => $versiBaru,
+                'is_aktif'   => true,
+                'created_at' => now(),
+            ]);
+        });
 
         LogAktivitas::catat(
             'Mengubah',
@@ -142,11 +157,30 @@ class KopSuratController extends Controller
         $versi = $kopSurat->versi;
         $nama  = $kopSurat->nama_kop;
 
-        if ($kopSurat->logo && Storage::disk('public')->exists($kopSurat->logo)) {
-            Storage::disk('public')->delete($kopSurat->logo);
+        if ($kopSurat->surat()->exists()) {
+            return redirect()->route('kop-surat.index')
+                ->with('error', "Kop surat \"{$nama}\" versi {$versi} tidak bisa dihapus karena sudah dipakai oleh surat.");
         }
 
-        $kopSurat->delete();
+        $logo = $kopSurat->logo;
+        $sedangAktif = $kopSurat->is_aktif;
+
+        DB::transaction(function () use ($kopSurat, $nama, $sedangAktif) {
+            $kopSurat->delete();
+
+            if ($sedangAktif) {
+                PengaturanKopSurat::where('nama_kop', $nama)
+                    ->orderByDesc('versi')
+                    ->first()
+                    ?->update(['is_aktif' => true]);
+            }
+        });
+
+        if ($logo
+            && ! PengaturanKopSurat::where('logo', $logo)->exists()
+            && Storage::disk('public')->exists($logo)) {
+            Storage::disk('public')->delete($logo);
+        }
 
         LogAktivitas::catat(
             'Menghapus',
@@ -158,6 +192,19 @@ class KopSuratController extends Controller
             ->with(
                 'success',
                 "Kop surat \"{$nama}\" versi {$versi} berhasil dihapus."
+            );
+    }
+
+    private function tolakJikaTidakAktif(PengaturanKopSurat $kopSurat)
+    {
+        if ($kopSurat->is_aktif) {
+            return null;
+        }
+
+        return redirect()->route('kop-surat.index')
+            ->with(
+                'error',
+                "Kop surat \"{$kopSurat->nama_kop}\" versi {$kopSurat->versi} sudah tidak aktif dan tidak dapat diedit. Edit versi yang berstatus Aktif."
             );
     }
 

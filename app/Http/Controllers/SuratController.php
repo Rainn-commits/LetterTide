@@ -70,7 +70,7 @@ class SuratController extends Controller
     {
         $fields = PlaceholderParser::toFormFields($template->isi_template);
         $users = User::orderBy('name')->get();
-        $kopSurats = PengaturanKopSurat::orderBy('versi', 'desc')->get();
+        $kopSurats = PengaturanKopSurat::where('is_aktif', true)->orderBy('nama_kop')->get();
 
         $templatePunyaLampiran = preg_match(
             '/<div[^>]*style=["\'][^"\']*page-break-before:\s*always[^"\']*["\'][^>]*><\/div>\s*\S/is',
