@@ -2,21 +2,42 @@
 
 namespace App\Models;
 
-use Database\Factories\UserFactory;
-use Illuminate\Database\Eloquent\Attributes\Fillable;
-use Illuminate\Database\Eloquent\Attributes\Hidden;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Auth;
-
-#[Fillable(['name', 'email', 'password', 'role_id', 'unit_kerja_id', 'is_aktif', 'can_sign'])]
-#[Hidden(['password', 'remember_token'])]
 
 class User extends Authenticatable
 {
     use HasFactory, Notifiable;
+
+    private ?bool $cacheGlobal = null;
+
+    protected $fillable = [
+        'name',
+        'email',
+        'password',
+        'role_id',
+        'unit_kerja_id',
+        'is_aktif',
+        'can_sign',
+    ];
+
+    protected $hidden = [
+        'password',
+        'remember_token',
+    ];
+
+    protected function casts(): array
+    {
+        return [
+            'email_verified_at' => 'datetime',
+            'password' => 'hashed',
+            'is_aktif' => 'boolean',
+            'can_sign' => 'boolean',
+        ];
+    }
 
     public function role()
     {
@@ -30,7 +51,7 @@ class User extends Authenticatable
 
     public function hasAnyRole(array $roles): bool
     {
-        return in_array($this->role?->nama_role, $roles);
+        return in_array($this->role?->nama_role, $roles, true);
     }
 
     public function punyaPermission(string $kode): bool
@@ -51,13 +72,16 @@ class User extends Authenticatable
 
     public function isGlobal(): bool
     {
-        return $this->cacheGlobal ??= $this->punyaPermission('role.manage');
-    }
+        if ($this->cacheGlobal === null) {
+            $this->cacheGlobal = $this->punyaPermission('role.manage');
+        }
 
-    private ?bool $cacheGlobal = null;
+        return $this->cacheGlobal;
+    }
 
     public function scopeDiUnitSaya(Builder $query): Builder
     {
+        /** @var User|null $saya */
         $saya = Auth::user();
 
         if (!$saya || $saya->isGlobal()) {
@@ -68,29 +92,4 @@ class User extends Authenticatable
             ? $query->where('users.unit_kerja_id', $saya->unit_kerja_id)
             : $query->whereRaw('1 = 0');
     }
-
-    protected function casts(): array
-    {
-        return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
-            'is_aktif' => 'boolean',
-            'can_sign' => 'boolean',
-        ];
-    }
-
-    protected $fillable = [
-        'name',
-        'email',
-        'password',
-        'role_id',
-        'unit_kerja_id',
-        'is_aktif',
-        'can_sign',
-    ];
-
-    protected $casts = [
-        'is_aktif' => 'boolean',
-        'can_sign' => 'boolean',
-    ];
 }
