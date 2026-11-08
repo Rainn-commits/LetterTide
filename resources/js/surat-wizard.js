@@ -37,11 +37,7 @@ document.addEventListener('DOMContentLoaded', function () {
             resultsBox.innerHTML = '';
 
             if (users.length === 0) {
-                const empty = document.createElement('div');
-                empty.className = 'autocomplete__empty';
-                empty.textContent = 'Nama tidak ditemukan.';
-                resultsBox.appendChild(empty);
-                resultsBox.classList.add('is-open');
+                closeResults();
                 return;
             }
 
