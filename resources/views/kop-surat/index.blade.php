@@ -44,7 +44,17 @@
                 </tr>
             </thead>
             <tbody>
-                @forelse ($daftarKop as $kop)
+                @php
+                    $kelompok = $daftarKop->groupBy(fn ($k) => $k->unit_kerja_id ?? 0)
+                        ->sortKeysUsing(fn ($a, $b) => ($a ?: PHP_INT_MAX) <=> ($b ?: PHP_INT_MAX));
+                @endphp
+                @forelse ($kelompok as $idUnit => $daftarDiUnit)
+                    <tr class="unit-group-row">
+                        <td colspan="5" style="background: #f1f5f9; font-weight: 700; color: #0f172a; padding: 10px 16px; text-align: left;">
+                            {{ $daftarDiUnit->first()->unitKerja->nama ?? 'Belum ditentukan unitnya' }}
+                        </td>
+                    </tr>
+                    @foreach ($daftarDiUnit as $kop)
                     <tr>
                         <td class="template-name">
                             {{ $kop->nama_kop }}
@@ -90,6 +100,7 @@
                             </div>
                         </td>
                     </tr>
+                    @endforeach
                 @empty
                     <tr>
                         <td colspan="5" class="table-empty">

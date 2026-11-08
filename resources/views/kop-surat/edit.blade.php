@@ -48,6 +48,10 @@
                 <small style="color: #64748B; font-size: 0.75rem; display: block; margin-top: 4px;">Biarkan kosong jika tidak ingin mengubah logo.</small>
             </div>
 
+            @include('partials.pilih-unit', [
+                'nilai' => old('unit_kerja_id', $kopSurat->unit_kerja_id),
+            ])
+
             <div style="margin-bottom: 16px;">
                 <label for="nama_kop" style="display: block; font-weight: 600; font-size: 0.875rem; margin-bottom: 6px; color: #334155;">Nama Kop Surat</label>
                 <input

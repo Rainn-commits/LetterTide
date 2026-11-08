@@ -60,6 +60,11 @@
                 <div id="file-name" style="font-size: 0.85rem; color: #334155; margin-top: 6px; font-weight: 500;"></div>
             </div>
 
+            @include('partials.pilih-unit', [
+                'nilai' => old('unit_kerja_id'),
+                'keterangan' => 'Kop ini hanya dapat dipakai dan dikelola oleh unit tersebut.',
+            ])
+
             <div style="margin-bottom: 16px;">
                 <label style="display: block; font-weight: 600; margin-bottom: 6px; color: #0f172a; text-transform: none;">
                     Nama Kop Surat
