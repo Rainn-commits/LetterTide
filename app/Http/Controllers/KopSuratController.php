@@ -16,7 +16,7 @@ class KopSuratController extends Controller
 
     public function index()
     {
-        $riwayat = PengaturanKopSurat::orderBy('nama_kop')
+        $riwayat = PengaturanKopSurat::with('unitKerja')->orderBy('nama_kop')
             ->orderByDesc('versi')
             ->get();
 
@@ -47,6 +47,9 @@ class KopSuratController extends Controller
             'telepon'   => ['required', 'string', 'max:20'],
             'email'     => ['required', 'email', 'max:100'],
             'website'   => ['nullable', 'string', 'max:100'],
+            'unit_kerja_id' => ['required', 'exists:unit_kerja,id'],
+        ], [
+            'unit_kerja_id.required' => 'Unit kerja pemilik kop wajib dipilih.',
         ]);
 
         $versiBaru = 1;
@@ -68,6 +71,7 @@ class KopSuratController extends Controller
             'versi'      => $versiBaru,
             'is_aktif'   => true,
             'created_at' => now(),
+            'unit_kerja_id' => $validated['unit_kerja_id'],
         ]);
 
         LogAktivitas::catat(
@@ -110,6 +114,7 @@ class KopSuratController extends Controller
             'telepon'   => ['required', 'string', 'max:20'],
             'email'     => ['required', 'email', 'max:100'],
             'website'   => ['nullable', 'string', 'max:100'],
+            'unit_kerja_id' => [auth()->user()->isGlobal() ? 'required' : 'nullable', 'exists:unit_kerja,id'],
         ]);
 
         if ($request->hasFile('logo')) {
@@ -120,7 +125,17 @@ class KopSuratController extends Controller
 
         $versiBaru = $kopSurat->versi + 1;
 
-        DB::transaction(function () use ($kopSurat, $validated, $logoPath, $versiBaru) {
+        $unitId = auth()->user()->isGlobal()
+            ? $validated['unit_kerja_id']
+            : $kopSurat->unit_kerja_id;
+
+        DB::transaction(function () use ($kopSurat, $validated, $logoPath, $versiBaru, $unitId) {
+            if ((int) $unitId !== (int) $kopSurat->unit_kerja_id) {
+                PengaturanKopSurat::where('nama_kop', $kopSurat->nama_kop)
+                    ->where('unit_kerja_id', $kopSurat->unit_kerja_id)
+                    ->update(['unit_kerja_id' => $unitId]);
+            }
+
             $kopSurat->update(['is_aktif' => false]);
 
             PengaturanKopSurat::create([
@@ -134,6 +149,7 @@ class KopSuratController extends Controller
                 'versi'      => $versiBaru,
                 'is_aktif'   => true,
                 'created_at' => now(),
+                'unit_kerja_id' => $unitId,
             ]);
         });
 
@@ -165,11 +181,14 @@ class KopSuratController extends Controller
         $logo = $kopSurat->logo;
         $sedangAktif = $kopSurat->is_aktif;
 
-        DB::transaction(function () use ($kopSurat, $nama, $sedangAktif) {
+        $unitId = $kopSurat->unit_kerja_id;
+
+        DB::transaction(function () use ($kopSurat, $nama, $sedangAktif, $unitId) {
             $kopSurat->delete();
 
             if ($sedangAktif) {
                 PengaturanKopSurat::where('nama_kop', $nama)
+                    ->where('unit_kerja_id', $unitId)
                     ->orderByDesc('versi')
                     ->first()
                     ?->update(['is_aktif' => true]);
@@ -177,7 +196,7 @@ class KopSuratController extends Controller
         });
 
         if ($logo
-            && ! PengaturanKopSurat::where('logo', $logo)->exists()
+            && ! PengaturanKopSurat::withoutGlobalScopes()->where('logo', $logo)->exists()
             && Storage::disk('public')->exists($logo)) {
             Storage::disk('public')->delete($logo);
         }

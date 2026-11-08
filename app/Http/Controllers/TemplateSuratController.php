@@ -13,7 +13,8 @@ class TemplateSuratController extends Controller
 {
     public function index()
     {
-        $templates = TemplateSurat::orderBy('nama_template')
+        $templates = TemplateSurat::with('unitKerja')
+            ->orderBy('nama_template')
             ->orderByDesc('versi')
             ->get();
 
@@ -30,6 +31,9 @@ class TemplateSuratController extends Controller
         $validated = $request->validate([
             'nama_template' => ['required', 'string', 'max:100'],
             'isi_template'  => ['required', 'string'],
+            'unit_kerja_id' => ['required', 'exists:unit_kerja,id'],
+        ], [
+            'unit_kerja_id.required' => 'Unit kerja pemilik template wajib dipilih.',
         ]);
 
         $template = TemplateSurat::create([
@@ -37,6 +41,7 @@ class TemplateSuratController extends Controller
             'isi_template'  => $validated['isi_template'],
             'versi'         => 1,
             'is_aktif'      => true,
+            'unit_kerja_id' => $validated['unit_kerja_id'],
         ]);
 
         LogAktivitas::catat('Membuat', 'Template Surat', "Membuat template \"{$template->nama_template}\" versi 1");
@@ -55,7 +60,13 @@ class TemplateSuratController extends Controller
         $validated = $request->validate([
             'nama_template' => ['required', 'string', 'max:100'],
             'isi_template'  => ['required', 'string'],
+            'unit_kerja_id' => ['required', 'exists:unit_kerja,id'],
+        ], [
+            'unit_kerja_id.required' => 'Unit kerja pemilik template wajib dipilih.',
         ]);
+
+        TemplateSurat::where('nama_template', $templateSurat->nama_template)
+            ->update(['unit_kerja_id' => $validated['unit_kerja_id']]);
 
         $templateSurat->update(['is_aktif' => false]);
 
@@ -64,6 +75,7 @@ class TemplateSuratController extends Controller
             'isi_template'  => $validated['isi_template'],
             'versi'         => $templateSurat->versi + 1,
             'is_aktif'      => true,
+            'unit_kerja_id' => $validated['unit_kerja_id'],
         ]);
 
         LogAktivitas::catat('Mengubah', 'Template Surat', "Memperbarui template \"{$baru->nama_template}\" ke versi {$baru->versi}");
@@ -105,6 +117,7 @@ class TemplateSuratController extends Controller
     public function preview(Request $request, TemplateSurat $templateSurat)
     {
         $daftarKop = PengaturanKopSurat::where('is_aktif', true)
+            ->when($templateSurat->unit_kerja_id, fn ($q) => $q->where('unit_kerja_id', $templateSurat->unit_kerja_id))
             ->orderBy('nama_kop')
             ->orderByDesc('versi')
             ->get();

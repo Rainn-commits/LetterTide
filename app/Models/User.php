@@ -7,7 +7,9 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Auth;
 
 #[Fillable(['name', 'email', 'password', 'role_id', 'unit_kerja_id', 'is_aktif', 'can_sign'])]
 #[Hidden(['password', 'remember_token'])]
@@ -49,7 +51,22 @@ class User extends Authenticatable
 
     public function isGlobal(): bool
     {
-        return $this->punyaPermission('role.manage');
+        return $this->cacheGlobal ??= $this->punyaPermission('role.manage');
+    }
+
+    private ?bool $cacheGlobal = null;
+
+    public function scopeDiUnitSaya(Builder $query): Builder
+    {
+        $saya = Auth::user();
+
+        if (!$saya || $saya->isGlobal()) {
+            return $query;
+        }
+
+        return $saya->unit_kerja_id
+            ? $query->where('users.unit_kerja_id', $saya->unit_kerja_id)
+            : $query->whereRaw('1 = 0');
     }
 
     protected function casts(): array

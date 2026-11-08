@@ -28,6 +28,11 @@
             @csrf
             @method('PUT')
 
+            @include('partials.pilih-unit', [
+                'nilai' => old('unit_kerja_id', $item->unit_kerja_id ?? null),
+                'keterangan' => 'Memindahkan unit berlaku untuk semua versi template ini.',
+            ])
+
             <div class="form-field">
                 <label for="nama_template">Nama Template:</label>
                 <input 

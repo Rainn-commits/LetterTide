@@ -69,7 +69,7 @@ class SuratController extends Controller
     public function form(TemplateSurat $template)
     {
         $fields = PlaceholderParser::toFormFields($template->isi_template);
-        $users = User::orderBy('name')->get();
+        $users = User::diUnitSaya()->orderBy('name')->get();
         $kopSurats = PengaturanKopSurat::where('is_aktif', true)->orderBy('nama_kop')->get();
 
         $templatePunyaLampiran = preg_match(
@@ -205,7 +205,7 @@ class SuratController extends Controller
         $values = $surat->isiSurat->pluck('nilai_field', 'nama_field')->toArray();
         $template = $surat->template;
         $fields = PlaceholderParser::toFormFields($template->isi_template);
-        $users = User::orderBy('name')->get();
+        $users = User::diUnitSaya()->orderBy('name')->get();
 
         return view('surat.edit', compact('surat', 'template', 'fields', 'values', 'users'));
     }

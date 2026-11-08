@@ -41,7 +41,18 @@
                 </tr>
             </thead>
             <tbody>
-                @forelse ($templates as $template)
+                @php
+                    $kelompok = $templates->groupBy(fn ($t) => $t->unit_kerja_id ?? 0)
+                        ->sortKeysUsing(fn ($a, $b) => ($a ?: PHP_INT_MAX) <=> ($b ?: PHP_INT_MAX));
+                @endphp
+                @forelse ($kelompok as $idUnit => $daftarTemplate)
+                    <tr class="unit-group-row">
+                        <td colspan="4" style="background: #f1f5f9; font-weight: 700; color: #0f172a; padding: 10px 16px; text-align: left;">
+                            {{ $daftarTemplate->first()->unitKerja->nama ?? 'Belum ditentukan unitnya' }}
+                            <span style="font-weight: 400; color: #64748b; margin-left: 6px;">({{ $daftarTemplate->pluck('nama_template')->unique()->count() }} template)</span>
+                        </td>
+                    </tr>
+                    @foreach ($daftarTemplate as $template)
                     <tr>
                         <td class="template-name">{{ $template->nama_template }}</td>
                         <td class="col-versi">v{{ $template->versi }}</td>
@@ -82,6 +93,7 @@
                             </div>
                         </td>
                     </tr>
+                    @endforeach
                 @empty
                     <tr>
                         <td colspan="4" class="table-empty">

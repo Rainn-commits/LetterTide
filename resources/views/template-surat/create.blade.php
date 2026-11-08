@@ -23,6 +23,11 @@
         <form method="POST" action="{{ route('template-surat.store') }}" class="template-form">
             @csrf
 
+            @include('partials.pilih-unit', [
+                'nilai' => old('unit_kerja_id'),
+                'keterangan' => 'Template hanya akan muncul di menu Buat Surat milik unit ini.',
+            ])
+
             <div class="form-field">
                 <label for="nama_template">Nama Template:</label>
                 <input 

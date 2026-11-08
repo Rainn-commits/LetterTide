@@ -2,15 +2,18 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\BerdasarkanUnitKerja;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 
 class LogAktivitas extends Model
 {
+    use BerdasarkanUnitKerja;
+
     protected $table = 'log_aktivitas';
     public $timestamps = false;
 
-    protected $fillable = ['user_id', 'aksi', 'modul', 'keterangan', 'created_at'];
+    protected $fillable = ['user_id', 'aksi', 'modul', 'keterangan', 'created_at', 'unit_kerja_id'];
 
     protected $casts = [
         'created_at' => 'datetime',

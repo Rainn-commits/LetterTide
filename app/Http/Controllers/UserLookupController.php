@@ -11,7 +11,7 @@ class UserLookupController extends Controller
     {
         $query = $request->get('q', '');
 
-        $users = User::where('name', 'like', "%{$query}%")
+        $users = User::diUnitSaya()->where('name', 'like', "%{$query}%")
             ->select('id', 'name')
             ->limit(10)
             ->get();
@@ -19,3 +19,4 @@ class UserLookupController extends Controller
         return response()->json($users);
     }
 }
+

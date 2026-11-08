@@ -2,10 +2,13 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\BerdasarkanUnitKerja;
 use Illuminate\Database\Eloquent\Model;
 
 class Surat extends Model
 {
+    use BerdasarkanUnitKerja;
+
     protected $table = 'surat';
 
     protected $fillable = [
@@ -22,6 +25,7 @@ class Surat extends Model
         'file_arsip',
         'jumlah_akses',
         'status',
+        'unit_kerja_id',
     ];
 
     public function evaluasiRetensi()
@@ -35,7 +39,7 @@ class Surat extends Model
 
     public function template()
     {
-        return $this->belongsTo(TemplateSurat::class, 'template_id');
+        return $this->belongsTo(TemplateSurat::class, 'template_id')->withoutGlobalScopes();
     }
 
     public function user()
@@ -45,7 +49,7 @@ class Surat extends Model
 
     public function kopSurat()
     {
-        return $this->belongsTo(PengaturanKopSurat::class, 'kop_surat_id');
+        return $this->belongsTo(PengaturanKopSurat::class, 'kop_surat_id')->withoutGlobalScopes();
     }
 
     public function isiSurat()

@@ -22,6 +22,7 @@ class DatabaseSeeder extends Seeder
             UnitKerjaSeeder::class,
             PermissionSeeder::class,
             RolePermissionSeeder::class,
+            RetensiKriteriaSeeder::class,
         ]);
 
         $idRole = fn (string $nama) => DB::table('roles')->where('nama_role', $nama)->value('id');
@@ -48,16 +49,17 @@ class DatabaseSeeder extends Seeder
         ];
 
         foreach ($akun as [$email, $nama, $password, $roleId, $kodeUnit]) {
-            User::updateOrCreate(
-                ['email' => $email],
-                [
-                    'name'          => $nama,
-                    'password'      => Hash::make($password),
-                    'role_id'       => $roleId,
-                    'unit_kerja_id' => $kodeUnit ? $idUnit($kodeUnit) : null,
-                    'is_aktif'      => true,
-                ]
-            );
+            // forceFill + save: tidak bergantung pada daftar $fillable di model User
+            $user = User::firstOrNew(['email' => $email]);
+            $user->forceFill([
+                'name'          => $nama,
+                'password'      => Hash::make($password),
+                'role_id'       => $roleId,
+                'unit_kerja_id' => $kodeUnit ? $idUnit($kodeUnit) : null,
+                'is_aktif'      => true,
+            ])->save();
+
+            $this->command?->info("Akun siap: {$email} ({$nama})");
         }
     }
 }

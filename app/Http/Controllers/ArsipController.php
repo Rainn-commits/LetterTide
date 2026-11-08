@@ -69,7 +69,7 @@ class ArsipController extends Controller
 
         $suratList = $query->paginate(10)->withQueryString();
 
-        $pejabatList = User::orderBy('name')->get();
+        $pejabatList = User::diUnitSaya()->orderBy('name')->get();
         $templates = TemplateSurat::where('is_aktif', true)
             ->orderBy('nama_template')
             ->get();

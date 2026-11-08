@@ -3,10 +3,13 @@
 namespace App\Models;
 
 use App\Models\Surat;
+use App\Models\Concerns\BerdasarkanUnitKerja;
 use Illuminate\Database\Eloquent\Model;
 
 class TemplateSurat extends Model
 {
+    use BerdasarkanUnitKerja;
+
     protected $table = 'template_surat';
 
     protected $fillable = [
@@ -14,6 +17,7 @@ class TemplateSurat extends Model
         'isi_template',
         'versi',
         'is_aktif',
+        'unit_kerja_id',
     ];
 
     protected $casts = [
@@ -22,6 +26,6 @@ class TemplateSurat extends Model
 
     public function surat()
     {
-       return $this->hasMany(Surat::class, 'template_id');
+       return $this->hasMany(Surat::class, 'template_id')->withoutGlobalScopes();
     }
 }
