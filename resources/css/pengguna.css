@@ -177,13 +177,16 @@
     border-radius: var(--radius-lg);
     border: 1px solid var(--color-border);
     box-shadow: var(--shadow-card);
-    overflow: hidden;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
     animation: fadeSlideUp 0.4s var(--ease);
     padding: 1rem;
 }
 
 .table-pengguna {
     width: 100%;
+    min-width: 760px;
     border-collapse: collapse;
     text-align: left;
     font-size: 0.9rem;

@@ -23,13 +23,18 @@
     padding: 12px 16px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
     border: 1px solid #f1f5f9;
+    max-width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    box-sizing: border-box;
 }
 
 .log-table {
     width: 100%;
+    min-width: 900px;
     border-collapse: collapse;
     background: var(--color-white);
-    overflow: hidden;
     animation: fadeSlideUp 0.4s var(--ease);
 }
 
@@ -274,12 +279,16 @@
 }
 
 @media (max-width: 720px) {
-    .log-page { padding: 16px; }
-    .log-table-container { padding: 8px; }
+    .log-page {
+        padding: 16px;
+    }
+
+    .log-table-container {
+        padding: 8px;
+    }
+
     .log-table {
-        display: block;
-        overflow-x: auto;
+        display: table;
         white-space: nowrap;
-        -webkit-overflow-scrolling: touch;
     }
 }

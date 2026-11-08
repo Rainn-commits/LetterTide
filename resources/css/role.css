@@ -79,11 +79,14 @@
 
 .table-responsive-wrapper {
   border-radius: 0;
-  overflow: hidden;
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
 }
 
 .role-table {
   width: 100%;
+  min-width: 650px;
   border-collapse: collapse;
 }
 

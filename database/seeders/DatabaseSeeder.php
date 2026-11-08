@@ -49,7 +49,6 @@ class DatabaseSeeder extends Seeder
         ];
 
         foreach ($akun as [$email, $nama, $password, $roleId, $kodeUnit]) {
-            // forceFill + save: tidak bergantung pada daftar $fillable di model User
             $user = User::firstOrNew(['email' => $email]);
             $user->forceFill([
                 'name'          => $nama,
