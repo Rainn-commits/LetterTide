@@ -57,6 +57,17 @@
                 >
             </div>
 
+            @php
+                $fieldKeys = collect($fields)->map(function ($f) {
+                    if (is_array($f)) {
+                        return $f['name'] ?? ($f['key'] ?? '');
+                    }
+
+                    return is_string($f) ? $f : ($f->name ?? ($f->key ?? ''));
+                })->filter()->values()->all();
+                $grupSebelumnya = null;
+            @endphp
+
             @forelse ($fields as $field)
                 @php
                     if (is_array($field)) {
@@ -83,6 +94,7 @@
                     $contactPhoneField = match ($key) {
                         'nama_guru_pembimbing' => 'kontak_guru_pembimbing',
                         'nama_dosen_pembimbing' => 'kontak_dosen',
+                        'nama_atasan_langsung' => 'kontak_atasan_langsung',
                         'anggota_1_nama' => 'anggota_1_kontak',
                         'anggota_2_nama' => 'anggota_2_kontak',
                         'anggota_3_nama' => 'anggota_3_kontak',
@@ -108,11 +120,23 @@
                     }
                 @endphp
 
-                <div class="form-field">
-                    <label for="field_{{ Str::slug($key) }}">{{ $key === 'masa_berlaku_penawaran' ? 'Masa Berlaku Penawaran (Hari)' : $label }}:</label>
+                @php
+                    $def = \App\Services\SuratFieldResolver::define($key, $fieldKeys);
+                    $grup = \App\Services\SuratFieldResolver::group($key);
+                    $judulGrup = ($grup && $grup['group'] !== $grupSebelumnya) ? $grup['judul'] : null;
+                    $grupSebelumnya = $grup['group'] ?? null;
+                    $labelTampil = \App\Services\SuratFieldResolver::label($key) ?? $label;
+                @endphp
 
-                    @if (in_array($key, ['ringkasan_fitur', 'platform_aplikasi', 'estimasi_biaya', 'biaya_berlangganan', 'estimasi_waktu_pengerjaan', 'masa_berlaku_penawaran']))
-                        @include('surat.partials.field-penawaran', ['key' => $key, 'value' => $oldValue])
+                @if ($judulGrup)
+                    <div style="margin: 20px 0 8px; padding-top: 12px; border-top: 1.5px dashed var(--color-ink); font-size: 13px; font-weight: 800; text-align: left; color: var(--color-ink);">{{ $judulGrup }}</div>
+                @endif
+
+                <div class="form-field">
+                    <label for="field_{{ Str::slug($key) }}">{{ $labelTampil }}:</label>
+
+                    @if ($def)
+                        @include('surat.partials.field-input', ['key' => $key, 'def' => $def, 'value' => $oldValue])
                     @elseif ($key === 'paket_layanan')
                         <select
                             id="field_{{ Str::slug($key) }}"

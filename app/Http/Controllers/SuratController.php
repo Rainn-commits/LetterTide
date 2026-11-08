@@ -10,6 +10,7 @@ use App\Models\Surat;
 use App\Models\TemplateSurat;
 use App\Models\User;
 use App\Services\PlaceholderParser;
+use App\Services\SuratFieldResolver;
 use App\Models\Kontak;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
@@ -85,7 +86,7 @@ class SuratController extends Controller
             'kop_surat_id' => ['required', 'exists:pengaturan_kop_surat,id'],
             'lampiran'     => ['nullable', 'string'],
             'fields'       => ['required', 'array'],
-            'fields.*'     => ['required', 'string'],
+            ...SuratFieldResolver::rules(array_keys((array) $request->input('fields', []))),
 
             'fields.tanggal_mulai_layanan' => ['sometimes', 'required', 'date'],
             'fields.tanggal_selesai_layanan' => [
@@ -96,12 +97,12 @@ class SuratController extends Controller
             ],
             'fields.estimasi_biaya' => ['sometimes', 'required', 'integer', 'min:1'],
             'fields.masa_berlaku_penawaran' => ['sometimes', 'required', 'integer', 'min:1', 'max:365'],
-        ], 
-        [
+        ],
+        array_merge(SuratFieldResolver::messages(array_keys((array) $request->input('fields', []))), [
             'fields.tanggal_mulai_layanan.required' => 'Tanggal mulai layanan wajib diisi.',
             'fields.tanggal_selesai_layanan.required' => 'Tanggal selesai layanan wajib diisi.',
             'fields.tanggal_selesai_layanan.after_or_equal' => 'Tanggal selesai tidak boleh lebih awal dari tanggal mulai layanan.',
-        ]);
+        ]));
 
         $nomorSurat = $this->generateNomorSurat($template);
 
@@ -120,7 +121,7 @@ class SuratController extends Controller
             IsiSurat::create([
                 'surat_id'    => $surat->id,
                 'nama_field'  => $namaField,
-                'nilai_field' => $nilaiField,
+                'nilai_field' => (string) $nilaiField,
                 'created_at'  => now(),
             ]);
         }
@@ -213,7 +214,7 @@ class SuratController extends Controller
     {
         $validated = $request->validate([
             'fields'   => ['required', 'array'],
-            'fields.*' => ['required', 'string'],
+            ...SuratFieldResolver::rules(array_keys((array) $request->input('fields', []))),
             'fields.masa_berlaku_penawaran' => ['sometimes', 'required', 'integer', 'min:1', 'max:365'],
 
             'fields.tanggal_mulai_layanan' => ['sometimes', 'required', 'date'],
@@ -224,17 +225,17 @@ class SuratController extends Controller
                 'after_or_equal:fields.tanggal_mulai_layanan',
             ],
             'fields.estimasi_biaya' => ['sometimes', 'required', 'integer', 'min:1'],
-        ], 
-        [
+        ],
+        array_merge(SuratFieldResolver::messages(array_keys((array) $request->input('fields', []))), [
             'fields.tanggal_mulai_layanan.required' => 'Tanggal mulai layanan wajib diisi.',
             'fields.tanggal_selesai_layanan.required' => 'Tanggal selesai layanan wajib diisi.',
             'fields.tanggal_selesai_layanan.after_or_equal' => 'Tanggal selesai tidak boleh lebih awal dari tanggal mulai layanan.',
-        ]);
+        ]));
 
         foreach ($validated['fields'] as $namaField => $nilaiField) {
             IsiSurat::updateOrCreate(
                 ['surat_id' => $surat->id, 'nama_field' => $namaField],
-                ['nilai_field' => $nilaiField]
+                ['nilai_field' => (string) $nilaiField]
             );
         }
 
@@ -324,27 +325,10 @@ class SuratController extends Controller
                 $values[$namaField] = $this->formatTanggalIndonesia($nilaiField);
             }
 
-            if ($namaKecil === 'estimasi_biaya') {
-                $values[$namaField] = ctype_digit(trim($nilaiField))
-                    ? 'Rp ' . $this->formatAngkaRibuan(trim($nilaiField))
-                    : $nilaiField;
-                continue;
-            }
+            $hasil = SuratFieldResolver::renderValue($namaField, $nilaiField, array_keys($values));
 
-            if ($namaKecil === 'ringkasan_fitur') {
-                $values[$namaField] = nl2br(e($nilaiField));
-                continue;
-            }
-
-            if ($namaKecil === 'masa_berlaku_penawaran') {
-                $values[$namaField] = ctype_digit(trim($nilaiField))
-                    ? trim($nilaiField) . ' hari'
-                    : $nilaiField;
-                continue;
-            }
-
-            if ($namaKecil === 'biaya_berlangganan') {
-                $values[$namaField] = $this->formatAngkaRibuan($nilaiField);
+            if ($hasil !== null) {
+                $values[$namaField] = $hasil;
             }
         }
 
