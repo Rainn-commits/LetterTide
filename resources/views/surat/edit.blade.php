@@ -42,6 +42,47 @@
                     $type = is_array($field) ? ($field['type'] ?? 'text') : 'text';
 
                     $currentValue = old('fields.' . $key, $values[$key] ?? '');
+
+                    $lowerKey = strtolower($key);
+
+                    $isPenandatangan = str_contains($lowerKey, 'penandatangan')
+                        || str_contains($lowerKey, 'hrd')
+                        || str_contains($lowerKey, 'nama_direktur');
+
+                    $contactPhoneField = match ($key) {
+                        'nama_guru_pembimbing' => 'kontak_guru_pembimbing',
+                        'nama_dosen_pembimbing' => 'kontak_dosen',
+                        'nama_atasan_langsung' => 'kontak_atasan_langsung',
+                        'anggota_1_nama' => 'anggota_1_kontak',
+                        'anggota_2_nama' => 'anggota_2_kontak',
+                        'anggota_3_nama' => 'anggota_3_kontak',
+                        default => null,
+                    };
+
+                    $isDeskripsiPelanggaran = str_contains($lowerKey, 'deskripsi_pelanggaran');
+
+                    $deskripsiPoints = [];
+
+                    if ($isDeskripsiPelanggaran && $currentValue) {
+                        $decodedPoints = json_decode($currentValue, true);
+
+                        if (is_array($decodedPoints)) {
+                            $deskripsiPoints = array_values(array_filter(
+                                $decodedPoints,
+                                fn($point) => trim((string) $point) !== ''
+                            ));
+                        } else {
+                            $deskripsiPoints = array_values(array_filter(
+                                preg_split('/\r\n|\r|\n/', $currentValue),
+                                fn($point) => trim($point) !== ''
+                            ));
+                        }
+                    }
+
+                    if ($isDeskripsiPelanggaran && empty($deskripsiPoints)) {
+                        $deskripsiPoints = [''];
+                    }
+
                 @endphp
 
                 @php
@@ -60,7 +101,12 @@
                     <label for="field_{{ Str::slug($key) }}">{{ $labelTampil }}:</label>
 
                     @if ($def)
-                        @include('surat.partials.field-input', ['key' => $key, 'def' => $def, 'value' => $currentValue])
+                        @include('surat.partials.field-input', [
+                            'key' => $key,
+                            'def' => $def,
+                            'value' => $currentValue
+                        ])
+
                     @elseif ($key === 'paket_layanan')
                         <select
                             id="field_{{ Str::slug($key) }}"
@@ -100,7 +146,50 @@
                             required
                         >
 
-                    @elseif ($type === 'date' || str_contains(strtolower($key), 'tanggal'))
+                    @elseif ($isPenandatangan)
+                        <input
+                            type="text"
+                            id="field_{{ Str::slug($key) }}"
+                            name="fields[{{ $key }}]"
+                            value="Novi Setia Nurviat"
+                            readonly
+                        >
+
+                    @elseif ($type === 'autocomplete_user' || $key === 'nama_karyawan')
+                        <div class="autocomplete">
+                            <input
+                                type="text"
+                                id="field_{{ Str::slug($key) }}"
+                                name="fields[{{ $key }}]"
+                                value="{{ $currentValue }}"
+                                data-autocomplete="user"
+                                data-search-url="{{ route('users.search') }}"
+                                autocomplete="off"
+                                required
+                            >
+                            <div class="autocomplete__results" id="results_{{ Str::slug($key) }}"></div>
+                        </div>
+
+                    @elseif ($contactPhoneField)
+                        <div class="autocomplete">
+                            <input
+                                type="text"
+                                id="field_{{ Str::slug($key) }}"
+                                name="fields[{{ $key }}]"
+                                value="{{ $currentValue }}"
+                                data-autocomplete="kontak"
+                                data-search-url="{{ route('kontak.search') }}"
+                                data-phone-field="{{ $contactPhoneField }}"
+                                autocomplete="off"
+                                required
+                            >
+                            <div
+                                class="autocomplete__results"
+                                id="results_{{ Str::slug($key) }}"
+                            ></div>
+                        </div>
+
+                    @elseif ($type === 'date' || str_contains($lowerKey, 'tanggal'))
                         <input
                             type="date"
                             id="field_{{ Str::slug($key) }}"
@@ -108,6 +197,69 @@
                             value="{{ $currentValue }}"
                             required
                         >
+
+                    @elseif ($key === 'tingkat_sp')
+                        <div style="display: flex; gap: 32px; align-items: center; flex-direction: row;">
+                            @foreach ([1, 2, 3] as $tingkat)
+                                <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                                    <input
+                                        type="radio"
+                                        name="fields[{{ $key }}]"
+                                        value="{{ $tingkat }}"
+                                        {{ (string) $currentValue === (string) $tingkat ? 'checked' : '' }}
+                                        required
+                                    >
+                                    SP {{ $tingkat }}
+                                </label>
+                            @endforeach
+                        </div>
+
+                    @elseif ($isDeskripsiPelanggaran)
+                        <div
+                            class="deskripsi-pelanggaran-input"
+                            data-description-field="{{ $key }}"
+                        >
+                            <input
+                                type="hidden"
+                                name="fields[{{ $key }}]"
+                                id="field_{{ Str::slug($key) }}"
+                                value="{{ json_encode($deskripsiPoints, JSON_UNESCAPED_UNICODE) }}"
+                            >
+
+                            <div class="deskripsi-pelanggaran-points">
+                                @foreach ($deskripsiPoints as $index => $point)
+                                    <div class="deskripsi-pelanggaran-point">
+                                        <span class="deskripsi-pelanggaran-number">{{ $index + 1 }}.</span>
+
+                                        <input
+                                            type="text"
+                                            value="{{ $point }}"
+                                            data-description-point
+                                            placeholder="Tuliskan poin pelanggaran..."
+                                            required
+                                        >
+
+                                        <button
+                                            type="button"
+                                            class="deskripsi-pelanggaran-remove"
+                                            data-remove-point
+                                            title="Hapus poin"
+                                            @if (count($deskripsiPoints) === 1) style="display: none;" @endif
+                                        >
+                                            &times;
+                                        </button>
+                                    </div>
+                                @endforeach
+                            </div>
+
+                            <button
+                                type="button"
+                                class="deskripsi-pelanggaran-add"
+                                data-add-point
+                            >
+                                + Tambah Poin
+                            </button>
+                        </div>
 
                     @else
                         <input
@@ -138,4 +290,95 @@
 
 @section('page-js')
     @vite('resources/js/surat-wizard.js')
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            document.querySelectorAll('[data-description-field]').forEach(function (wrapper) {
+                const hiddenInput = wrapper.querySelector('input[type="hidden"]');
+                const pointsContainer = wrapper.querySelector('.deskripsi-pelanggaran-points');
+                const addButton = wrapper.querySelector('[data-add-point]');
+
+                function updateNumbers() {
+                    const points = pointsContainer.querySelectorAll('.deskripsi-pelanggaran-point');
+
+                    points.forEach(function (point, index) {
+                        point.querySelector('.deskripsi-pelanggaran-number').textContent = (index + 1) + '.';
+
+                        const removeButton = point.querySelector('[data-remove-point]');
+                        removeButton.style.display = points.length === 1 ? 'none' : 'inline-flex';
+                    });
+
+                    addButton.style.display = points.length >= 10 ? 'none' : 'inline-flex';
+                }
+
+                function syncHiddenInput() {
+                    const pointInputs = pointsContainer.querySelectorAll('[data-description-point]');
+
+                    const points = Array.from(pointInputs)
+                        .map(input => input.value.trim())
+                        .filter(value => value !== '');
+
+                    hiddenInput.value = JSON.stringify(points);
+                }
+
+                function createPoint() {
+                    const points = pointsContainer.querySelectorAll('.deskripsi-pelanggaran-point');
+
+                    if (points.length >= 10) return;
+
+                    const point = document.createElement('div');
+                    point.className = 'deskripsi-pelanggaran-point';
+
+                    point.innerHTML = `
+                        <span class="deskripsi-pelanggaran-number"></span>
+                        <input
+                            type="text"
+                            data-description-point
+                            placeholder="Tuliskan poin pelanggaran..."
+                            required
+                        >
+                        <button
+                            type="button"
+                            class="deskripsi-pelanggaran-remove"
+                            data-remove-point
+                            title="Hapus poin"
+                        >&times;</button>
+                    `;
+
+                    pointsContainer.appendChild(point);
+                    point.querySelector('[data-description-point]').focus();
+
+                    updateNumbers();
+                    syncHiddenInput();
+                }
+
+                addButton.addEventListener('click', createPoint);
+
+                pointsContainer.addEventListener('click', function (event) {
+                    const removeButton = event.target.closest('[data-remove-point]');
+
+                    if (!removeButton) return;
+
+                    if (pointsContainer.querySelectorAll('.deskripsi-pelanggaran-point').length <= 1) return;
+
+                    removeButton.closest('.deskripsi-pelanggaran-point').remove();
+
+                    updateNumbers();
+                    syncHiddenInput();
+                });
+
+                pointsContainer.addEventListener('input', function (event) {
+                    if (event.target.matches('[data-description-point]')) {
+                        syncHiddenInput();
+                    }
+                });
+
+                wrapper.closest('form').addEventListener('submit', syncHiddenInput);
+
+                updateNumbers();
+                syncHiddenInput();
+            });
+        });
+    </script>
 @endsection
+
