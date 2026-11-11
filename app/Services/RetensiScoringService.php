@@ -4,7 +4,6 @@ namespace App\Services;
 
 use App\Models\EvaluasiRetensi;
 use App\Models\RetensiKriteria;
-use App\Models\Surat;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 
@@ -26,83 +25,100 @@ class RetensiScoringService
     private const AMBANG_PERMANEN     = 0.70;
     private const AMBANG_SIMPAN_LOKAL = 0.40;
 
+    private const URUTAN_KRITERIA = ['K1', 'K2', 'K3', 'K4'];
+
+    public function __construct(private TopsisCalculator $topsis = new TopsisCalculator())
+    {
+    }
+
     public function evaluasiMassal(): int
     {
-        $bobotKriteria = RetensiKriteria::all()->keyBy('kode');
+        $hitung = $this->jalankan();
 
-        $evaluasiSiap = EvaluasiRetensi::whereHas('surat')
-            ->whereNotNull('nilai_guna')
-            ->whereNotNull('kerahasiaan')
-            ->get();
-
-        if ($evaluasiSiap->isEmpty()) {
+        if ($hitung === null) {
             return 0;
         }
 
-        $rawK3 = [];
-        $rawK4 = [];
-
-        foreach ($evaluasiSiap as $item) {
-            $umurHari = Carbon::parse($item->surat->tanggal_surat)->diffInDays(now());
-            $rawK3[$item->id] = $umurHari;
-            $rawK4[$item->id] = $item->surat->jumlah_akses ?? 0;
-        }
-
-        $minK3 = min($rawK3); $maxK3 = max($rawK3);
-        $minK4 = min($rawK4); $maxK4 = max($rawK4);
-
-        foreach ($evaluasiSiap as $item) {
-            $skorK1 = self::SKALA_NILAI_GUNA[$item->nilai_guna] ?? 1;
-            $skorK2 = self::SKALA_KERAHASIAAN[$item->kerahasiaan] ?? 1;
-
-            $normK1 = $skorK1 / max(self::SKALA_NILAI_GUNA);
-            $normK2 = $skorK2 / max(self::SKALA_KERAHASIAAN);
-
-            $normK3 = $this->normalisasiCost($rawK3[$item->id], $minK3, $maxK3);
-            $normK4 = $this->normalisasiBenefit($rawK4[$item->id], $minK4, $maxK4);
-
-            $bobotK1 = $bobotKriteria['K1']->bobot ?? 0.25;
-            $bobotK2 = $bobotKriteria['K2']->bobot ?? 0.25;
-            $bobotK3 = $bobotKriteria['K3']->bobot ?? 0.25;
-            $bobotK4 = $bobotKriteria['K4']->bobot ?? 0.25;
-
-            $skorTotal =
-                ($bobotK1 * $normK1) +
-                ($bobotK2 * $normK2) +
-                ($bobotK3 * $normK3) +
-                ($bobotK4 * $normK4);
+        foreach ($hitung['items'] as $item) {
+            $id = $item->id;
+            $ci = $hitung['topsis']['ci'][$id];
 
             $item->update([
-                'skor_total'         => round($skorTotal, 4),
-                'status_rekomendasi' => $this->klasifikasikan($skorTotal),
+                'skor_total'         => round($ci, 6),
+                'd_plus'             => $hitung['topsis']['d_plus'][$id],
+                'd_minus'            => $hitung['topsis']['d_minus'][$id],
+                'status_rekomendasi' => $this->klasifikasikan($ci),
                 'status_persetujuan' => 'Menunggu Validasi',
                 'dievaluasi_pada'    => now(),
                 'dievaluasi_oleh'    => Auth::id(),
             ]);
         }
 
-        return $evaluasiSiap->count();
+        return $hitung['items']->count();
     }
 
-    private function normalisasiBenefit(float $nilai, float $min, float $max): float
+    public function detail(): ?array
     {
-        if ($max == $min) return 1;
-        return ($nilai - $min) / ($max - $min);
+        return $this->jalankan();
     }
 
-    private function normalisasiCost(float $nilai, float $min, float $max): float
+    private function jalankan(): ?array
     {
-        if ($max == $min) return 1;
-        return ($max - $nilai) / ($max - $min);
+        $kriteria = RetensiKriteria::all()->keyBy('kode');
+
+        $items = EvaluasiRetensi::with('surat')
+            ->whereHas('surat')
+            ->whereNotNull('nilai_guna')
+            ->whereNotNull('kerahasiaan')
+            ->get();
+
+        if ($items->isEmpty()) {
+            return null;
+        }
+
+        $bobot = [];
+        $tipe = [];
+        foreach (self::URUTAN_KRITERIA as $kode) {
+            $bobot[] = (float) ($kriteria[$kode]->bobot ?? 0);
+            $tipe[] = $kriteria[$kode]->tipe ?? 'benefit';
+        }
+
+        $jumlah = array_sum($bobot);
+        if ($jumlah > 0) {
+            $bobot = array_map(fn ($b) => $b / $jumlah, $bobot);
+        } else {
+            $bobot = array_fill(0, count($bobot), 1 / count($bobot));
+        }
+
+        $matriks = [];
+        foreach ($items as $item) {
+            $umurHari = Carbon::parse($item->surat->tanggal_surat)->diffInDays(now());
+
+            $matriks[$item->id] = [
+                self::SKALA_NILAI_GUNA[$item->nilai_guna] ?? 1,
+                self::SKALA_KERAHASIAAN[$item->kerahasiaan] ?? 1,
+                $umurHari,
+                $item->surat->jumlah_akses ?? 0,
+            ];
+        }
+
+        return [
+            'items'    => $items,
+            'kriteria' => $kriteria,
+            'bobot'    => $bobot,
+            'tipe'     => $tipe,
+            'matriks'  => $matriks,
+            'topsis'   => $this->topsis->hitung($matriks, $bobot, $tipe),
+        ];
     }
 
-    private function klasifikasikan(float $skor): string
+    private function klasifikasikan(float $ci): string
     {
-        if ($skor >= self::AMBANG_PERMANEN) {
+        if ($ci >= self::AMBANG_PERMANEN) {
             return 'Permanen';
         }
 
-        if ($skor >= self::AMBANG_SIMPAN_LOKAL) {
+        if ($ci >= self::AMBANG_SIMPAN_LOKAL) {
             return 'Simpan Lokal';
         }
 

@@ -10,7 +10,7 @@ class EvaluasiRetensi extends Model
 
     protected $fillable = [
         'surat_id', 'nilai_guna', 'kerahasiaan',
-        'skor_total', 'status_rekomendasi',
+        'skor_total', 'd_plus', 'd_minus', 'status_rekomendasi',
         'status_persetujuan', 'divalidasi_oleh', 'divalidasi_pada',
         'dievaluasi_oleh', 'dievaluasi_pada',
     ];
