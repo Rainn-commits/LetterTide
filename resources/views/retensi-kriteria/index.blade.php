@@ -131,7 +131,7 @@
                         <thead>
                             <tr>
                                 <th>Kode</th>
-                                <th class="rk-kolom-kiri">Nama Kriteria</th>
+                                <th>Nama Kriteria</th>
                                 <th>Tipe</th>
                                 <th>Bobot (AHP)</th>
                             </tr>
@@ -139,7 +139,7 @@
                         <tbody>
                             @foreach ($kriteria as $k)
                                 <tr>
-                                    <th>Nama Kriteria</th>
+                                    <td>{{ $k->kode }}</td>
                                     <td>{{ $k->nama_kriteria }}</td>
                                     <td><span class="rk-tipe-badge rk-tipe-badge--{{ $k->tipe }}">{{ ucfirst($k->tipe) }}</span></td>
                                     <td>{{ number_format($k->bobot, 4) }}</td>
