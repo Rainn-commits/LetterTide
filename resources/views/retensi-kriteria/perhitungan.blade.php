@@ -77,7 +77,7 @@
                             <td>{{ $f($t['d_plus'][$id], 6) }}</td>
                             <td>{{ $f($t['d_minus'][$id], 6) }}</td>
                             <td><strong>{{ $f($ci, 6) }}</strong></td>
-                            <td>{{ $ci >= 0.70 ? 'Permanen' : ($ci >= 0.40 ? 'Simpan Lokal' : 'Musnah') }}</td>
+                            <td>{{ \App\Services\RetensiScoringService::klasifikasikan($ci) }}</td>
                         </tr>
                     @endforeach
                 </tbody>

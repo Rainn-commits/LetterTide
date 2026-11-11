@@ -114,7 +114,7 @@ Sistem memiliki tiga role bawaan. Role bersifat **dinamis** - Super Admin dapat 
 | Kelola Pengguna dan Role | Ya (semua unit) | Hanya ubah nama dan nonaktifkan/aktifkan akun di unit sendiri | Tidak |
 | Buat Surat | Tidak | Ya | Ya |
 | Arsip Digital | Tidak | Ya (semua surat di unit) | Terbatas (surat sendiri) |
-| Retensi Arsip | Tidak | Evaluasi, validasi, dan atur bobot kriteria | Hanya mengisi penilaian |
+| Retensi Arsip | Tidak | Evaluasi, validasi, dan atur bobot kriteria lewat perbandingan berpasangan AHP | Hanya mengisi penilaian |
 | Log Aktivitas Sistem | Ya (semua unit) | Ya (unit sendiri) | Tidak |
 
 Super Admin berperan sebagai pengelola sistem, sehingga tidak membuat surat, tidak mengelola arsip, dan tidak mengikuti proses retensi. Hal-hal yang menyangkut password dan pembuatan akun hanya dapat dilakukan Super Admin.
@@ -133,7 +133,7 @@ Hak akses disimpan pada tabel `permissions` dan dicek melalui middleware `permis
 | `role.manage` | Mengelola role, hak akses, akun, dan melihat semua unit (lintas unit) | Super Admin |
 | `pengguna.unit` | Mengelola akun pada unit sendiri (ubah nama, nonaktifkan, aktifkan) | Admin |
 | `retensi.evaluate` | Mengakses fitur retensi arsip | Admin, User |
-| `retensi.manage` | Pengelolaan kriteria retensi | - |
+| `retensi.manage` | Mengelola kriteria retensi: matriks perbandingan AHP dan detail perhitungan TOPSIS, untuk unit sendiri | Admin |
 | `log.view` | Melihat log aktivitas sistem | Super Admin, Admin |
 
 ### Aturan Pengaman Hierarki
@@ -311,28 +311,32 @@ Data sensitif seperti password tidak pernah dicatat pada log. Halaman log dileng
 
 ### 12. Evaluasi Retensi Arsip (SPK)
 
-Fitur pendukung keputusan untuk menentukan masa simpan arsip menggunakan metode **TOPSIS + AHP**, dijalankan **per unit kerja**.
+Fitur pendukung keputusan untuk menentukan masa simpan arsip menggunakan metode **Hybrid AHP + TOPSIS**, dijalankan **per unit kerja**. AHP menghasilkan bobot kriteria, lalu TOPSIS memakai bobot itu untuk merangking arsip.
 
-**Kriteria penilaian (bobot bawaan, dapat berbeda tiap unit):**
+**Kriteria penilaian:**
 
-| Kode | Kriteria | Tipe | Bobot Bawaan |
+| Kode | Kriteria | Tipe | Nilai yang dipakai |
 |---|---|---|---|
-| K1 | Nilai Guna Dokumen | Benefit | 0.4 |
-| K2 | Sifat/Kerahasiaan Surat | Benefit | 0.3 |
-| K3 | Masa Simpan/Umur Surat | Cost | 0.2 |
-| K4 | Frekuensi Akses/Download | Benefit | 0.1 |
+| K1 | Nilai Guna Dokumen | Benefit | Hukum = 4, Keuangan = 3, Operasional = 2, Pemberitahuan = 1 |
+| K2 | Sifat/Kerahasiaan Surat | Benefit | Sangat Rahasia = 3, Rahasia = 2, Biasa/Terbuka = 1 |
+| K3 | Masa Simpan/Umur Surat | Cost | Umur surat dalam hari sejak tanggal surat |
+| K4 | Frekuensi Akses/Download | Benefit | Jumlah akses surat |
 
 K3 bertipe *cost*, artinya semakin lama sebuah arsip tersimpan, semakin rendah skornya dan semakin condong ke rekomendasi Musnah. K4 dihitung otomatis dari jumlah akses surat, sedangkan K1 dan K2 diisi manual oleh pengguna.
 
-Bobot tiap kriteria dapat diubah oleh **Admin** melalui tab Kelola Kriteria Retensi, dengan total bobot ideal 1.0. Setiap unit kerja memiliki set bobotnya sendiri, dan perubahan pada satu unit tidak memengaruhi unit lain.
+**Bobot kriteria (AHP).** Admin mengisi perbandingan berpasangan antar kriteria (skala Saaty 1 sampai 9) pada tab Kelola Kriteria Retensi. Sistem membentuk matriks perbandingan, menghitung bobot dari *eigenvector* utama, lalu menguji konsistensi dengan CI = (λmaks − n) / (n − 1) dan CR = CI / RI (RI = 0,90 untuk n = 4). Penilaian hanya disimpan bila **CR ≤ 0,10**; bila tidak konsisten, bobot lama tetap dipakai. Bobot tidak dapat diisi manual. Setiap unit kerja memiliki matriks dan bobotnya sendiri, dan perubahan pada satu unit tidak memengaruhi unit lain. Setelah bobot disimpan, seluruh arsip unit itu dihitung ulang.
+
+Matriks bawaan dari seeder (`RetensiScoringService::PERBANDINGAN_AWAL`) menghasilkan bobot sekitar K1 0,483, K2 0,272, K3 0,157, dan K4 0,088 (CR ≈ 0,005). Nilai ini hanya titik awal dan sebaiknya diganti dengan penilaian Admin tiap unit.
+
+**Perangkingan (TOPSIS).** Untuk arsip yang sudah dinilai dalam satu unit, sistem melakukan normalisasi vektor, normalisasi terbobot, menentukan solusi ideal positif dan negatif (benefit = maksimum, cost = minimum), menghitung jarak D⁺ dan D⁻, lalu nilai kedekatan relatif C<sub>i</sub> = D⁻ / (D⁺ + D⁻). Nilai C<sub>i</sub> (0 sampai 1) disimpan sebagai skor. Bila hanya ada satu arsip atau semua arsip bernilai sama, C<sub>i</sub> tidak dapat dibedakan dan diberi nilai 0,5. Seluruh langkah perhitungan dapat dilihat Admin pada halaman **Detail Perhitungan**.
 
 **Klasifikasi hasil skor:**
 
-| Rentang Skor | Rekomendasi |
+| Nilai C<sub>i</sub> | Rekomendasi |
 |---|---|
-| >= 0.70 | Permanen |
-| 0.40 - 0.69 | Simpan Lokal |
-| < 0.40 | Musnah |
+| ≥ 0,70 | Permanen |
+| 0,40 sampai di bawah 0,70 | Simpan Lokal |
+| < 0,40 | Musnah |
 
 **Alur evaluasi:**
 
@@ -419,8 +423,9 @@ Lupa password: pengguna mengirim permintaan -> notifikasi ke Super Admin -> rese
 | `isi_surat` | Isian field surat dengan pola EAV (`nama_field` dan `nilai_field`) |
 | `pengaturan_kop_surat` | Kop surat beserta versi, status aktif, dan `unit_kerja_id` |
 | `log_aktivitas` | Catatan audit trail aktivitas sistem, beserta `unit_kerja_id` |
-| `retensi_kriteria` | Kriteria K1 sampai K4 beserta bobot dan tipe, terpisah per `unit_kerja_id` |
-| `evaluasi_retensi` | Hasil penilaian, skor, rekomendasi, dan status validasi |
+| `retensi_kriteria` | Kriteria K1 sampai K4 beserta bobot (hasil AHP) dan tipe, terpisah per `unit_kerja_id` |
+| `kriteria_ahp` | Matriks perbandingan berpasangan AHP beserta λmaks, CI, RI, dan CR, satu baris per `unit_kerja_id` |
+| `evaluasi_retensi` | Hasil penilaian, skor (nilai kedekatan relatif C<sub>i</sub>), jarak D⁺ dan D⁻, rekomendasi, dan status validasi |
 | `kontak` | Buku kontak untuk saran isian nama pembimbing, atasan, dan anggota |
 | `notifications` | Notifikasi bawaan Laravel, dipakai untuk permintaan reset password |
 
@@ -428,7 +433,7 @@ Lupa password: pengguna mengirim permintaan -> notifikasi ke Super Admin -> rese
 
 ```
 unit_kerja 1 ---- N users, template_surat, pengaturan_kop_surat,
-      |                   surat, log_aktivitas, retensi_kriteria
+      |                   surat, log_aktivitas, retensi_kriteria kriteria_ahp
       |
 roles 1 ---- N users 1 ---- N surat 1 ---- N isi_surat
   |                           |
@@ -717,6 +722,7 @@ Bila dilakukan perubahan pada tata letak PDF, file PDF lama tidak ikut berubah k
 - Reset password bersifat manual oleh Super Admin, belum melalui email otomatis.
 - Unit kerja ditentukan lewat seeder (`UnitKerjaSeeder`). Belum ada menu untuk menambah atau mengubah unit dari dalam aplikasi.
 - Rekomendasi retensi arsip berhenti pada tahap rekomendasi dan validasi; sistem belum melakukan eksekusi pemusnahan arsip secara otomatis.
+- Skor TOPSIS bersifat relatif terhadap arsip lain dalam unit yang sama, sehingga skor sebuah arsip dapat berubah ketika arsip baru dinilai. Ambang 0,70 dan 0,40 merupakan ketentuan rancangan sistem, bukan bagian dari metode TOPSIS.
 
 ---
 

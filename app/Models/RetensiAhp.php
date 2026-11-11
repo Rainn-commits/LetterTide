@@ -2,14 +2,17 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\BerdasarkanUnitKerja;
 use Illuminate\Database\Eloquent\Model;
 
 class RetensiAhp extends Model
 {
-    protected $table = 'retensi_ahp';
+    use BerdasarkanUnitKerja;
+
+    protected $table = 'kriteria_ahp';
 
     protected $fillable = [
-        'matriks', 'lambda_max', 'ci', 'ri', 'cr', 'diubah_oleh',
+        'unit_kerja_id', 'matriks', 'lambda_max', 'ci', 'ri', 'cr', 'diubah_oleh',
     ];
 
     protected $casts = [

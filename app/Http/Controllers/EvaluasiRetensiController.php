@@ -129,7 +129,7 @@ class EvaluasiRetensiController extends Controller
             $dataToSave
         );
 
-        $service->evaluasiMassal();
+        $service->evaluasiMassal((int) $surat->unit_kerja_id);
 
         return back()->with('success', "Penilaian untuk surat \"{$surat->nomor_surat}\" tersimpan dan skor retensi diperbarui.");
     }

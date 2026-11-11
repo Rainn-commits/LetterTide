@@ -37,6 +37,6 @@ return new class extends Migration
             $table->dropColumn(['d_plus', 'd_minus']);
         });
 
-        Schema::dropIfExists('retensi_ahp');
+        Schema::dropIfExists('kriteria_ahp');
     }
 };

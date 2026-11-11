@@ -68,7 +68,7 @@
         ],
         [
             'label'      => 'Retensi Arsip',
-            'route'      => str_contains($roleName, 'User') ? 'evaluasi-retensi.index' : 'retensi-kriteria.index',
+            'route'      => auth()->user()->punyaPermission('retensi.manage') ? 'retensi-kriteria.index' : 'evaluasi-retensi.index',
             'active'     => request()->routeIs('retensi-kriteria.*') || request()->routeIs('evaluasi-retensi.*'),
             'roles'      => ['Admin', 'User'], 
             'icon'       => 'archive-clock',

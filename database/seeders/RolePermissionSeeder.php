@@ -13,7 +13,7 @@ class RolePermissionSeeder extends Seeder
 
         $hakAkses = [
             'Super Admin' => ['template.manage', 'kopsurat.manage', 'role.manage', 'log.view'],
-            'Admin'       => ['surat.create', 'arsip.manage', 'kopsurat.edit', 'pengguna.unit', 'retensi.evaluate', 'log.view'],
+            'Admin'       => ['surat.create', 'arsip.manage', 'kopsurat.edit', 'pengguna.unit', 'retensi.evaluate', 'retensi.manage', 'log.view'],
             'User'        => ['surat.create', 'arsip.manage', 'retensi.evaluate'],
         ];
 

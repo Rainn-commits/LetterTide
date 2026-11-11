@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\RetensiAhp;
 use App\Models\RetensiKriteria;
+use App\Models\User;
 use App\Services\AhpCalculator;
 use App\Services\RetensiScoringService;
 use Illuminate\Http\Request;
@@ -18,21 +19,25 @@ class RetensiKriteriaController extends Controller
         '1/2', '1/3', '1/4', '1/5', '1/6', '1/7', '1/8', '1/9',
     ];
 
-    public function index()
+    public function index(Request $request, RetensiScoringService $scoring)
     {
-        $kriteria = RetensiKriteria::orderBy('kode')->get();
-        $ahp = RetensiAhp::find(1);
+        $unitId = $this->unitAktif($request);
+        $scoring->siapkanUnit($unitId);
 
         return view('retensi-kriteria.index', [
-            'kriteria'   => $kriteria,
-            'ahp'        => $ahp,
+            'kriteria'   => RetensiKriteria::where('unit_kerja_id', $unitId)->orderBy('kode')->get(),
+            'ahp'        => RetensiAhp::where('unit_kerja_id', $unitId)->first(),
             'nilaiSkala' => self::NILAI_SKALA,
+            'unitId'     => $unitId,
         ]);
     }
 
     public function simpanAhp(Request $request, AhpCalculator $ahp, RetensiScoringService $scoring)
     {
-        $kriteria = RetensiKriteria::orderBy('kode')->get();
+        $unitId = $this->unitAktif($request);
+        $scoring->siapkanUnit($unitId);
+
+        $kriteria = RetensiKriteria::where('unit_kerja_id', $unitId)->orderBy('kode')->get();
         $n = $kriteria->count();
         $jumlahPasangan = $n * ($n - 1) / 2;
 
@@ -60,39 +65,39 @@ class RetensiKriteriaController extends Controller
                 ->withInput();
         }
 
-        DB::transaction(function () use ($kriteria, $hasil, $matriks) {
-            foreach ($kriteria as $i => $k) {
-                $k->update(['bobot' => $hasil['bobot'][$i]]);
-            }
+        DB::transaction(fn () => $scoring->simpanHasilAhp($unitId, $kriteria, $matriks, $hasil, Auth::id()));
 
-            RetensiAhp::updateOrCreate(['id' => 1], [
-                'matriks'     => $matriks,
-                'lambda_max'  => $hasil['lambda_max'],
-                'ci'          => $hasil['ci'],
-                'ri'          => $hasil['ri'],
-                'cr'          => $hasil['cr'],
-                'diubah_oleh' => Auth::id(),
-            ]);
-        });
-
-        $jumlah = $scoring->evaluasiMassal();
+        $jumlah = $scoring->evaluasiMassal($unitId);
 
         return back()->with(
             'success',
             sprintf(
-                'Bobot AHP disimpan (CR = %.4f, konsisten). %d arsip dihitung ulang dengan TOPSIS dan menunggu validasi ulang.',
+                'Bobot AHP disimpan (CR = %.4f, konsisten). %d arsip unit ini dihitung ulang dengan TOPSIS dan menunggu validasi ulang.',
                 $hasil['cr'],
                 $jumlah
             )
         );
     }
 
-    public function perhitungan(RetensiScoringService $scoring)
+    public function perhitungan(Request $request, RetensiScoringService $scoring)
     {
+        $unitId = $this->unitAktif($request);
+
         return view('retensi-kriteria.perhitungan', [
-            'hitung' => $scoring->detail(),
-            'ahp'    => RetensiAhp::find(1),
+            'hitung'     => $scoring->detail($unitId),
+            'ahp'        => RetensiAhp::where('unit_kerja_id', $unitId)->first(),
+            'unitId'     => $unitId,
         ]);
+    }
+
+    private function unitAktif(Request $request): int
+    {
+        /** @var User $user */
+        $user = Auth::user();
+
+        abort_unless($user->unit_kerja_id, 403, 'Akun Anda belum terhubung ke unit kerja.');
+
+        return (int) $user->unit_kerja_id;
     }
 
     private function keAngka(string $nilai): float
@@ -106,4 +111,3 @@ class RetensiKriteriaController extends Controller
         return (float) $nilai;
     }
 }
-
