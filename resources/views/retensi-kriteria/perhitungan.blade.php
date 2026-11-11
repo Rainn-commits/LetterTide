@@ -112,4 +112,5 @@
                 Kembali ke Kelola Kriteria
             </a>
         </div>
+    </div>
 @endsection

@@ -177,4 +177,5 @@
                 Lihat Detail Perhitungan TOPSIS
             </a>
         </div>
+    </div>
 @endsection

@@ -236,6 +236,10 @@
 
 .rk-table--kiri th,
 .rk-table--kiri td {
+    text-align: left;
+}
+
+.rk-table--kiri th:first-child {
     text-align: center;
 }
 
