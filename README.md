@@ -433,7 +433,7 @@ Lupa password: pengguna mengirim permintaan -> notifikasi ke Super Admin -> rese
 
 ```
 unit_kerja 1 ---- N users, template_surat, pengaturan_kop_surat,
-      |                   surat, log_aktivitas, retensi_kriteria kriteria_ahp
+      |                   surat, log_aktivitas, retensi_kriteria, kriteria_ahp
       |
 roles 1 ---- N users 1 ---- N surat 1 ---- N isi_surat
   |                           |

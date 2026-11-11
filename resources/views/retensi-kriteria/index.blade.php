@@ -55,100 +55,126 @@
             <div class="rk-alert rk-alert--error">{{ $errors->first() }}</div>
         @endif
 
-        <h3>Perbandingan Berpasangan</h3>
-        <p>Pilih seberapa penting kriteria di kiri dibanding kriteria di kanan
-            (9 = mutlak lebih penting, 1 = sama penting, 1/9 = kriteria kanan mutlak lebih penting).</p>
+        <section class="rk-section">
+            <h3 class="rk-section__title">Perbandingan Berpasangan</h3>
+            <p class="rk-text">
+                Pilih seberapa penting kriteria di kiri dibanding kriteria di kanan
+                (9 = mutlak lebih penting, 1 = sama penting, 1/9 = kriteria kanan mutlak lebih penting).
+            </p>
 
-        <form method="POST" action="{{ route('retensi-kriteria.ahp') }}">
-            @csrf
-            <div class="rk-table-container">
-                <table class="rk-table">
-                    <thead>
-                        <tr>
-                            <th>Kriteria A</th>
-                            <th>Nilai A terhadap B</th>
-                            <th>Kriteria B</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($pasangan as $k => [$i, $j])
+            <form method="POST" action="{{ route('retensi-kriteria.ahp') }}">
+                @csrf
+                <div class="rk-table-container">
+                    <table class="rk-table rk-table--kiri">
+                        <thead>
                             <tr>
-                                <td>{{ $kriteria[$i]->kode }} – {{ $kriteria[$i]->nama_kriteria }}</td>
-                                <td>
-                                    <select name="perbandingan[{{ $k }}]" required>
-                                        @foreach ($nilaiSkala as $nilai)
-                                            <option value="{{ $nilai }}" {{ $nilaiTerpilih($k, $i, $j) === $nilai ? 'selected' : '' }}>
-                                                {{ $nilai }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                </td>
-                                <td>{{ $kriteria[$j]->kode }} – {{ $kriteria[$j]->nama_kriteria }}</td>
+                                <th>Kriteria A</th>
+                                <th>Nilai A terhadap B</th>
+                                <th>Kriteria B</th>
                             </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            </div>
-            <button type="submit">Hitung Bobot &amp; Simpan</button>
-        </form>
+                        </thead>
+                        <tbody>
+                            @foreach ($pasangan as $k => [$i, $j])
+                                <tr>
+                                    <td>{{ $kriteria[$i]->kode }} – {{ $kriteria[$i]->nama_kriteria }}</td>
+                                    <td>
+                                        <select name="perbandingan[{{ $k }}]" class="rk-select" required>
+                                            @foreach ($nilaiSkala as $nilai)
+                                                <option value="{{ $nilai }}" {{ $nilaiTerpilih($k, $i, $j) === $nilai ? 'selected' : '' }}>
+                                                    {{ $nilai }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </td>
+                                    <td>{{ $kriteria[$j]->kode }} – {{ $kriteria[$j]->nama_kriteria }}</td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="rk-form-aksi">
+                    <button type="submit" class="rk-btn">Hitung Bobot &amp; Simpan</button>
+                </div>
+            </form>
+        </section>
 
         @if ($ahp)
-            <h3>Matriks Perbandingan Berpasangan</h3>
-            <div class="rk-table-container">
-                <table class="rk-table">
-                    <thead>
-                        <tr>
-                            <th></th>
-                            @foreach ($kriteria as $k) <th>{{ $k->kode }}</th> @endforeach
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($kriteria as $i => $k)
+            <section class="rk-section">
+                <h3 class="rk-section__title">Matriks Perbandingan Berpasangan</h3>
+                <div class="rk-table-container">
+                    <table class="rk-table">
+                        <thead>
                             <tr>
-                                <td>{{ $k->kode }}</td>
-                                @foreach ($kriteria as $j => $_)
-                                    <td>{{ number_format($ahp->matriks[$i][$j], 4) }}</td>
-                                @endforeach
+                                <th></th>
+                                @foreach ($kriteria as $k) <th>{{ $k->kode }}</th> @endforeach
                             </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            </div>
+                        </thead>
+                        <tbody>
+                            @foreach ($kriteria as $i => $k)
+                                <tr>
+                                    <td><strong>{{ $k->kode }}</strong></td>
+                                    @foreach ($kriteria as $j => $_)
+                                        <td>{{ number_format($ahp->matriks[$i][$j], 4) }}</td>
+                                    @endforeach
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </section>
 
-            <h3>Hasil Bobot &amp; Uji Konsistensi</h3>
-            <div class="rk-table-container">
-                <table class="rk-table">
-                    <thead>
-                        <tr>
-                            <th>Kode</th><th>Nama Kriteria</th><th>Tipe</th><th>Bobot (AHP)</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($kriteria as $k)
+            <section class="rk-section">
+                <h3 class="rk-section__title">Hasil Bobot &amp; Uji Konsistensi</h3>
+                <div class="rk-table-container">
+                    <table class="rk-table">
+                        <thead>
                             <tr>
-                                <td>{{ $k->kode }}</td>
-                                <td>{{ $k->nama_kriteria }}</td>
-                                <td><span class="rk-tipe-badge rk-tipe-badge--{{ $k->tipe }}">{{ ucfirst($k->tipe) }}</span></td>
-                                <td>{{ number_format($k->bobot, 4) }}</td>
+                                <th>Kode</th>
+                                <th class="rk-kolom-kiri">Nama Kriteria</th>
+                                <th>Tipe</th>
+                                <th>Bobot (AHP)</th>
                             </tr>
-                        @endforeach
-                        <tr>
-                            <td colspan="3"><strong>Total</strong></td>
-                            <td><strong>{{ number_format($kriteria->sum('bobot'), 4) }}</strong></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+                        </thead>
+                        <tbody>
+                            @foreach ($kriteria as $k)
+                                <tr>
+                                    <th>Nama Kriteria</th>
+                                    <td>{{ $k->nama_kriteria }}</td>
+                                    <td><span class="rk-tipe-badge rk-tipe-badge--{{ $k->tipe }}">{{ ucfirst($k->tipe) }}</span></td>
+                                    <td>{{ number_format($k->bobot, 4) }}</td>
+                                </tr>
+                            @endforeach
+                            <tr class="rk-baris-total">
+                                <td colspan="3">Total</td>
+                                <td>{{ number_format($kriteria->sum('bobot'), 4) }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
 
-            <p>
-                λmaks = {{ number_format($ahp->lambda_max, 4) }} ·
-                CI = (λmaks − n) / (n − 1) = {{ number_format($ahp->ci, 4) }} ·
-                RI (n = {{ $n }}) = {{ number_format($ahp->ri, 2) }} ·
-                CR = CI / RI = <strong>{{ number_format($ahp->cr, 4) }}</strong>
-                ({{ $ahp->cr <= 0.1 ? 'konsisten, CR ≤ 0,10' : 'TIDAK konsisten' }})
-            </p>
+                <p class="rk-text rk-konsistensi">
+                    λmaks = {{ number_format($ahp->lambda_max, 4) }} ·
+                    CI = (λmaks − n) / (n − 1) = {{ number_format($ahp->ci, 4) }} ·
+                    RI (n = {{ $n }}) = {{ number_format($ahp->ri, 2) }} ·
+                    CR = CI / RI = <strong>{{ number_format($ahp->cr, 4) }}</strong>
+                    @if ($ahp->cr <= 0.1)
+                        <span class="rk-status rk-status--ok">Konsisten (CR ≤ 0,10)</span>
+                    @else
+                        <span class="rk-status rk-status--gagal">Tidak konsisten</span>
+                    @endif
+                </p>
+            </section>
         @endif
 
-        <p><a href="{{ route('retensi-kriteria.perhitungan') }}">Lihat detail perhitungan TOPSIS</a></p>
-    </div>
+        <div class="rk-aksi-halaman">
+            <a href="{{ route('retensi-kriteria.perhitungan') }}" class="rk-btn">
+                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <rect x="5" y="3" width="14" height="18" rx="2" stroke="currentColor" stroke-width="2"/>
+                    <path d="M8.5 7H15.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    <path d="M8.5 11.5H8.51M12 11.5H12.01M15.5 11.5H15.51M8.5 15H8.51M12 15H12.01M15.5 15H15.51M8.5 18H8.51M12 18H15.5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+                </svg>
+                Lihat Detail Perhitungan TOPSIS
+            </a>
+        </div>
 @endsection
