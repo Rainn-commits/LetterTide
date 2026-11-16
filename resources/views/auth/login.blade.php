@@ -59,7 +59,7 @@
                     <span class="auth-card__brand-name">LetterTide</span>
                 </div>
 
-                <form method="POST" action="{{ route('login') }}" novalidate>
+                <form method="POST" action="{{ route('login') }}" data-loading-text="Sedang masuk ke LetterTide" novalidate>
                     @csrf
 
                     <div class="auth-field @error('email') has-error @enderror">
@@ -107,5 +107,6 @@
         </div>
     </div>
 
+    @include('partials.page-loader')
 </body>
 </html>

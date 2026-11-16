@@ -13,7 +13,7 @@
     </div>
 
     <div class="card">
-        <form method="POST" action="{{ route('surat.update', $surat->id) }}" class="surat-form" novalidate>
+        <form method="POST" action="{{ route('surat.update', $surat->id) }}" class="surat-form" data-loading-text="Sedang menyimpan perubahan surat" novalidate>
             @csrf
             @method('PUT')
 
@@ -381,4 +381,3 @@
         });
     </script>
 @endsection
-

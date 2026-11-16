@@ -17,7 +17,7 @@
     </div>
 
     <div class="card">
-        <form method="POST" action="{{ route('surat.store', $template->id) }}" class="surat-form" novalidate>
+        <form method="POST" action="{{ route('surat.store', $template->id) }}" class="surat-form" data-loading-text="Sedang membuat surat" novalidate>
             @csrf
 
             <div class="form-field">

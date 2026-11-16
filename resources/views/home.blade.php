@@ -204,5 +204,6 @@
         </div>
     </section>
 
+    @include('partials.page-loader')
 </body>
 </html>

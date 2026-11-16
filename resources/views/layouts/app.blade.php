@@ -68,6 +68,8 @@
         </div>
     </div>
 
+    @include('partials.page-loader')
+
     @yield('page-js')
     @stack('scripts')
 </body>

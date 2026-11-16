@@ -29,6 +29,7 @@ export default defineConfig({
                 'resources/css/evaluasi-retensi.css',
                 'resources/css/retensi-kriteria.css',
                 'resources/css/log-aktivitas.css',
+                'resources/css/page-loader.css',
                 'resources/js/surat-wizard.js',
                 'resources/js/template-editor.js',
                 'resources/js/app.js',
@@ -36,6 +37,7 @@ export default defineConfig({
                 'resources/js/hero-parallax.js',
                 'resources/js/password-toggle.js',
                 'resources/js/dashboard-interactions.js',
+                'resources/js/page-loader.js',
             ],
             refresh: true,
             fonts: [
