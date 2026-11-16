@@ -32,32 +32,36 @@
 
                     @php
                         $checkedList = old('permissions', $permissionTerpilih);
-
-                        $retensiEvaluate = $permissions->firstWhere('kode_permission', 'retensi.evaluate');
-                        $retensiChecked = $retensiEvaluate
-                            && in_array($retensiEvaluate->id, $checkedList);
+                        $isSuperAdmin = $role->nama_role === 'Super Admin';
+                        $catatanSyarat = [
+                            'arsip.unit'     => 'otomatis ikut Arsip Digital',
+                            'surat.ttd'      => 'otomatis ikut Arsip Digital',
+                            'retensi.manage' => 'otomatis ikut Retensi Arsip',
+                        ];
                     @endphp
 
                     @foreach($permissions as $permission)
-                        @if(in_array($permission->kode_permission, ['retensi.evaluate', 'retensi.manage']))
-                            @continue
-                        @endif
-
                         @php
-                            $isChecked = in_array($permission->id, $checkedList);
-                            $isLockedRoleManage = $role->nama_role === 'Super Admin'
-                                && $permission->kode_permission === 'role.manage';
+                            $kode = $permission->kode_permission;
+                            $isLockedRoleManage = $isSuperAdmin && $kode === 'role.manage';
+                            $isTidakBerlaku = $isSuperAdmin
+                                && in_array($kode, \App\Models\Permission::TIDAK_UNTUK_SUPER_ADMIN, true);
+                            $isChecked = !$isTidakBerlaku && in_array($permission->id, $checkedList);
                         @endphp
 
-                        <label class="permission-item {{ $isLockedRoleManage ? 'permission-item--locked' : '' }}">
+                        <label class="permission-item {{ ($isLockedRoleManage || $isTidakBerlaku) ? 'permission-item--locked' : '' }}">
                             <input type="checkbox" name="permissions[]" value="{{ $permission->id }}"
                                 {{ $isChecked ? 'checked' : '' }}
-                                {{ $isLockedRoleManage ? 'disabled' : '' }}>
+                                {{ ($isLockedRoleManage || $isTidakBerlaku) ? 'disabled' : '' }}>
 
                             <span>{{ $permission->nama_permission }}</span>
 
                             @if($isLockedRoleManage)
                                 <small class="permission-item__note">(wajib untuk Super Admin)</small>
+                            @elseif($isTidakBerlaku)
+                                <small class="permission-item__note">(tidak berlaku untuk Super Admin)</small>
+                            @elseif(isset($catatanSyarat[$kode]))
+                                <small class="permission-item__note permission-item__note--info">({{ $catatanSyarat[$kode] }})</small>
                             @endif
                         </label>
 
@@ -65,14 +69,6 @@
                             <input type="hidden" name="permissions[]" value="{{ $permission->id }}">
                         @endif
                     @endforeach
-
-                    <label class="permission-item">
-                        <input type="checkbox"
-                            name="retensi_arsip"
-                            value="1"
-                            {{ $retensiChecked ? 'checked' : '' }}>
-                        <span>Retensi Arsip</span>
-                    </label>
 
                 </div>
             </div>

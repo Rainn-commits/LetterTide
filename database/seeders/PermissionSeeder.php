@@ -17,9 +17,11 @@ class PermissionSeeder extends Seeder
             ['nama_permission' => 'Ubah Kop Surat Unit', 'kode_permission' => 'kopsurat.edit'],
             ['nama_permission' => 'Kelola Pengguna & Role', 'kode_permission' => 'role.manage'],
             ['nama_permission' => 'Kelola Pengguna Unit', 'kode_permission' => 'pengguna.unit'],
-            ['nama_permission' => 'Evaluasi Retensi Arsip', 'kode_permission' => 'retensi.evaluate'],
-            ['nama_permission' => 'Kelola Kriteria Retensi', 'kode_permission' => 'retensi.manage'],
+            ['nama_permission' => 'Retensi Arsip (Isi Penilaian)', 'kode_permission' => 'retensi.evaluate'],
+            ['nama_permission' => 'Kelola Kriteria AHP & Validasi Retensi', 'kode_permission' => 'retensi.manage'],
             ['nama_permission' => 'Log Aktivitas Sistem', 'kode_permission' => 'log.view'],
+            ['nama_permission' => 'Lihat Seluruh Arsip Unit', 'kode_permission' => 'arsip.unit'],
+            ['nama_permission' => 'ACC & Tanda Tangan Digital', 'kode_permission' => 'surat.ttd'],
         ];
 
         foreach ($permissions as $perm) {

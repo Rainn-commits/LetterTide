@@ -339,6 +339,10 @@
   margin-left: auto;
 }
 
+.permission-item__note--info {
+  color: #64748b;
+}
+
 .form-actions {
   display: flex;
   align-items: center;
@@ -447,4 +451,3 @@
     white-space: nowrap;
   }
 }
-

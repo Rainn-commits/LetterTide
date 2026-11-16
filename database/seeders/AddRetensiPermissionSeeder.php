@@ -21,7 +21,7 @@ class AddRetensiPermissionSeeder extends Seeder
         ]);
 
         $roleIds = DB::table('roles')
-            ->whereIn('nama_role', ['Super Admin', 'Admin'])
+            ->whereIn('nama_role', ['Admin'])
             ->pluck('id');
 
         foreach ($roleIds as $roleId) {

@@ -10,7 +10,7 @@
     <div class="dash-pro-grid">
         <div class="dash-pro-main">
             <div class="stat-grid-pro">
-                <a href="{{ Route::has('arsip.index') ? route('arsip.index') : '#' }}" class="glass-card stat-card-pro stat-card-pro--teal">
+                <a href="{{ auth()->user()->punyaPermission('arsip.manage') ? route('arsip.index') : route('log-aktivitas.index') }}" class="glass-card stat-card-pro stat-card-pro--teal">
                     <div class="stat-card-pro__top">
                         <span class="stat-card-pro__label">Total Surat</span>
                         <span class="skeuo-icon skeuo-icon--teal">

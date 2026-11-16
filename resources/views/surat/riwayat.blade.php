@@ -17,6 +17,10 @@
         <div class="surat-alert surat-alert--success">{{ session('success') }}</div>
     @endif
 
+    @if (session('error'))
+        <div class="surat-alert surat-alert--error">{{ session('error') }}</div>
+    @endif
+
     <form method="GET" action="{{ route('surat.riwayat') }}" class="card filter-card">
         <div class="filter-grid">
             <div class="form-group-center">
@@ -97,9 +101,11 @@
                                 <a href="{{ route('surat.show', $surat) }}" class="btn-modern btn-modern--detail btn-modern--icon-only" title="Lihat Detail">
                                     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
                                 </a>
+                                @if (strtolower($surat->status ?? '') !== 'disetujui')
                                 <a href="{{ route('surat.edit', $surat) }}" class="btn-modern btn-modern--upload btn-modern--icon-only" title="Edit Isi Surat">
                                     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
                                 </a>
+                                @endif
                                 <a href="{{ route('surat.cetak', $surat) }}" target="_blank" class="btn-modern btn-modern--cetak btn-modern--icon-only" title="Cetak Surat">
                                     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
                                 </a>

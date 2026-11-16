@@ -8,7 +8,7 @@
 
 @section('content')
 
-    @if (in_array(auth()->user()->role?->nama_role ?? '', ['Super Admin', 'Admin']))
+    @if (auth()->user()->punyaPermission('retensi.manage'))
         <div class="retensi-tabs">
             <a href="{{ route('retensi-kriteria.index') }}" class="retensi-tabs__link">
                 Kelola Kriteria Retensi
@@ -21,7 +21,7 @@
     @endif
 
     @php
-        $isPrivileged = in_array(auth()->user()->role->nama_role ?? '', ['Super Admin', 'Admin']);
+        $isPrivileged = auth()->user()->punyaPermission('retensi.manage');
         $jumlahKolom = $isPrivileged ? 8 : 6;
     @endphp
 

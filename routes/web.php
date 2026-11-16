@@ -48,12 +48,20 @@ Route::middleware(['auth', 'active'])->group(function () {
     Route::get('/kontak/search', [KontakLookupController::class, 'search'])
         ->name('kontak.search');
     
-    Route::get('/arsip', [ArsipController::class, 'index'])->name('arsip.index');
-    Route::post('/arsip/surat-masuk', [SuratMasukController::class, 'store'])->name('arsip.surat-masuk.store');
+    Route::middleware('permission:arsip.manage')->group(function () {
+        Route::get('/arsip', [ArsipController::class, 'index'])->name('arsip.index');
+        Route::post('/arsip/surat-masuk', [SuratMasukController::class, 'store'])->name('arsip.surat-masuk.store');
+        Route::post('/surat/{surat}/upload-arsip', [SuratController::class, 'uploadArsip'])->name('surat.upload-arsip');
+    });
 
-    Route::get('/evaluasi-retensi', [EvaluasiRetensiController::class, 'index'])->name('evaluasi-retensi.index');
-    Route::post('/evaluasi-retensi/{surat}/nilai', [EvaluasiRetensiController::class, 'simpanPenilaian'])->name('retensi.simpan-penilaian');
-    Route::post('/evaluasi-retensi/{surat}/validasi', [EvaluasiRetensiController::class, 'validasi'])->name('retensi.validasi');
+    Route::middleware('permission:retensi.evaluate')->group(function () {
+        Route::get('/evaluasi-retensi', [EvaluasiRetensiController::class, 'index'])->name('evaluasi-retensi.index');
+        Route::post('/evaluasi-retensi/{surat}/nilai', [EvaluasiRetensiController::class, 'simpanPenilaian'])->name('retensi.simpan-penilaian');
+    });
+
+    Route::post('/evaluasi-retensi/{surat}/validasi', [EvaluasiRetensiController::class, 'validasi'])
+        ->middleware('permission:retensi.manage')
+        ->name('retensi.validasi');
 
     Route::middleware('permission:kopsurat.manage')->group(function () {
         Route::get('/kop-surat/create', [KopSuratController::class, 'create'])->name('kop-surat.create');
@@ -67,11 +75,6 @@ Route::middleware(['auth', 'active'])->group(function () {
         Route::put('/kop-surat/{pengaturanKopSurat}', [KopSuratController::class, 'update'])->name('kop-surat.update');
         Route::delete('/kop-surat/{pengaturanKopSurat}', [KopSuratController::class, 'destroy'])->name('kop-surat.destroy');
     });
-
-    Route::match(['get', 'post'], '/surat/{surat}/ttd-digital', [SuratController::class, 'ttdDigital'])->name('surat.ttd-digital');
-    Route::delete('/surat/{surat}', [SuratController::class, 'destroy'])->name('surat.destroy');
-    Route::get('/surat/{surat}/edit', [SuratController::class, 'edit'])->name('surat.edit');
-    Route::put('/surat/{surat}', [SuratController::class, 'update'])->name('surat.update');
 
     Route::middleware('permission:role.manage')->group(function () {
         Route::get('/pengguna/create', [PenggunaController::class, 'create'])->name('pengguna.create');
@@ -106,10 +109,19 @@ Route::middleware(['auth', 'active'])->group(function () {
     });
 
     Route::middleware('permission:surat.create')->group(function () {
+        Route::get('/surat/{surat}/edit', [SuratController::class, 'edit'])->name('surat.edit');
+        Route::put('/surat/{surat}', [SuratController::class, 'update'])->name('surat.update');
+    });
+
+    Route::middleware('permission:surat.create,arsip.manage')->group(function () {
         Route::get('/surat/{surat}', [SuratController::class, 'show'])->name('surat.show');
         Route::get('/surat/{surat}/cetak', [SuratController::class, 'cetak'])->name('surat.cetak');
-        Route::post('/surat/{surat}/upload-arsip', [SuratController::class, 'uploadArsip'])->name('surat.upload-arsip');
+        Route::delete('/surat/{surat}', [SuratController::class, 'destroy'])->name('surat.destroy');
     });
+
+    Route::post('/surat/{surat}/ttd-digital', [SuratController::class, 'ttdDigital'])
+        ->middleware('permission:surat.ttd')
+        ->name('surat.ttd-digital');
 
     Route::middleware('permission:role.manage')->group(function () {
         Route::get('/role', [RoleController::class, 'index'])->name('role.index');

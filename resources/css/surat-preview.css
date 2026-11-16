@@ -307,3 +307,21 @@
         margin: 30mm;
     }
 }
+
+.preview-alert {
+  border-radius: var(--radius-sm);
+  padding: 14px 18px;
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+
+.preview-alert--success {
+  background: var(--color-bg-tint-2);
+  color: var(--color-primary-dark);
+}
+
+.preview-alert--error {
+  background: var(--color-danger-bg);
+  color: var(--color-danger);
+}

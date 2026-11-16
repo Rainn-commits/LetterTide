@@ -13,7 +13,7 @@ class RolePermissionSeeder extends Seeder
 
         $hakAkses = [
             'Super Admin' => ['template.manage', 'kopsurat.manage', 'role.manage', 'log.view'],
-            'Admin'       => ['surat.create', 'arsip.manage', 'kopsurat.edit', 'pengguna.unit', 'retensi.evaluate', 'retensi.manage', 'log.view'],
+            'Admin'       => ['surat.create', 'arsip.manage', 'arsip.unit', 'surat.ttd', 'kopsurat.edit', 'pengguna.unit', 'retensi.evaluate', 'retensi.manage', 'log.view'],
             'User'        => ['surat.create', 'arsip.manage', 'retensi.evaluate'],
         ];
 
@@ -29,7 +29,16 @@ class RolePermissionSeeder extends Seeder
                     continue;
                 }
 
-                DB::table('role_permissions')->insertOrIgnore([
+                $sudahAda = DB::table('role_permissions')
+                    ->where('role_id', $roleId)
+                    ->where('permission_id', $permissions[$kode])
+                    ->exists();
+
+                if ($sudahAda) {
+                    continue;
+                }
+
+                DB::table('role_permissions')->insert([
                     'role_id'       => $roleId,
                     'permission_id' => $permissions[$kode],
                     'created_at'    => now(),

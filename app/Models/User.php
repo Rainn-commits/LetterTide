@@ -59,6 +59,11 @@ class User extends Authenticatable
         return (bool) $this->role?->permissions->contains('kode_permission', $kode);
     }
 
+    public function bolehAksesSurat(Surat $surat): bool
+    {
+        return $this->punyaPermission('arsip.unit') || (int) $surat->user_id === (int) $this->id;
+    }
+
     public function punyaSalahSatuPermission(array $kode): bool
     {
         foreach ($kode as $k) {

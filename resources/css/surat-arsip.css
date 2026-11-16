@@ -14,6 +14,11 @@
   color: var(--color-primary-dark);
 }
 
+.surat-alert--error {
+  background: var(--color-danger-bg);
+  color: var(--color-danger);
+}
+
 .card {
   background: var(--color-white);
   border-radius: var(--radius-lg);
@@ -367,6 +372,17 @@
   background-color: #10b981;
   color: #ffffff;
   box-shadow: 0 3px 10px rgba(16, 185, 129, 0.25);
+}
+
+.btn-modern--pending {
+  padding: 7px 14px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 700;
+  background-color: #f59e0b;
+  color: #ffffff;
+  box-shadow: 0 3px 10px rgba(245, 158, 11, 0.25);
+  cursor: default;
 }
 
 .btn-modern--upload {

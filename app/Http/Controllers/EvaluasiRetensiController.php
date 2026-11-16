@@ -18,8 +18,7 @@ class EvaluasiRetensiController extends Controller
         /** @var User $user */
         $user = Auth::user();
 
-        $namaRole = $user->role->nama_role ?? '';
-        $isPrivileged = in_array($namaRole, ['Super Admin', 'Admin']);
+        $isPrivileged = $user->punyaPermission('retensi.manage');
 
         $query = Surat::with('evaluasiRetensi', 'template', 'user');
 
@@ -105,11 +104,11 @@ class EvaluasiRetensiController extends Controller
 
     public function simpanPenilaian(Request $request, Surat $surat, RetensiScoringService $service)
     {
+        /** @var User $user */
         $user = Auth::user();
-        $namaRole = $user->role->nama_role ?? '';
-        $isAdmin = in_array($namaRole, ['Super Admin', 'Admin']);
+        $isAdmin = $user->punyaPermission('retensi.manage');
 
-        if (strtolower($namaRole) === 'user' && $surat->user_id !== $user->id) {
+        if (!$isAdmin && (int) $surat->user_id !== (int) $user->id) {
             abort(403, 'Anda tidak berhak menilai surat milik pengguna lain.');
         }
 
@@ -144,11 +143,6 @@ class EvaluasiRetensiController extends Controller
     {
         /** @var User $user */
         $user = Auth::user();
-        $namaRole = $user->role->nama_role ?? '';
-
-        if (!in_array($namaRole, ['Super Admin', 'Admin'])) {
-            abort(403, 'Hanya Admin/Super Admin yang dapat memvalidasi status retensi.');
-        }
 
         $eval = $surat->evaluasiRetensi;
 

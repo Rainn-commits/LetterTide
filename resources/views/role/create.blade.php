@@ -24,31 +24,25 @@
             <div class="form-field">
                 <label>Hak Akses:</label>
                 <div class="permission-grid">
-                    @foreach($permissions as $permission)
-                        @if(in_array($permission->kode_permission, ['retensi.evaluate', 'retensi.manage']))
-                            @continue
-                        @endif
+                    @php
+                        $catatanSyarat = [
+                            'arsip.unit'     => 'otomatis ikut Arsip Digital',
+                            'surat.ttd'      => 'otomatis ikut Arsip Digital',
+                            'retensi.manage' => 'otomatis ikut Retensi Arsip',
+                        ];
+                    @endphp
 
+                    @foreach($permissions as $permission)
                         <label class="permission-item">
                             <input type="checkbox" name="permissions[]" value="{{ $permission->id }}"
                                 {{ in_array($permission->id, old('permissions', [])) ? 'checked' : '' }}>
                             <span>{{ $permission->nama_permission }}</span>
+
+                            @if(isset($catatanSyarat[$permission->kode_permission]))
+                                <small class="permission-item__note permission-item__note--info">({{ $catatanSyarat[$permission->kode_permission] }})</small>
+                            @endif
                         </label>
                     @endforeach
-
-                    @php
-                        $retensiEvaluate = $permissions->firstWhere('kode_permission', 'retensi.evaluate');
-                        $retensiChecked = $retensiEvaluate
-                            && in_array($retensiEvaluate->id, old('permissions', []));
-                    @endphp
-
-                    <label class="permission-item">
-                        <input type="checkbox"
-                            name="retensi_arsip"
-                            value="1"
-                            {{ $retensiChecked ? 'checked' : '' }}>
-                        <span>Retensi Arsip</span>
-                    </label>
                 </div>
             </div>
 

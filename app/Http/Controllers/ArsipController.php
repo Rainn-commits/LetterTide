@@ -26,12 +26,8 @@ class ArsipController extends Controller
             ->where('jenis', $jenis)
             ->latest('tanggal_surat');
 
-        if (!$user->hasAnyRole(['Super Admin', 'Admin'])) {
+        if (!$user->punyaPermission('arsip.unit') || $request->input('pembuat') === 'saya') {
             $query->where('user_id', $user->id);
-        } else {
-            if ($request->input('pembuat') === 'saya') {
-                $query->where('user_id', $user->id);
-            }
         }
 
         if ($request->filled('q')) {

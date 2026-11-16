@@ -10,6 +10,10 @@
     @if (session('success')) 
         <div class="surat-alert surat-alert--success">{{ session('success') }}</div> 
     @endif 
+
+    @if (session('error'))
+        <div class="surat-alert surat-alert--error">{{ session('error') }}</div>
+    @endif
  
     <div class="arsip-header-wrapper"> 
         <h2 class="arsip-header-title">Arsip Surat</h2> 
@@ -119,7 +123,7 @@
         <input type="hidden" name="folder" value="{{ $folder }}"> 
  
         <div class="filter-grid"> 
-            @if (Auth::user()->hasAnyRole(['Super Admin', 'Admin'])) 
+            @if (Auth::user()->punyaPermission('arsip.unit')) 
                 <div class="form-group-center"> 
                     <label>Cakupan Surat</label> 
 
@@ -309,7 +313,7 @@
                                                 <polyline points="22 4 12 14.01 9 11.01"/>
                                             </svg> 
                                         </span> 
-                                    @else 
+                                    @elseif (Auth::user()->punyaPermission('surat.ttd'))
                                         <form action="{{ route('surat.ttd-digital', $surat) }}" 
                                             method="POST" 
                                             style="display: inline-block;" 
@@ -327,6 +331,10 @@
                                                 </svg> 
                                             </button> 
                                         </form> 
+                                    @else
+                                        <span class="btn-modern--pending btn-modern--icon-only" title="Menunggu ACC & Tanda Tangan">
+                                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                                        </span>
                                     @endif 
                                 @else 
                                     @if ($surat->file_arsip) 
@@ -411,4 +419,3 @@
         </div> 
     @endif 
 @endsection
-

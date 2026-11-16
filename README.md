@@ -46,8 +46,8 @@ LetterTide menyelesaikan masalah tersebut dengan:
 
 | Komponen | Teknologi |
 |---|---|
-| Framework Backend | Laravel 13.23.0 |
-| Bahasa | PHP 8.5.12 |
+| Framework Backend | Laravel 13 |
+| Bahasa | PHP 8.3+ |
 | Database | MySQL/MariaDB |
 | Build Tool Frontend | Vite + Laravel Vite Plugin |
 | Styling | Tailwind CSS v4 dan CSS kustom per fitur |
@@ -114,27 +114,32 @@ Sistem memiliki tiga role bawaan. Role bersifat **dinamis** - Super Admin dapat 
 | Kelola Pengguna dan Role | Ya (semua unit) | Hanya ubah nama dan nonaktifkan/aktifkan akun di unit sendiri | Tidak |
 | Buat Surat | Tidak | Ya | Ya |
 | Arsip Digital | Tidak | Ya (semua surat di unit) | Terbatas (surat sendiri) |
+| ACC & Tanda Tangan Digital | Tidak | Ya (surat di unit sendiri) | Tidak |
 | Retensi Arsip | Tidak | Evaluasi, validasi, dan atur bobot kriteria lewat perbandingan berpasangan AHP | Hanya mengisi penilaian |
 | Log Aktivitas Sistem | Ya (semua unit) | Ya (unit sendiri) | Tidak |
 
-Super Admin berperan sebagai pengelola sistem, sehingga tidak membuat surat, tidak mengelola arsip, dan tidak mengikuti proses retensi. Hal-hal yang menyangkut password dan pembuatan akun hanya dapat dilakukan Super Admin.
+Super Admin berperan sebagai pengelola sistem, sehingga tidak membuat surat, tidak mengelola arsip, tidak menandatangani surat, dan tidak mengikuti proses retensi. Hak akses tersebut dikunci pada form Edit Role Super Admin dan juga ditolak oleh server (pemisahan tugas antara pengelola sistem dan pengelola surat). Selain itu, Super Admin tidak terikat unit kerja, sehingga surat buatannya tidak akan masuk ke arsip unit mana pun. Hal-hal yang menyangkut password dan pembuatan akun hanya dapat dilakukan Super Admin.
 
 ### Daftar Kode Hak Akses (Permission)
 
-Hak akses disimpan pada tabel `permissions` dan dicek melalui middleware `permission:{kode}`. Middleware menerima lebih dari satu kode, misalnya `permission:kopsurat.manage,kopsurat.edit`, yang berarti cukup memiliki salah satunya.
+Hak akses disimpan pada tabel `permissions` dan dicek melalui middleware `permission:{kode}` pada setiap rute, sehingga mencabut hak akses tidak hanya menyembunyikan menu, tetapi juga menutup alamat URL-nya. Middleware menerima lebih dari satu kode, misalnya `permission:kopsurat.manage,kopsurat.edit`, yang berarti cukup memiliki salah satunya.
 
 | Kode | Keterangan | Bawaan untuk |
 |---|---|---|
-| `surat.create` | Membuat surat, melihat riwayat, detail, dan cetak surat | Admin, User |
-| `arsip.manage` | Mengakses arsip digital | Admin, User |
+| `surat.create` | Membuat surat, melihat riwayat, detail, cetak, dan mengedit surat yang belum ditandatangani | Admin, User |
+| `arsip.manage` | Mengakses arsip digital (surat sendiri), mengunggah file arsip, dan mencatat surat masuk | Admin, User |
+| `arsip.unit` | Melihat dan mengelola seluruh surat pada unit sendiri, bukan hanya surat buatan sendiri | Admin |
+| `surat.ttd` | ACC dan tanda tangan digital surat keluar | Admin |
 | `template.manage` | Mengelola template surat | Super Admin |
 | `kopsurat.manage` | Membuat kop surat baru (dan mengelola semua kop) | Super Admin |
 | `kopsurat.edit` | Mengubah dan menghapus kop surat yang sudah ada pada unit sendiri | Admin |
 | `role.manage` | Mengelola role, hak akses, akun, dan melihat semua unit (lintas unit) | Super Admin |
 | `pengguna.unit` | Mengelola akun pada unit sendiri (ubah nama, nonaktifkan, aktifkan) | Admin |
-| `retensi.evaluate` | Mengakses fitur retensi arsip | Admin, User |
-| `retensi.manage` | Mengelola kriteria retensi: matriks perbandingan AHP dan detail perhitungan TOPSIS, untuk unit sendiri | Admin |
+| `retensi.evaluate` | Mengakses fitur retensi arsip dan mengisi penilaian surat sendiri | Admin, User |
+| `retensi.manage` | Mengelola kriteria retensi (matriks perbandingan AHP dan detail perhitungan TOPSIS), melihat skor seluruh arsip unit, dan memvalidasi rekomendasi | Admin |
 | `log.view` | Melihat log aktivitas sistem | Super Admin, Admin |
+
+Beberapa hak akses bergantung pada hak akses lain dan otomatis ikut diberikan saat disimpan: `arsip.unit` dan `surat.ttd` membutuhkan `arsip.manage`, sedangkan `retensi.manage` membutuhkan `retensi.evaluate`. Hak akses `surat.create`, `arsip.manage`, `arsip.unit`, `surat.ttd`, `retensi.evaluate`, dan `retensi.manage` tidak dapat diberikan kepada Super Admin.
 
 ### Aturan Pengaman Hierarki
 
@@ -145,6 +150,7 @@ Beberapa pembatasan diterapkan agar struktur wewenang tidak dapat disalahgunakan
 - Role "Super Admin" tidak dapat dipilih pada form Tambah Pengguna, dan terkunci (tidak dapat diubah) pada form Edit Pengguna.
 - Super Admin wajib memilih unit kerja saat menambah atau mengubah akun (kecuali akun Super Admin).
 - Super Admin tidak dapat menghapus hak akses `role.manage` dari role-nya sendiri, untuk mencegah kehilangan akses permanen.
+- Di dalam satu unit, pengguna tanpa hak akses `arsip.unit` hanya dapat membuka, mencetak, mengubah, dan menghapus surat buatannya sendiri. Membuka surat milik orang lain lewat alamat URL menghasilkan halaman **404**.
 - Role bawaan sistem (Super Admin, Admin, User) tidak dapat dihapus, dan role yang masih dipakai pengguna tidak dapat dihapus.
 - Pengguna tidak dapat menonaktifkan atau menghapus akunnya sendiri.
 - Penghapusan permanen pengguna hanya tersedia bila pengguna tersebut belum pernah tercatat sebagai pembuat atau penandatangan surat, demi menjaga integritas data arsip.
@@ -249,7 +255,10 @@ PDF arsip di-generate ulang secara otomatis pada tiga kondisi: saat surat dibuat
 - Surat yang disetujui memperoleh QR Code yang mengarah ke halaman detail surat, sehingga keaslian surat dapat diverifikasi dengan memindainya.
 - QR Code digenerate secara lokal oleh server, bukan mengambil dari layanan luar, agar tetap muncul konsisten pada Preview, Cetak, maupun PDF.
 - Surat yang belum disetujui menampilkan keterangan "(Belum Menyetujui/Ditandatangani)".
-- Persetujuan hanya dapat dilakukan oleh pengguna yang ditunjuk sebagai penandatangan, atau oleh Admin.
+- Persetujuan hanya dapat dilakukan oleh role yang memiliki hak akses `surat.ttd` (bawaan: Admin), dan hanya untuk surat di unitnya sendiri. Tombol ACC tidak ditampilkan untuk role lain; mereka melihat status "Menunggu ACC & Tanda Tangan".
+- ACC hanya dapat dilakukan melalui tombol (permintaan POST dengan konfirmasi), bukan dengan membuka alamat URL.
+- Surat yang sudah ditandatangani tidak dapat diubah isinya, karena QR Code menjamin isi surat sama dengan yang disetujui. Perbaikan dilakukan dengan membuat surat baru.
+- Mengunggah file arsip (misalnya scan surat bertanda tangan basah) hanya menandai surat sebagai disetujui bila diunggah oleh pemilik hak akses `surat.ttd`.
 
 ### 8. Pengaturan Kop Surat
 
@@ -369,7 +378,7 @@ Sistem membuat nomor surat otomatis + menyimpan isian surat
 Sistem menghasilkan PDF dan menyimpannya ke Arsip Digital unit
                     |
                     v
-Penandatangan (atau Admin) melakukan ACC & TTD Digital
+Admin (pemilik hak akses `surat.ttd`) melakukan ACC & TTD Digital
                     |
                     v
 PDF diperbarui dengan QR Code verifikasi; surat berstatus Disetujui

@@ -169,6 +169,8 @@ class SuratController extends Controller
 
     public function show(Surat $surat)
     {
+        $this->pastikanBolehAkses($surat);
+
         $surat->increment('jumlah_akses');
 
         return view('surat.preview', $this->buildCetakData($surat));
@@ -176,11 +178,15 @@ class SuratController extends Controller
 
     public function cetak(Surat $surat)
     {
+        $this->pastikanBolehAkses($surat);
+
         return view('surat.cetak', $this->buildCetakData($surat));
     }
 
     public function uploadArsip(Request $request, Surat $surat)
     {
+        $this->pastikanBolehAkses($surat);
+
         $request->validate([
             'file_arsip' => ['required', 'file', 'mimes:pdf,zip,rar', 'max:5120'],
         ]);
@@ -192,7 +198,13 @@ class SuratController extends Controller
 
             $path = $request->file('file_arsip')->store('arsip_surat', 'public');
             $surat->file_arsip = $path;
-            $surat->status = 'Disetujui';
+
+            /** @var User $user */
+            $user = Auth::user();
+            if ($surat->jenis === 'Keluar' && $user->punyaPermission('surat.ttd')) {
+                $surat->status = 'Disetujui';
+            }
+
             $surat->save();
         }
 
@@ -201,6 +213,9 @@ class SuratController extends Controller
 
     public function edit(Surat $surat)
     {
+        $this->pastikanBolehAkses($surat);
+        $this->pastikanBelumDisetujui($surat);
+
         $surat->load(['template', 'isiSurat']);
         $values = $surat->isiSurat->pluck('nilai_field', 'nama_field')->toArray();
         $template = $surat->template;
@@ -212,6 +227,9 @@ class SuratController extends Controller
 
     public function update(Request $request, Surat $surat)
     {
+        $this->pastikanBolehAkses($surat);
+        $this->pastikanBelumDisetujui($surat);
+
         $validated = $request->validate([
             'fields'   => ['required', 'array'],
             ...SuratFieldResolver::rules(array_keys((array) $request->input('fields', []))),
@@ -249,18 +267,14 @@ class SuratController extends Controller
 
     public function ttdDigital(Surat $surat)
     {
-        $user = Auth::user();
+        $this->pastikanBolehAkses($surat);
 
-        $isAdmin = $user && in_array(
-            $user->role?->nama_role,
-            ['Super Admin', 'Admin']
-        );
+        if ($surat->jenis !== 'Keluar') {
+            return redirect()->back()->with('error', 'Hanya surat keluar yang dapat ditandatangani.');
+        }
 
-        if (!$user || ($user->id != $surat->ttd_by_user_id && !$isAdmin)) {
-            return redirect()->back()->with(
-                'error',
-                'Anda tidak memiliki hak untuk menandatangani surat ini!'
-            );
+        if (strtolower($surat->status ?? '') === 'disetujui') {
+            return redirect()->back()->with('error', 'Surat ini sudah ditandatangani.');
         }
 
         $surat->status = 'Disetujui';
@@ -297,6 +311,8 @@ class SuratController extends Controller
 
     public function destroy(Surat $surat)
     {
+        $this->pastikanBolehAkses($surat);
+
         if ($surat->file_arsip && Storage::disk('public')->exists($surat->file_arsip)) {
             Storage::disk('public')->delete($surat->file_arsip);
         }
@@ -304,6 +320,24 @@ class SuratController extends Controller
         $surat->delete();
 
         return redirect()->back()->with('success', 'Surat berhasil dihapus!');
+    }
+
+    private function pastikanBolehAkses(Surat $surat): void
+    {
+        /** @var User $user */
+        $user = Auth::user();
+
+        abort_unless($user && $user->bolehAksesSurat($surat), 404);
+    }
+
+    private function pastikanBelumDisetujui(Surat $surat): void
+    {
+        if (strtolower($surat->status ?? '') === 'disetujui') {
+            abort(redirect()->route('surat.show', $surat)->with(
+                'error',
+                'Surat yang sudah ditandatangani tidak dapat diubah. Buat surat baru bila ada perbaikan.'
+            ));
+        }
     }
 
     private function buildCetakData(Surat $surat): array

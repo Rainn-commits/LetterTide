@@ -30,28 +30,12 @@ class RoleController extends Controller
             'nama_role'      => ['required', 'string', 'max:50', 'unique:roles,nama_role'],
             'permissions'    => ['nullable', 'array'],
             'permissions.*'  => ['exists:permissions,id'],
-            'retensi_arsip'  => ['nullable', 'boolean'],
         ]);
 
-        $permissionBaru = $validated['permissions'] ?? [];
-
-        if ($request->boolean('retensi_arsip')) {
-            $idRetensiEvaluate = Permission::where('kode_permission', 'retensi.evaluate')->value('id');
-
-            if ($idRetensiEvaluate) {
-                $permissionBaru[] = $idRetensiEvaluate;
-            }
-
-            if ($validated['nama_role'] === 'Admin') {
-                $idRetensiManage = Permission::where('kode_permission', 'retensi.manage')->value('id');
-
-                if ($idRetensiManage) {
-                    $permissionBaru[] = $idRetensiManage;
-                }
-            }
-        }
-
-        $permissionBaru = array_values(array_unique($permissionBaru));
+        $permissionBaru = Permission::rapikanUntukRole(
+            $validated['permissions'] ?? [],
+            $validated['nama_role']
+        );
 
         $role = Role::create([
             'nama_role' => $validated['nama_role'],
@@ -90,7 +74,6 @@ class RoleController extends Controller
             'nama_role'      => ['required', 'string', 'max:50', 'unique:roles,nama_role,' . $role->id],
             'permissions'    => ['nullable', 'array'],
             'permissions.*'  => ['exists:permissions,id'],
-            'retensi_arsip'  => ['nullable', 'boolean'],
         ]);
 
         if ($role->nama_role === 'Super Admin' && $validated['nama_role'] !== 'Super Admin') {
@@ -111,25 +94,7 @@ class RoleController extends Controller
             }
         }
 
-        $idRetensiEvaluate = Permission::where('kode_permission', 'retensi.evaluate')->value('id');
-        $idRetensiManage = Permission::where('kode_permission', 'retensi.manage')->value('id');
-
-        $permissionBaru = array_values(array_diff(
-            $permissionBaru,
-            array_filter([$idRetensiEvaluate, $idRetensiManage])
-        ));
-
-        if ($request->boolean('retensi_arsip')) {
-            if ($idRetensiEvaluate) {
-                $permissionBaru[] = $idRetensiEvaluate;
-            }
-
-            if ($role->nama_role === 'Admin' && $idRetensiManage) {
-                $permissionBaru[] = $idRetensiManage;
-            }
-        }
-
-        $permissionBaru = array_values(array_unique($permissionBaru));
+        $permissionBaru = Permission::rapikanUntukRole($permissionBaru, $role->nama_role);
 
         $role->update([
             'nama_role' => $validated['nama_role'],
