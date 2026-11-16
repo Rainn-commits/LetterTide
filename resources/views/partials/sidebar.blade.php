@@ -1,15 +1,7 @@
 @php
     $roleName = auth()->user()->role->nama_role ?? '';
 
-    $dashboardRoute = match (true) {
-        str_contains($roleName, 'Super Admin') => 'dashboard.superadmin',
-        str_contains($roleName, 'Admin')       => 'dashboard.admin',
-        default                                => 'dashboard.user',
-    };
-
-    if (!Route::has($dashboardRoute)) {
-        $dashboardRoute = 'dashboard';
-    }
+    $dashboardRoute = 'dashboard';
 
     $menuItems = [
         [
@@ -97,8 +89,8 @@
         @foreach ($menuItems as $item)
             @php
                 $userRole = auth()->user()->role;
-                $isDefaultAllowed = $roleName && in_array($roleName, $item['roles']);
                 $kodeItem = (array) ($item['permission'] ?? []);
+                $isDefaultAllowed = empty($kodeItem) || ($roleName && in_array($roleName, $item['roles']));
                 $hasDbPermission = !empty($kodeItem) && $userRole?->permissions?->whereIn('kode_permission', $kodeItem)->isNotEmpty();
                 $isExplicitlyRevoked = !empty($kodeItem) && $userRole?->permissions->isNotEmpty() && !$hasDbPermission;
             @endphp

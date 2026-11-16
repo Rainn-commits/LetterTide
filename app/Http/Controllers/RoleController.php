@@ -76,10 +76,10 @@ class RoleController extends Controller
             'permissions.*'  => ['exists:permissions,id'],
         ]);
 
-        if ($role->nama_role === 'Super Admin' && $validated['nama_role'] !== 'Super Admin') {
+        if (in_array($role->nama_role, ['Super Admin', 'Admin', 'User'], true) && $validated['nama_role'] !== $role->nama_role) {
             return back()->withErrors([
-                'nama_role' => 'Nama role "Super Admin" tidak dapat diubah.'
-            ]);
+                'nama_role' => "Nama role bawaan \"{$role->nama_role}\" tidak dapat diubah."
+            ])->withInput();
         }
 
         $permissionBaru = $validated['permissions'] ?? [];

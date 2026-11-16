@@ -11,6 +11,8 @@ use Carbon\Carbon;
 
 class DashboardController extends Controller
 {
+    private const PERMISSION_DASHBOARD_ADMIN = ['arsip.unit', 'pengguna.unit'];
+
     private function getTrafficData($userId = null)
     {
         $trafficData = [];
@@ -34,6 +36,8 @@ class DashboardController extends Controller
 
     public function superAdmin()
     {
+        abort_unless($this->saya()->isGlobal(), 403, 'Anda tidak memiliki akses ke dashboard ini.');
+
         $stats = [
             'total_surat'     => Surat::count(),
             'total_pengguna'  => User::count(),
@@ -51,6 +55,12 @@ class DashboardController extends Controller
 
     public function admin()
     {
+        abort_unless(
+            $this->saya()->punyaSalahSatuPermission(self::PERMISSION_DASHBOARD_ADMIN),
+            403,
+            'Anda tidak memiliki akses ke dashboard ini.'
+        );
+
         $stats = [
             'total_surat'     => Surat::count(),
             'total_pengguna'  => User::diUnitSaya()->count(),
@@ -81,18 +91,24 @@ class DashboardController extends Controller
 
     public function index()
     {
-        /** @var \App\Models\User $user */
-        $user = Auth::user();
-        $roleName = $user?->role?->nama_role ?? '';
+        $user = $this->saya();
 
-        if (str_contains($roleName, 'Super Admin')) {
+        if ($user->isGlobal()) {
             return $this->superAdmin();
-        } 
-        
-        if (str_contains($roleName, 'Admin')) {
+        }
+
+        if ($user->punyaSalahSatuPermission(self::PERMISSION_DASHBOARD_ADMIN)) {
             return $this->admin();
         }
 
         return $this->user();
+    }
+
+    private function saya(): User
+    {
+        /** @var User $user */
+        $user = Auth::user();
+
+        return $user;
     }
 }

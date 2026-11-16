@@ -30,17 +30,6 @@ class PlaceholderParser
 
     public static function render(string $text, array $values): string
     {
-        foreach ($values as $name => $value) {
-            $search = [
-                '{{ ' . $name . ' }}',
-                '{{' . $name . '}}',
-                '[' . $name . ']',
-                '{' . $name . '}',
-            ];
-
-            $text = str_replace($search, $value, $text);
-        }
-
         return preg_replace_callback(
             '/\{\{\s*(.*?)\s*\}\}|\[\s*(.*?)\s*\]|\{\s*(.*?)\s*\}/',
             function ($matches) use ($values) {
@@ -66,4 +55,5 @@ class PlaceholderParser
         return 'text';
     }
 }
+
 

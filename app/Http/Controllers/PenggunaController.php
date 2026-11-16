@@ -133,6 +133,10 @@ class PenggunaController extends Controller
             'unit_kerja_id.required' => 'Unit kerja wajib dipilih.',
         ]);
 
+        if ($adalahSuperAdmin) {
+            $validated['role_id'] = $pengguna->role_id;
+        }
+
         $this->cegahPenugasanSuperAdminTanpaIzin($validated['role_id']);
 
         $dataUpdate = [

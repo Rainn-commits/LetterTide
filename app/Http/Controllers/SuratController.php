@@ -83,7 +83,11 @@ class SuratController extends Controller
     public function store(Request $request, TemplateSurat $template)
     {
         $validated = $request->validate([
-            'kop_surat_id' => ['required', 'exists:pengaturan_kop_surat,id'],
+            'kop_surat_id' => ['required', function ($attribute, $value, $fail) {
+                if (!PengaturanKopSurat::where('is_aktif', true)->whereKey($value)->exists()) {
+                    $fail('Kop surat yang dipilih tidak tersedia.');
+                }
+            }],
             'lampiran'     => ['nullable', 'string'],
             'fields'       => ['required', 'array'],
             ...SuratFieldResolver::rules(array_keys((array) $request->input('fields', []))),
@@ -170,6 +174,7 @@ class SuratController extends Controller
     public function show(Surat $surat)
     {
         $this->pastikanBolehAkses($surat);
+        $this->pastikanSuratKeluar($surat);
 
         $surat->increment('jumlah_akses');
 
@@ -179,6 +184,7 @@ class SuratController extends Controller
     public function cetak(Surat $surat)
     {
         $this->pastikanBolehAkses($surat);
+        $this->pastikanSuratKeluar($surat);
 
         return view('surat.cetak', $this->buildCetakData($surat));
     }
@@ -214,6 +220,7 @@ class SuratController extends Controller
     public function edit(Surat $surat)
     {
         $this->pastikanBolehAkses($surat);
+        $this->pastikanSuratKeluar($surat);
         $this->pastikanBelumDisetujui($surat);
 
         $surat->load(['template', 'isiSurat']);
@@ -228,6 +235,7 @@ class SuratController extends Controller
     public function update(Request $request, Surat $surat)
     {
         $this->pastikanBolehAkses($surat);
+        $this->pastikanSuratKeluar($surat);
         $this->pastikanBelumDisetujui($surat);
 
         $validated = $request->validate([
@@ -317,7 +325,12 @@ class SuratController extends Controller
             Storage::disk('public')->delete($surat->file_arsip);
         }
 
+        $nomor = $surat->nomor_surat;
+        $jenis = $surat->jenis === 'Masuk' ? 'Surat Masuk' : 'Surat';
+
         $surat->delete();
+
+        LogAktivitas::catat('Menghapus', $jenis, "Menghapus surat \"{$nomor}\"");
 
         return redirect()->back()->with('success', 'Surat berhasil dihapus!');
     }
@@ -328,6 +341,11 @@ class SuratController extends Controller
         $user = Auth::user();
 
         abort_unless($user && $user->bolehAksesSurat($surat), 404);
+    }
+
+    private function pastikanSuratKeluar(Surat $surat): void
+    {
+        abort_unless($surat->jenis === 'Keluar' && $surat->template_id, 404);
     }
 
     private function pastikanBelumDisetujui(Surat $surat): void
@@ -345,6 +363,7 @@ class SuratController extends Controller
         $surat->load(['template', 'kopSurat', 'isiSurat', 'user', 'penandatangan']);
 
         $values = $surat->isiSurat->pluck('nilai_field', 'nama_field')->toArray();
+        $semuaField = array_keys($values);
 
         foreach ($values as $namaField => $nilaiField) {
             $nilaiField = (string) $nilaiField;
@@ -355,15 +374,15 @@ class SuratController extends Controller
                 continue;
             }
 
-            if (str_contains($namaKecil, 'tanggal')) {
-                $values[$namaField] = $this->formatTanggalIndonesia($nilaiField);
-            }
+            $tampil = str_contains($namaKecil, 'tanggal')
+                ? $this->formatTanggalIndonesia($nilaiField)
+                : $nilaiField;
 
-            $hasil = SuratFieldResolver::renderValue($namaField, $nilaiField, array_keys($values));
+            $hasil = SuratFieldResolver::renderValue($namaField, $nilaiField, $semuaField);
+            $definisi = SuratFieldResolver::define($namaField, $semuaField);
+            $sudahHtml = $hasil !== null && ($definisi['render'] ?? null) === 'nl2br';
 
-            if ($hasil !== null) {
-                $values[$namaField] = $hasil;
-            }
+            $values[$namaField] = $sudahHtml ? $hasil : e($hasil ?? $tampil);
         }
 
         $isiSuratRendered = PlaceholderParser::render($surat->template->isi_template, $values);
@@ -536,16 +555,22 @@ class SuratController extends Controller
         $tahunPenuh = now()->year;
         $bulanIni   = now()->month;
 
-        $runningNumber = Surat::where('template_id', $template->id)
-            ->whereYear('created_at', $tahunPenuh)
-            ->whereMonth('created_at', $bulanIni)
-            ->count() + 1;
-
-        $nomorUrut    = str_pad($runningNumber, 3, '0', STR_PAD_LEFT);
         $kodeTemplate = $this->deriveKodeTemplate($template->nama_template);
         $bulanRomawi  = $this->bulanRomawi($bulanIni);
+        $akhiran      = "/{$kodeTemplate}/INOVINDO/{$bulanRomawi}/{$tahunPenuh}";
 
-        return "{$nomorUrut}/{$kodeTemplate}/INOVINDO/{$bulanRomawi}/{$tahunPenuh}";
+        $nomorTerakhir = Surat::withoutGlobalScopes()
+            ->where('jenis', 'Keluar')
+            ->whereYear('created_at', $tahunPenuh)
+            ->whereMonth('created_at', $bulanIni)
+            ->pluck('nomor_surat')
+            ->filter(fn ($nomor) => str_ends_with((string) $nomor, $akhiran))
+            ->map(fn ($nomor) => (int) strtok((string) $nomor, '/'))
+            ->max() ?? 0;
+
+        $nomorUrut = str_pad($nomorTerakhir + 1, 3, '0', STR_PAD_LEFT);
+
+        return "{$nomorUrut}{$akhiran}";
     }
 
     private function deriveKodeTemplate(string $namaTemplate): string

@@ -231,7 +231,7 @@ Alur pembuatan surat:
 contoh: 007/PKSK/INOVINDO/IX/2026
 ```
 
-Nomor urut dihitung per template per bulan, dan kode template diambil dari inisial nama template.
+Nomor urut dihitung per kode template per bulan dan berlaku untuk seluruh unit, dengan melanjutkan nomor urut terakhir yang sudah terpakai. Dengan begitu nomor tidak kembar walaupun ada surat yang dihapus, template diperbarui ke versi baru, atau dua unit memakai kode template yang sama. Kode template diambil dari inisial nama template.
 
 Menu Buat Surat memiliki dua tab:
 

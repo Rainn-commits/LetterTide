@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\LogAktivitas;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -14,18 +15,18 @@ class LogAktivitasController extends Controller
         /** @var User $user */
         $user = Auth::user();
 
-        if (!$user || !in_array($user->role_id, [1, 2])) {
-            abort(403, 'Anda tidak memiliki akses ke halaman ini.');
-        }
-
-        $roleName = $user->role?->nama_role ?? '';
+        $lintasUnit = $user->isGlobal();
 
         $query = LogAktivitas::with('user');
 
-        if ($roleName !== 'Super Admin') {
-            $query->where(function ($q) {
+        if (!$lintasUnit) {
+            $idSuperAdmin = User::whereHas('role.permissions', function ($q) {
+                $q->where('kode_permission', 'role.manage');
+            })->pluck('id');
+
+            $query->where(function ($q) use ($idSuperAdmin) {
                 $q->whereNotIn('modul', ['Role', 'Pengguna'])
-                ->orWhere('user_id', '!=', 1);
+                ->orWhereNotIn('user_id', $idSuperAdmin);
             });
         }
 
@@ -71,7 +72,7 @@ class LogAktivitasController extends Controller
 
         $modulQuery = LogAktivitas::query();
 
-        if ($roleName !== 'Super Admin') {
+        if (!$lintasUnit) {
             $modulQuery->where('modul', '!=', 'Role');
         }
 
@@ -90,4 +91,3 @@ class LogAktivitasController extends Controller
         ));
     }
 }
-
