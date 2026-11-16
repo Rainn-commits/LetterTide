@@ -43,9 +43,7 @@ class LoginController extends Controller
                 'Super Admin' => redirect()->route('dashboard.super-admin'),
                 'Admin'       => redirect()->route('dashboard.admin'),
                 'User'        => redirect()->route('dashboard.user'),
-                default       => redirect()->route('login')->withErrors([
-                    'email' => 'Role tidak dikenali, hubungi administrator.',
-                ]),
+                default       => redirect()->route('dashboard'),
             };
         }
 
