@@ -46,8 +46,8 @@ LetterTide menyelesaikan masalah tersebut dengan:
 
 | Komponen | Teknologi |
 |---|---|
-| Framework Backend | Laravel 13 |
-| Bahasa | PHP 8.3+ |
+| Framework Backend | Laravel 13.23.0 |
+| Bahasa | PHP 8.5.12 |
 | Database | MySQL/MariaDB |
 | Build Tool Frontend | Vite + Laravel Vite Plugin |
 | Styling | Tailwind CSS v4 dan CSS kustom per fitur |
@@ -324,7 +324,7 @@ Fitur pendukung keputusan untuk menentukan masa simpan arsip menggunakan metode 
 
 K3 bertipe *cost*, artinya semakin lama sebuah arsip tersimpan, semakin rendah skornya dan semakin condong ke rekomendasi Musnah. K4 dihitung otomatis dari jumlah akses surat, sedangkan K1 dan K2 diisi manual oleh pengguna.
 
-**Bobot kriteria (AHP).** Admin mengisi perbandingan berpasangan antar kriteria (skala Saaty 1 sampai 9) pada tab Kelola Kriteria Retensi. Sistem membentuk matriks perbandingan, menghitung bobot dari *eigenvector* utama, lalu menguji konsistensi dengan CI = (λmaks − n) / (n − 1) dan CR = CI / RI (RI = 0,90 untuk n = 4). Penilaian hanya disimpan bila **CR ≤ 0,10**; bila tidak konsisten, bobot lama tetap dipakai. Bobot tidak dapat diisi manual. Setiap unit kerja memiliki matriks dan bobotnya sendiri, dan perubahan pada satu unit tidak memengaruhi unit lain. Setelah bobot disimpan, seluruh arsip unit itu dihitung ulang.
+**Bobot kriteria (AHP).** Admin mengisi perbandingan berpasangan antar kriteria (skala Saaty 1 sampai 9) pada tab Kelola Kriteria Retensi. Sistem membentuk matriks perbandingan, menghitung bobot dari *eigenvector* utama, lalu menguji konsistensi dengan CI = (λmaks − n) / (n − 1) dan CR = CI / RI (RI = 0,90 untuk n = 4). Penilaian hanya disimpan bila **CR ≤ 0,10**; bila tidak konsisten, bobot lama tetap dipakai. Bobot tidak dapat diisi manual. Setiap unit kerja memiliki matriks dan bobotnya sendiri, dan perubahan pada satu unit tidak memengaruhi unit lain. Setelah bobot disimpan, seluruh arsip unit itu dihitung ulang; arsip yang rekomendasinya berubah kembali berstatus Menunggu Validasi.
 
 Matriks bawaan dari seeder (`RetensiScoringService::PERBANDINGAN_AWAL`) menghasilkan bobot sekitar K1 0,483, K2 0,272, K3 0,157, dan K4 0,088 (CR ≈ 0,005). Nilai ini hanya titik awal dan sebaiknya diganti dengan penilaian Admin tiap unit.
 
@@ -342,8 +342,9 @@ Matriks bawaan dari seeder (`RetensiScoringService::PERBANDINGAN_AWAL`) menghasi
 
 1. Pengguna mengisi Nilai Guna dan Kerahasiaan pada surat, lalu menyimpan.
 2. Sistem langsung menghitung ulang skor seluruh arsip yang telah dinilai **dalam unit yang sama**. Perhitungan bersifat relatif antar arsip, sehingga penambahan data baru memengaruhi skor arsip lain di unit tersebut.
-3. Hasil berstatus **Menunggu Validasi** hingga disetujui Admin.
+3. Hasil berstatus **Menunggu Validasi** hingga disetujui Admin. Penilaian yang diisi langsung oleh Admin otomatis berstatus **Tervalidasi**.
 4. Admin melakukan validasi, dan status berubah menjadi **Tervalidasi**.
+5. Arsip yang sudah tervalidasi tetap tervalidasi saat skor dihitung ulang, kecuali rekomendasinya (Permanen/Simpan Lokal/Musnah) berubah; arsip tersebut kembali ke **Menunggu Validasi**.
 
 **Pembatasan tampilan:** User tidak melihat kolom skor maupun status rekomendasi (Musnah/Simpan Lokal/Permanen). User hanya melihat status prosesnya: Belum Dievaluasi, Menunggu Validasi, atau Tervalidasi. Keputusan retensi merupakan wewenang administratif Admin.
 

@@ -42,7 +42,7 @@ class RoleController extends Controller
                 $permissionBaru[] = $idRetensiEvaluate;
             }
 
-            if ($validated['nama_role'] === 'Super Admin') {
+            if ($validated['nama_role'] === 'Admin') {
                 $idRetensiManage = Permission::where('kode_permission', 'retensi.manage')->value('id');
 
                 if ($idRetensiManage) {
@@ -124,7 +124,7 @@ class RoleController extends Controller
                 $permissionBaru[] = $idRetensiEvaluate;
             }
 
-            if ($role->nama_role === 'Super Admin' && $idRetensiManage) {
+            if ($role->nama_role === 'Admin' && $idRetensiManage) {
                 $permissionBaru[] = $idRetensiManage;
             }
         }

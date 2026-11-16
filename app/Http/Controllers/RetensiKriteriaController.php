@@ -72,9 +72,10 @@ class RetensiKriteriaController extends Controller
         return back()->with(
             'success',
             sprintf(
-                'Bobot AHP disimpan (CR = %.4f, konsisten). %d arsip unit ini dihitung ulang dengan TOPSIS dan menunggu validasi ulang.',
+                'Bobot AHP disimpan (CR = %.4f, konsisten). %d arsip unit ini dihitung ulang dengan TOPSIS; %d arsip berubah rekomendasinya dan perlu divalidasi ulang.',
                 $hasil['cr'],
-                $jumlah
+                $jumlah['dihitung'],
+                $jumlah['perlu_validasi']
             )
         );
     }

@@ -86,15 +86,17 @@ class RetensiScoringService
         ]);
     }
 
-    public function evaluasiMassal(?int $unitId = null): int
+    public function evaluasiMassal(?int $unitId = null): array
     {
         $daftarUnit = $unitId
             ? [$unitId]
             : Surat::query()->whereNotNull('unit_kerja_id')->distinct()->pluck('unit_kerja_id')->all();
 
-        $total = 0;
+        $total = ['dihitung' => 0, 'perlu_validasi' => 0];
         foreach ($daftarUnit as $id) {
-            $total += $this->evaluasiUnit((int) $id);
+            $hasil = $this->evaluasiUnit((int) $id);
+            $total['dihitung'] += $hasil['dihitung'];
+            $total['perlu_validasi'] += $hasil['perlu_validasi'];
         }
 
         return $total;
@@ -105,30 +107,41 @@ class RetensiScoringService
         return $this->jalankan($unitId);
     }
 
-    private function evaluasiUnit(int $unitId): int
+    private function evaluasiUnit(int $unitId): array
     {
         $hitung = $this->jalankan($unitId);
 
         if ($hitung === null) {
-            return 0;
+            return ['dihitung' => 0, 'perlu_validasi' => 0];
         }
+
+        $perluValidasi = 0;
 
         foreach ($hitung['items'] as $item) {
             $id = $item->id;
             $ci = $hitung['topsis']['ci'][$id];
+            $rekomendasiBaru = self::klasifikasikan($ci);
 
-            $item->update([
+            $data = [
                 'skor_total'         => round($ci, 6),
                 'd_plus'             => $hitung['topsis']['d_plus'][$id],
                 'd_minus'            => $hitung['topsis']['d_minus'][$id],
-                'status_rekomendasi' => self::klasifikasikan($ci),
-                'status_persetujuan' => 'Menunggu Validasi',
+                'status_rekomendasi' => $rekomendasiBaru,
                 'dievaluasi_pada'    => now(),
                 'dievaluasi_oleh'    => Auth::id(),
-            ]);
+            ];
+
+            if ($item->status_rekomendasi !== $rekomendasiBaru || empty($item->status_persetujuan)) {
+                $data['status_persetujuan'] = 'Menunggu Validasi';
+                $data['divalidasi_oleh'] = null;
+                $data['divalidasi_pada'] = null;
+                $perluValidasi++;
+            }
+
+            $item->update($data);
         }
 
-        return $hitung['items']->count();
+        return ['dihitung' => $hitung['items']->count(), 'perlu_validasi' => $perluValidasi];
     }
 
     private function jalankan(int $unitId): ?array
@@ -161,7 +174,7 @@ class RetensiScoringService
 
         $matriks = [];
         foreach ($items as $item) {
-            $umurHari = Carbon::parse($item->surat->tanggal_surat)->diffInDays(now());
+            $umurHari = max(0, (int) floor(Carbon::parse($item->surat->tanggal_surat)->diffInDays(now())));
 
             $matriks[$item->id] = [
                 self::SKALA_NILAI_GUNA[$item->nilai_guna] ?? 1,

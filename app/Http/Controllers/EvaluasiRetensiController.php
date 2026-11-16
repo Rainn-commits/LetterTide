@@ -118,18 +118,24 @@ class EvaluasiRetensiController extends Controller
             'kerahasiaan' => ['required', 'in:Sangat Rahasia,Rahasia,Biasa/Terbuka'],
         ]);
 
-        $dataToSave = array_merge($validated, [
-            'status_persetujuan' => $isAdmin ? 'Disetujui' : 'Menunggu',
-            'divalidasi_oleh'    => $isAdmin ? $user->id : null,
-            'divalidasi_pada'    => $isAdmin ? now() : null,
-        ]);
-
-        EvaluasiRetensi::updateOrCreate(
+        $evaluasi = EvaluasiRetensi::updateOrCreate(
             ['surat_id' => $surat->id],
-            $dataToSave
+            array_merge($validated, [
+                'status_persetujuan' => 'Menunggu Validasi',
+                'divalidasi_oleh'    => null,
+                'divalidasi_pada'    => null,
+            ])
         );
 
         $service->evaluasiMassal((int) $surat->unit_kerja_id);
+
+        if ($isAdmin) {
+            $evaluasi->refresh()->update([
+                'status_persetujuan' => 'Disetujui',
+                'divalidasi_oleh'    => $user->id,
+                'divalidasi_pada'    => now(),
+            ]);
+        }
 
         return back()->with('success', "Penilaian untuk surat \"{$surat->nomor_surat}\" tersimpan dan skor retensi diperbarui.");
     }
